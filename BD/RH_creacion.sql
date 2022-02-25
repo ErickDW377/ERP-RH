@@ -31,7 +31,7 @@ estatus char,
 primary key (idPuesto)
 );
 
-create table Percepciones(
+create table RH_Percepciones(
 idPercepcion int auto_increment,
 nombre varchar(30),
 descripcion varchar(80),
@@ -67,7 +67,7 @@ nombre varchar(80),
 idEstado int,
 estatus char,
 primary key (idCiudad),
-foreign key (idEstado) references RH_Estados (idEstados)
+foreign key (idEstado) references RH_Estados (idEstado)
 );
 create table RH_Sucursales(
  idSucursal int auto_increment,
@@ -126,7 +126,7 @@ horaSalida date,
 dia varchar(20),
 idEmpleado int,
 primary key (idAsistencia),
-foreign key (idEmpleados) references RH_Empleados (idEmpleados)
+foreign key (idEmpleado) references RH_Empleados (idEmpleado)
 );
 create table RH_Ausencias_Justificadas(
 idAusencia int auto_increment,
@@ -178,7 +178,7 @@ idFormaPago int,
 idPeriodo int,
 primary key (idNomina),
 foreign key (idFormaPago) references RH_FormasPago(idFormaPago),
-foreign key (idPeriodo) references RH_Peridos(idPeriodo),
+foreign key (idPeriodo) references RH_Periodos(idPeriodo),
 foreign key (idEmpleado) references RH_Empleados(idEmpleado)
 );
 
@@ -197,7 +197,7 @@ idPercepcion int auto_increment,
 importe float,
 primary key (idPercepcion,idNomina),
 foreign key (idNomina) references RH_Nominas(idNomina),
-foreign key (idPerepcion) references RH_Percepciones (idPercepcion)
+foreign key (idPercepcion) references RH_Percepciones (idPercepcion)
 );
 
 
