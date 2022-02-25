@@ -140,7 +140,8 @@ evidencia blob,
 estatus char,
 motivo varchar(100),
 primary key (idAusencia),
-foreign key (idEmpleadoAutoriza) references RH_Empleados(idEmpleadoAutoriza)
+foreign key (idEmpleadoAutoriza) references RH_Empleados(idEmpleado),
+foreign key (idEmpleadoSolicita) references RH_Empleados(idEmpleado)
 );
 create table RH_HistorialPuesto(
 idEmpleado int auto_increment,
