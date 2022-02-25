@@ -1,5 +1,74 @@
 create database RecuHum;
 use  recuhum;
+
+create table RH_Deducciones(
+idDeduccion int auto_increment,
+nombre varchar(30),
+descripcion varchar(80),
+porcentaje float,
+primary key(idDeduccion)
+);
+create table RH_Periodos(
+idPeriodo int auto_increment,
+nombre varchar(50),
+fechaInicio date,
+fechaFin date,
+estatus char,
+primary key(idPeriodo)
+);
+create table RH_FormasPago(
+idFormaPago int auto_increment,
+nombre varchar(50),
+estatus char,
+primary key(idFormaPago)
+);
+create table RH_Puestos(
+idPuesto int auto_increment,
+nombre varchar(60),
+salarioMinimo float,
+salarioMaximo float,
+estatus char,
+primary key (idPuesto)
+);
+
+create table Percepciones(
+idPercepcion int auto_increment,
+nombre varchar(30),
+descripcion varchar(80),
+diasPagar int,
+primary key(idPercepcion)
+);
+
+create table RH_Turnos(
+idTurno int auto_increment,
+nombre varchar(20),
+horaInicio timestamp,
+horaFin timestamp,
+dias varchar (30),
+primary key(idTurno)
+);
+
+create table RH_Departamentos(
+idDepartamento int auto_increment,
+nombre varchar(20),
+estatus char,
+primary key (idDepartamento)
+);
+create table RH_Estados(
+idEstado int auto_increment,
+nombre varchar(60),
+siglas varchar(10),
+estatus char,
+primary key (idEstado)
+);
+create table RH_Ciudades(
+idCiudad int auto_increment,
+nombre varchar(80),
+idEstado int,
+estatus char,
+primary key (idCiudad),
+foreign key (idEstado) references RH_Estados (idEstados)
+);
 create table RH_Sucursales(
  idSucursal int auto_increment,
  nombre varchar(50),
@@ -12,31 +81,6 @@ create table RH_Sucursales(
  idCiudad int,
  Primary key(idSucursal),
  Foreign key (idCiudad) references RH_CIUDADES(idCiudad)
-);
-create table RH_Ciudades(
-idCiudad int auto_increment,
-nombre varchar(80),
-idEstado int,
-estatus char,
-primary key (idCiudad),
-foreign key (idEstado) references RH_Estados (idEstados)
-);
-create table RH_Estados(
-idEstado int auto_increment,
-nombre varchar(60),
-siglas varchar(10),
-estatus char,
-primary key (idEstado)
-);
-create table RH_Asistencias(
-idAsistencia int auto_increment,
-fecha date,
-horaEntrada date,
-horaSalida date,
-dia varchar(20),
-idEmpleado int,
-primary key (idAsistencia),
-foreign key (idEmpleados) references RH_Empleados (idEmpleados)
 );
 
 create table RH_Empleados(
@@ -74,7 +118,16 @@ foreign key (idDepartamento) references RH_Departamentos(idDepartamento),
 foreign key (idTurno) references RH_Turnos(idTurno),
 foreign key (idSucursal) references RH_Sucursales(idSucursal)
 );
- 
+create table RH_Asistencias(
+idAsistencia int auto_increment,
+fecha date,
+horaEntrada date,
+horaSalida date,
+dia varchar(20),
+idEmpleado int,
+primary key (idAsistencia),
+foreign key (idEmpleados) references RH_Empleados (idEmpleados)
+);
 create table RH_Ausencias_Justificadas(
 idAusencia int auto_increment,
 fechaSolicitud date,
@@ -89,14 +142,6 @@ motivo varchar(100),
 primary key (idAusencia),
 foreign key (idEmpleadoAutoriza) references RH_Empleados(idEmpleadoAutoriza)
 );
-create table RH_Turnos(
-idTurno int auto_increment,
-nombre varchar(20),
-horaInicio timestamp,
-horaFin timestamp,
-dias varchar (30),
-primary key(idTurno)
-);
 create table RH_HistorialPuesto(
 idEmpleado int auto_increment,
 idPuesto int,
@@ -107,55 +152,7 @@ primary key (idEmpleado,idPuesto,idDepartamento,fechaInicio),
 foreign key (idPuesto) references RH_Puestos(idPuesto),
 foreign key (idEmpleado) references RH_Empleados(idEmpleado),
 foreign key (idDepartamento) references RH_Departamentos (idDepartamento)
-
 );
-
-create table RH_Puestos(
-idPuesto int auto_increment,
-nombre varchar(60),
-salarioMinimo float,
-salarioMaximo float,
-estatus char,
-primary key (idPuesto)
-);
-create table RH_Departamentos(
-idDepartamento int auto_increment,
-nombre varchar(20),
-estatus char,
-primary key (idDepartamento)
-);
-create table Percepciones(
-idPercepcion int auto_increment,
-nombre varchar(30),
-descripcion varchar(80),
-diasPagar int,
-primary key(idPercepcion)
-);
-
-create table RH_FormasPago(
-idFormaPago int auto_increment,
-nombre varchar(50),
-estatus char,
-primary key(idFormaPago)
-);
-
-create table RH_Periodos(
-idPeriodo int auto_increment,
-nombre varchar(50),
-fechaInicio date,
-fechaFin date,
-estatus char,
-primary key(idPeriodo)
-);
-
-create table RH_Deducciones(
-idDeduccion int auto_increment,
-nombre varchar(30),
-descripcion varchar(80),
-porcentaje float,
-primary key(idDeduccion)
-);
-
 create table RH_DocumentacionEmpleado(
 idDocumento int auto_increment,
 nombreDocumento varchar(80),
@@ -201,7 +198,6 @@ primary key (idPercepcion,idNomina),
 foreign key (idNomina) references RH_Nominas(idNomina),
 foreign key (idPerepcion) references RH_Percepciones (idPercepcion)
 );
-
 
 
 
