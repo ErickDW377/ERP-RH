@@ -1,19 +1,26 @@
-{% extends 'componentes/head.html' %} {% block contenedor%}
-<header>
-  {%block encabezado%} {%endblock%}
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">WebSiteName</a>
+{% extends 'componentes/head.html' %} 
+{% block contenedor%}
+  <header>
+    {%block encabezado%} 
+    
+    {%endblock%}
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">AGROQUIMICA</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/puestos">Puestos</a></li>
+          <li><a href="#">Page 2</a></li>
+          <li><a href="#">Page 3</a></li>
+        </ul>
       </div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">Page 1</a></li>
-        <li><a href="#">Page 2</a></li>
-        <li><a href="#">Page 3</a></li>
-      </ul>
-    </div>
-  </nav>
-</header>
+    </nav>
+  </header>
 
-{%block cuerpo%} {%endblock%} {%endblock%}
+  {%block cuerpo%} 
+
+  {%endblock%} 
+
+{%endblock%}

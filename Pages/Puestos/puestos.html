@@ -1,0 +1,28 @@
+{% extends 'componentes/menu.html' %}
+{%block encabezado%}
+<div class="encabezado txt-encabezado">
+    <label class="margenes-I">ERP</label>        
+</div>
+{%endblock%}
+{%block cuerpo%}
+
+<table>
+    <thead class="slot-center">
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Salario Minimo</th>
+      <th>Salario Maximo</th>
+      <th>Estatus</th>           
+    </thead>
+
+    {%for obj in puestos%} 
+    <tr>
+      <td>{{obj.idPuesto}}</td>
+      <td>{{obj.nombre}}</td>
+      <td>{{obj.salarioMinimo}}</td>
+      <td>{{obj.salarioMaximo}}</td>
+      <td>{{obj.estatus}}</td>               
+    </tr>
+    {% endfor %}
+
+{%endblock%}
