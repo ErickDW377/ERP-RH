@@ -14,14 +14,15 @@ app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:Hola.123@127.0.0.1/c
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 app.secret_key='cl4v3'
 
-#  login_manager=LoginManager()
-#  login_manager.init_app(app)
-#  login_manager.login_view = "login"
-#  login_manager.login_message = u"! Debes iniciar sesión !"
+#login_manager=LoginManager()
+#login_manager.init_app(app)
+#login_manager.login_view = "login"
+#login_manager.login_message = u"! Debes iniciar sesión !"
 
 @app.route('/')
 def iniciar():    
     return  render_template('Inicio/inicio.html')
+
 
 
 if __name__=='__main__': 
