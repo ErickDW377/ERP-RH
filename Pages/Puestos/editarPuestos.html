@@ -5,7 +5,17 @@
 </div>
 {%endblock%}
 {%block cuerpo%}
-<div class="container">
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="contenedor-formulario">
   <form action="/editarP/{{puesto.idPuesto}}" method="post" enctype="multipart/form-data">   
     <div class="form-group">
       <label>Nombre:</label>

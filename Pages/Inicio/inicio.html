@@ -1,10 +1,15 @@
 {% extends 'componentes/menu.html' %}
 {%block encabezado%}
 <body> 
- 
-    <h1 align="center" 
-    style="background-color:rgb(141, 218, 228); font-size:600%;">AGROQUIMICA</h1> 
-    <p style="background-color:tomato; font-size:150%;">RH</p>
+    <img src="{{url_for('static',filename='images/logo.png')}}" height="5%", width="5%"
+            /> 
+    <div class="encabezado">        
+        AGROQIMICA EEYV
+    </div> 
+    <div class="encabezadoModulo">
+        Modulo:        
+            Recursos Humanos       
+    </div>
 </body>
 {%endblock%}
 {%block cuerpo%}

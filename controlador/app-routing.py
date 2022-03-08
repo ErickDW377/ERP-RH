@@ -60,6 +60,7 @@ def registarP():
     else:
         puesto.estatus=False 
     puesto.registrar()
+    flash('Puesto registrado con exito')
     return  redirect(url_for('puestosR'))
 
 @app.route('/editarP/<int:id>',methods=['post'])
@@ -75,12 +76,14 @@ def editarP(id):
         puesto.estatus=False  
     puesto.idPuesto = id
     puesto.actualizar()
+    flash('Puesto actualizado con exito')
     return  redirect(url_for('puestosE', id= puesto.idPuesto))
 
 @app.route('/eliminarP/<int:id>')
 def eliminarP(id): 
     puesto = Puestos()
     puesto.eliminar(id)
+    flash('Puesto eliminado con exito')
     return  redirect(url_for('puestos'))
 
 # Enrutamiento sucursales

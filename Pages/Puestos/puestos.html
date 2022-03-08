@@ -6,9 +6,18 @@
 {%endblock%}
 {%block cuerpo%}
 
-<div class="container">
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="tabla">
 <table class="table table-striped">
-    <thead class="slot-center">
+    <thead>
       <th>ID</th>
       <th>Nombre</th>
       <th>Salario Minimo</th>
@@ -33,13 +42,37 @@
         </a>
       </td> 
       <td>
-        <a href="/eliminarP/{{obj.idPuesto}}" class="btn" role="button">
+        <button type="button" class="btn" data-toggle="modal" data-target="#eliminar{{obj.idPuesto}}">
           <img             
             src="{{url_for('static',filename='images/eliminar.png')}}"
           />
-        </a>
+        </button>        
       </td>         
     </tr>
+    <div id="eliminar{{obj.idPuesto}}" class="modal fade" role="dialog">
+      <div class="modal-dialog">   
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h4 class="modal-title">Confirmacion de proceso</h4>
+          </div>
+          <div class="modal-body">
+            <p>¿Estas seguro de eliminar el puesto: {{obj.nombre}} ?</p>
+          </div>
+          <div class="modal-footer">
+            <a href="/eliminarP/{{obj.idPuesto}}" class="btn btn-info"
+              >Aceptar</a
+            >
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     {% endfor %}
     </table>
   </div>
