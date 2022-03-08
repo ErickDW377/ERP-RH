@@ -1,0 +1,33 @@
+{% extends 'componentes/menu.html' %} {% block contenedor%}
+<body class="fondo">
+  <header class="encabezado txt-encabezado">AGROQUIMICA</header>
+  {% if get_flashed_messages()%}
+        {% for m in get_flashed_messages()%}
+        <div class="alert alert-danger alert-dismissible alertas-txt">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{m}}</strong>
+        </div>
+        {% endfor %}
+  {% endif %}
+  <form class="form slot-center" action="//login" method="post">
+    <div>
+      <img class="icon-xg" src="{{url_for('static',filename='images/login.png')}}" />
+    </div>
+    <div class="padding">
+      <input type="text" name="email" id="" placeholder="Usuario" required />
+    </div>
+    <div class="padding">
+      <input type="password" name="password" id="" placeholder="Password" required />
+    </div>
+    <div>
+      <button type="submit">Iniciar sesión</button>
+    </div>
+    <div>
+      <a href="/inicio">
+        <button class="color-danger" type="button">Cancelar</button>
+      </a>
+    </div>
+    <a style="font-size: medium" href="//login">¿Cliente nuevo? registrate</a>
+  </form>
+</body>
+{% endblock%}

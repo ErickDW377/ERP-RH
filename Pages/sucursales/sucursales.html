@@ -1,0 +1,109 @@
+{% extends 'componentes/menu.html' %} {%block encabezado%}
+<div class="encabezado txt-encabezado">Sucursales</div>
+{%endblock%} {%block cuerpo%}
+{% if get_flashed_messages()%}
+        {% for m in get_flashed_messages()%}
+        <div class="alert alert-success alert-dismissible alertas-txt">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{m}}</strong>
+        </div>
+        {% endfor %}
+  {% endif %}
+<section class="contenedor">
+  <div class="slot-start padding">
+    <img src="{{url_for('static',filename='images/')}}" />
+  </div>
+  <div class="alineacion">
+    <a href="/formularioSucursales">
+      <button class="boton-icono">
+        <img src="{{url_for('static',filename='images/')}}" />
+        <label class="slot-end padding-center"> Registrar</label>
+      </button>
+    </a>
+  </div>
+</section>
+
+<section class="slot-center padding-ch">
+  <h2 class="txt-encabezado2">Datos</h2>
+  <table>
+    <thead class="slot-center">
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Telefono</th>
+      <th>Direccion</th>
+      <th>Colonia</th>
+      <th>Codigo Postal</th>
+      <th>presupuesto</th>
+      <th>Estatus</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </thead>
+
+    {%for obj in sucursales%} 
+    <tr>
+      <td>{{obj.idSucursal}}</td>
+      <td>{{obj.nombre}}</td>
+      <td>{{obj.telefono}}</td>
+      <td>{{obj.direccion}}</td>
+      <td>{{obj.colonia}}</td>
+      <td>{{obj.codigoPostal}}</td>
+      <td>{{obj.presupuesto}}</td>
+      <td>${{obj.estaus}}</td>
+      <td>
+        <a 
+        href="/formularioSucursales/{{obj.idSucursal}}"
+        >
+          <button class="boton-icono-only">
+           <img 
+            class="icon-auto" 
+            src="{{url_for('static',filename='images/')}}"
+          />
+          </button>
+        </a>
+      </td>
+      <td>
+        <button
+          class="boton-icono-only"
+          type="button"
+          data-toggle="modal"
+          data-target="#eliminar{{obj.idSucursal}}"
+          class="btn btn-info"
+        >
+          <img
+            class="icon-auto"
+            src="{{url_for('static',filename='images/')}}"
+          />
+        </button>        
+      </td>      
+    </tr>
+    <!-- Modal -->
+    <div id="eliminar{{obj.idSucursal}}" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h4 class="modal-title">Confirmacion de proceso</h4>
+          </div>
+          <div class="modal-body">
+            <p>¿Estas seguro de eliminar el registro: {{obj.idSucursal}} ?</p>
+          </div>
+          <div class="modal-footer">
+            <a href="/sucursal/{{obj.idSucursal}}" class="btn btn-info"
+              >Aceptar</a
+            >
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </table>
+</section>
+{%endblock%}
+

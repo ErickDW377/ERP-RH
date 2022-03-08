@@ -36,5 +36,37 @@ class Puestos(db.Model):
         objeto=self.consultar(id)
         db.session.delete(objeto)
         db.session.commit()
+  #Sucursales      
+        
+class sucursales(db.Model):
+    __tablename__= 'RH_Sucursales'
+    idSucursales = Column(Integer, primary_key=True)
+    nombre = Column(String(60),nullable= False)
+    telefono= Column(String(15),nullable= False)
+    direccion = Column(String(80),nullable= False)
+    colonoa = Column(String(50),nullable= False)
+    codigoPostal = Column(String(5),nullable= False)
+    presupuesto = Column(Float,nullable= False)
+    estatus = Column(String(1),nullable= False)
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        db.session.delete(objeto)
+        db.session.commit()
+       
 
 

@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos
+from DAO import db, Puestos,sucursales 
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
 
@@ -23,11 +23,29 @@ app.secret_key='cl4v3'
 def iniciar():    
     return  render_template('Inicio/inicio.html')
 
+@app.route('/inicio')
+def inicio():    
+    return  render_template('inicio/inicio.html')
+ 
+# Enrutamiento login
+@app.route('/login')
+def login():    
+    return  render_template('login/login.html')
+
+
 @app.route('/puestos')
 def puestos():
     p=Puestos() 
     puestos = p.consultarAll()   
     return  render_template('Puestos/puestos.html', puestos = puestos)
+
+# Enrutamiento sucursales
+@app.route('/sucursales')
+def sucursales():  
+    s=sucursales()
+    sucursales= s.consultarAll() 
+    return  render_template('sucursales/sucursales.html', sucursales=sucursales) 
+
 
 if __name__=='__main__':
     db.init_app(app)

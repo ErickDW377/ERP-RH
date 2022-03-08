@@ -1,0 +1,91 @@
+{% extends 'componentes/menu.html' %} {% block contenedor%}
+<body class="fondo">
+  <header class="encabezado txt-encabezado">Formulario Sucursales</header>
+  {% if get_flashed_messages()%}
+        {% for m in get_flashed_messages()%}
+        <div class="alert alert-success alert-dismissible alertas-txt">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{m}}</strong>
+        </div>
+        {% endfor %}
+  {% endif %}
+  <form class="form" action="/sucursales/guardar/{{editar}}" method="post" enctype="multipart/form-data">
+     <div>
+      Id Producto:
+      <input type="number" placeholder="ID Sucursal" name="id" value="{{sucursal.idSucursal}}" />
+    </div>
+
+    <div>
+      Nombre:
+      <input type="text" placeholder="Nombre" name="nombre" value="{{sucursal.nombre}}" required />
+    </div>
+
+    <div>
+        Telefono:
+        <input type="tel" placeholder="Número de telefono" name="telefono" value="{{sucursal.telefono}}" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" />
+      </div>
+  
+    <div>
+        Domicilio:
+        <input type="text" placeholder="Domicilio" name="calle" value="{{sucursales.calle}}"/>
+    </div>
+
+    <div>
+        Colonia:
+        <input type="text" placeholder="Colonia" name="colonia" value="{{sucursales.colonia}}"/>
+    </div>
+
+    <div>
+        CP:
+        <input type="number" placeholder="Código Postal" name="cp" value="{{sucursales.cp}}"/>
+      </div>
+  
+    <div>
+      Presupuesto:
+      <input type="number" placeholder="Presupuesto" name="presupuesto" value="{{sucursales.presupuesto}}" />
+    </div>
+
+    <div>
+        Estatus:
+        <select id="estatus" name="estatus" >                
+          {% if servicios.estatus == "c" %}      
+          <option value="c">Completo</option>        
+          <option value="e">En espera</option>
+          <option value="r">En reparacion</option>
+          <option value="f">Finalizado</option>
+          {% else %}
+            {% if servicios.estatus == "f" %}
+            <option value="f">Finalizado</option>
+            <option value="e">En espera</option>
+            <option value="c">Completo</option>        
+            <option value="r">En reparacion</option>  
+            {% else %}
+              {% if servicios.estatus == "r" %}
+              <option value="r">En reparacion</option>
+              <option value="e">En espera</option>
+              <option value="c">Completo</option>            
+              <option value="f">Finalizado</option>
+              {% else %}
+              <option value="e">En espera</option>
+              <option value="c">Completo</option>        
+              <option value="r">En reparacion</option>
+              <option value="f">Finalizado</option>                                     
+              {% endif %}
+            {% endif %}
+          {% endif %}
+      </select>
+      </div> 
+
+  <div>
+    
+      <button type="submit"> Guardar </button>
+   
+    </div>
+    <div>
+      <a href="/sucursales">
+        <button class="color-danger" type="button">Cancelar</button>
+      </a>
+    </div>
+    </form>
+</body>
+{% endblock%}
