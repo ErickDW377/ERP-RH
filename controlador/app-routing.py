@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,sucursales 
+from DAO import db, Puestos,Sucursales 
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
 
@@ -86,7 +86,7 @@ def eliminarP(id):
 # Enrutamiento sucursales
 @app.route('/sucursales')
 def sucursales():  
-    s=sucursales()
+    s=Sucursales()
     sucursales= s.consultarAll() 
     return  render_template('sucursales/sucursales.html', sucursales=sucursales) 
 

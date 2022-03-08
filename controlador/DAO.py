@@ -38,9 +38,9 @@ class Puestos(db.Model):
         db.session.commit()
   #Sucursales      
         
-class sucursales(db.Model):
+class Sucursales(db.Model):
     __tablename__= 'RH_Sucursales'
-    idSucursales = Column(Integer, primary_key=True)
+    idSucursal = Column(Integer, primary_key=True)
     nombre = Column(String(60),nullable= False)
     telefono= Column(String(15),nullable= False)
     direccion = Column(String(80),nullable= False)
