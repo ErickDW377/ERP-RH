@@ -6,13 +6,16 @@
 {%endblock%}
 {%block cuerpo%}
 
-<table>
+<div class="container">
+<table class="table table-striped">
     <thead class="slot-center">
       <th>ID</th>
       <th>Nombre</th>
       <th>Salario Minimo</th>
       <th>Salario Maximo</th>
-      <th>Estatus</th>           
+      <th>Estatus</th>  
+      <th></th>  
+      <th></th>       
     </thead>
 
     {%for obj in puestos%} 
@@ -21,8 +24,23 @@
       <td>{{obj.nombre}}</td>
       <td>{{obj.salarioMinimo}}</td>
       <td>{{obj.salarioMaximo}}</td>
-      <td>{{obj.estatus}}</td>               
+      <td>{{obj.estatus}}</td>     
+      <td>
+        <a href="/editarPuestos/{{obj.idPuesto}}" class="btn" role="button">
+          <img              
+            src="{{url_for('static',filename='images/editar.png')}}"
+          />
+        </a>
+      </td> 
+      <td>
+        <a href="/eliminarP/{{obj.idPuesto}}" class="btn" role="button">
+          <img             
+            src="{{url_for('static',filename='images/eliminar.png')}}"
+          />
+        </a>
+      </td>         
     </tr>
     {% endfor %}
-
+    </table>
+  </div>
 {%endblock%}

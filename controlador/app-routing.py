@@ -35,9 +35,53 @@ def login():
 
 @app.route('/puestos')
 def puestos():
-    p=Puestos() 
-    puestos = p.consultarAll()   
-    return  render_template('Puestos/puestos.html', puestos = puestos)
+    p=Puestos()     
+    return  render_template('Puestos/puestos.html', puestos =p.consultarAll()  )
+
+@app.route('/registrarPuestos')
+def puestosR():  
+    return  render_template('Puestos/registrarPuestos.html')
+
+@app.route('/editarPuestos/<int:id>')
+def puestosE(id):  
+    puesto =  Puestos()
+    puesto = puesto.consultar(id)
+    return  render_template('Puestos/editarPuestos.html', puesto = puesto)
+
+@app.route('/registrarP',methods=['post'])
+def registarP():  
+    puesto = Puestos()
+    puesto.nombre = request.form['nombrePuesto']
+    puesto.salarioMinimo = request.form['salarioMinimo']
+    puesto.salarioMaximo = request.form['salarioMaximo']
+    estatus = request.values.get('estatus',False)
+    if estatus=="True":
+        puesto.estatus=True
+    else:
+        puesto.estatus=False 
+    puesto.registrar()
+    return  redirect(url_for('puestosR'))
+
+@app.route('/editarP/<int:id>',methods=['post'])
+def editarP(id):  
+    puesto = Puestos()
+    puesto.nombre = request.form['nombrePuesto']
+    puesto.salarioMinimo = request.form['salarioMinimo']
+    puesto.salarioMaximo = request.form['salarioMaximo']
+    estatus = request.values.get('estatus',False)
+    if estatus=="True":
+        puesto.estatus=True
+    else:
+        puesto.estatus=False  
+    puesto.idPuesto = id
+    puesto.actualizar()
+    return  redirect(url_for('puestosE', id= puesto.idPuesto))
+
+@app.route('/eliminarP/<int:id>')
+def eliminarP(id): 
+    puesto = Puestos()
+    puesto.eliminar(id)
+    return  redirect(url_for('puestos'))
 
 # Enrutamiento sucursales
 @app.route('/sucursales')
