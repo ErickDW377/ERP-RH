@@ -1,9 +1,4 @@
 {% extends 'componentes/menu.html' %}
-{%block encabezado%}
-<div class="encabezado txt-encabezado">
-    <label class="margenes-I">ERP</label>        
-</div>
-{%endblock%}
 {%block cuerpo%}
 
 {% if get_flashed_messages()%}
@@ -37,21 +32,13 @@
       <td>{{obj.nombre}}</td>
       <td>{{obj.salarioMinimo}}</td>
       <td>{{obj.salarioMaximo}}</td>
-      <td>{{obj.estatus}}</td>     
+      <td>{{obj.estatus}}</td>
       <td>
-        <a href="/editarPuestos/{{obj.idPuesto}}" class="btn" role="button">
-          <img              
-            src="{{url_for('static',filename='images/editar.png')}}" height="100%", width="100%"
-          />
-        </a>
-      </td> 
+        <a href="/editarPuestos/{{obj.idPuesto}}" class="btn btn-success" role="button">editar</a>
+      </td>   
       <td>
-        <a class="btn" role="button" data-toggle="modal" data-target="#eliminar{{obj.idPuesto}}">       
-          <img             
-            src="{{url_for('static',filename='images/eliminar.png') }}" height="100%", width="100%"
-          />       
-        </a>  
-      </td>         
+        <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idPuesto}}">eliminar</a>
+      </td>               
     </tr>
     <div id="eliminar{{obj.idPuesto}}" class="modal fade" role="dialog">
       <div class="modal-dialog">   

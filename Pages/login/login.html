@@ -1,6 +1,6 @@
 {% extends 'componentes/menu.html' %} {% block contenedor%}
-<body class="fondo">
-  <header class="encabezado txt-encabezado">AGROQUIMICA</header>
+<body>
+
   {% if get_flashed_messages()%}
         {% for m in get_flashed_messages()%}
         <div class="alert alert-danger alert-dismissible alertas-txt">
@@ -9,25 +9,37 @@
         </div>
         {% endfor %}
   {% endif %}
-  <form class="form slot-center" action="//login" method="post">
-    <div>
-      <img class="icon-xg" src="{{url_for('static',filename='images/login.png')}}" />
+
+  <div class="titulo">
+    <p>Inicio de sesión </p>
+  </div>
+
+<div class="login">
+  <form action="/">
+    <div class="form-group">
+      <img src="{{url_for('static',filename='images/login.png')}}" height="45%" width="45%"/>
     </div>
-    <div class="padding">
-      <input type="text" name="email" id="" placeholder="Usuario" required />
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input type="text" class="form-control input-lg" name="email" id="" placeholder="Usuario" required />
+      </div>      
     </div>
-    <div class="padding">
-      <input type="password" name="password" id="" placeholder="Password" required />
+    <div class="form-group">
+      <div class="input-group">        
+        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+        <input type="password" class="form-control input-lg" name="password" id="" placeholder="Password" required />
+      </div>      
     </div>
-    <div>
-      <button type="submit">Iniciar sesión</button>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Iniciar sesión</button>
     </div>
-    <div>
-      <a href="/inicio">
-        <button class="color-danger" type="button">Cancelar</button>
-      </a>
-    </div>
-    <a style="font-size: medium" href="//login">¿Cliente nuevo? registrate</a>
+    <div class="form-group">
+      <a href="/" class="btn btn-danger btn-block btn-lg" role="button">Cancelar</a>
+    </div>    
   </form>
+</div>
+  
+
 </body>
 {% endblock%}
