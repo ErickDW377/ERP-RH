@@ -3,7 +3,7 @@ from enum import unique
 from sqlalchemy.sql.expression import column
 from sqlalchemy.sql.sqltypes import VARCHAR
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column,Integer,String,Date,Float,ForeignKey,Boolean
+from sqlalchemy import TIMESTAMP, Column,Integer,String,Date,Float,ForeignKey,Boolean
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 
@@ -36,6 +36,35 @@ class Puestos(db.Model):
         objeto=self.consultar(id)
         db.session.delete(objeto)
         db.session.commit()
+        
+      #Turnos  
+class Turnos(db.Model):
+    __tablename__= 'RH_Turnos'
+    idTurno = Column(Integer, primary_key=True)
+    nombre = Column(String(20))
+    horaInicio = Column(TIMESTAMP)
+    horaFin = Column(TIMESTAMP)
+    dias = Column(String(30))
+    
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        db.session.delete(objeto)
+        db.session.commit()
+
   #Sucursales      
         
 class Sucursales(db.Model):

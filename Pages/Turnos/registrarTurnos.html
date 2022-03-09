@@ -1,0 +1,33 @@
+{% extends 'componentes/menu.html' %}
+{%block encabezado%}
+<div class="encabezado txt-encabezado">
+    <label class="margenes-I">ERP</label>        
+</div>
+{%endblock%}
+{%block cuerpo%}
+
+
+    <div class="container">   
+    <form action="/registrarT" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label > Nombre</label>
+      <input type="text" class="form-control" name="nombreTurno">
+    </div>
+    <div class="form-group">
+      <label>HoraInicio</label>
+      <input type="text" class="form-control" name="horaInicioT">
+    </div>
+    <div class="form-group">
+        <label>HoraFin</label>
+        <input type="text" class="form-control" name="horaFinT">
+      </div>
+
+      <div class="form-group">
+        <label>Dias</label>
+        <input type="text" class="form-control" name ="diasT">
+      </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+  </div>
+{%endblock%}

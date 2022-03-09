@@ -1,0 +1,38 @@
+{% extends 'componentes/menu.html' %}
+{%block encabezado%}
+<div class="encabezado txt-encabezado">
+    <label class="margenes-I">ERP</label>        
+</div>
+{%endblock%}
+{%block cuerpo%}
+<div class="container"> 
+  <table class="table">
+    <thead class="slot-center">
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Horario inicio</th>
+      <th>Horario fin</th>
+      <th>Dias</th> 
+      <th></th>      
+      <th></th>    
+    </thead>
+
+    {%for obj in turnos%} 
+    <tr>
+      <td>{{obj.idTurno}}</td>
+      <td>{{obj.nombre}}</td>
+      <td>{{obj.horaInicio}}</td>
+      <td>{{obj.horaFin}}</td>
+      <td>{{obj.dias}}</td> 
+      <td>
+        <a href="/editarTurnos" class="btn btn-success" role="button">editar</a>
+      </td>   
+      <td>
+        <a href="" class="btn btn-danger" role="button">eliminar</a>
+      </td>           
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+{%endblock%}

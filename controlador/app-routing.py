@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Sucursales 
+from DAO import db, Puestos,Sucursales,Turnos
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
 
@@ -85,6 +85,28 @@ def eliminarP(id):
     puesto.eliminar(id)
     flash('Puesto eliminado con exito')
     return  redirect(url_for('puestos'))
+#Turnos
+@app.route('/turnos')
+def turnos():
+    t=Turnos()
+    turnos = t.consultarAll()   
+    return  render_template('Turnos/turnos.html', turnos = turnos)
+
+@app.route('/registrarTurnos')
+def turnosR():
+    return  render_template('Turnos/registrarTurnos.html')
+
+@app.route('/registrarT',methods=['post']
+           )
+def registrarT():
+    r=Turnos()
+    r.nombre= request.form['nombreTurno']
+    r.horaInicio=request.form['horaInicioT']                  
+    r.horaFin=request.form['horaFinT']                 
+    r.dias= request.form['diasT']
+    r.registrar()
+    
+    return  render_template('Turnos/registrarTurnos.html')
 
 # Enrutamiento sucursales
 @app.route('/sucursales')
