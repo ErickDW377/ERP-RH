@@ -5,9 +5,23 @@
 </div>
 {%endblock%}
 {%block cuerpo%}
-<div class="container"> 
-  <table class="table">
-    <thead class="slot-center">
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Catálogo Turnos</p>
+</div>
+
+<div class="tabla"> 
+  <table class="table table-hover">
+    <thead>
       <th>ID</th>
       <th>Nombre</th>
       <th>Horario inicio</th>
@@ -25,12 +39,36 @@
       <td>{{obj.horaFin}}</td>
       <td>{{obj.dias}}</td> 
       <td>
-        <a href="/editarTurnos" class="btn btn-success" role="button">editar</a>
+        <a href="/editarTurnos/{{obj.idTurno}}" class="btn btn-success" role="button">editar</a>
       </td>   
       <td>
-        <a href="" class="btn btn-danger" role="button">eliminar</a>
+        <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idTurno}}">eliminar </a>
       </td>           
     </tr>
+    <div id="eliminar{{obj.idTurno}}" class="modal fade" role="dialog">
+      <div class="modal-dialog">   
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h4 class="modal-title">Confirmacion de proceso</h4>
+          </div>
+          <div class="modal-body">
+            <p>¿Estas seguro de eliminar el puesto: {{obj.nombre}} ?</p>
+          </div>
+          <div class="modal-footer">
+            <a href="/eliminarT/{{obj.idTurno}}" class="btn btn-info"
+              >Aceptar</a
+            >
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     {% endfor %}
 </table>
 </div>
