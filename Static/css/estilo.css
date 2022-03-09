@@ -33,4 +33,10 @@ th{
     font-size: 50px;
     text-align: center;
     font-weight: bolder;
+    color: rgb(0, 128, 0) !important;
+}
+
+a{
+    color: rgb(0, 128, 0) !important;
+    font-weight: bolder;
 }

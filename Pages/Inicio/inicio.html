@@ -1,22 +1,10 @@
 {% extends 'componentes/menu.html' %}
-{%block encabezado%}
-<body> 
-    <img src="{{url_for('static',filename='images/logo.png')}}" height="5%", width="5%"
-            /> 
-    <div class="encabezado">        
-        AGROQIMICA EEYV
-    </div> 
-    <div class="encabezadoModulo">
-        Modulo:        
-            Recursos Humanos       
-    </div>
-</body>
-{%endblock%}
 {%block cuerpo%}
-<div  align="center">
+<div class="container">
     
-    <img src="{{url_for('static',filename='images/10.jpeg')}}" height="", width="1600px"
+    <img src="{{url_for('static',filename='images/10.jpeg')}}" height="100%", width="100%"
     />
-   </div>
+
+</div>
 
 {%endblock%}
