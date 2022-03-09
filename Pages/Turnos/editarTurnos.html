@@ -1,0 +1,39 @@
+{% extends 'componentes/menu.html' %}
+{%block encabezado%}
+<div class="encabezado txt-encabezado">
+    <label class="margenes-I">ERP</label>        
+</div>
+{%endblock%}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="contenedor-formulario">
+  <form action="/editarT/{{turno.idTurno}}" method="post" enctype="multipart/form-data">   
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" class="form-control" name="nombreTurno" value="{{turno.nombre}}">
+    </div>
+    <div class="form-group">
+      <label>Hora Incio</label>
+      <input type="text" class="form-control" name="horaInicioT" value="{{turno.horaInicio}}">
+    </div> 
+    <div class="form-group">
+      <label>Hora Fin</label>
+      <input type="text" class="form-control" name="horaFinT" value="{{turno.horaFin}}">
+    </div> 
+    <div class="form-group">
+        <label>Dias</label>
+        <input type="text" class="form-control" name ="diasT" value="{{turno.dias}}">
+      </div>
+    <button type="submit" class="btn btn-default">Modificar</button>
+  </form>
+</div>
+{%endblock%}

@@ -5,20 +5,31 @@
 </div>
 {%endblock%}
 {%block cuerpo%}
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
 
+<div class="titulo">
+  <p>Registro de turno </p>
+</div>
 
-    <div class="container">   
+    <div class="contenedor-formulario">   
     <form action="/registrarT" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label > Nombre</label>
       <input type="text" class="form-control" name="nombreTurno">
     </div>
     <div class="form-group">
-      <label>HoraInicio</label>
+      <label>Hora Inicio</label>
       <input type="text" class="form-control" name="horaInicioT">
     </div>
     <div class="form-group">
-        <label>HoraFin</label>
+        <label>Hora Fin</label>
         <input type="text" class="form-control" name="horaFinT">
       </div>
 
@@ -27,7 +38,7 @@
         <input type="text" class="form-control" name ="diasT">
       </div>
 
-    <button type="submit" class="btn btn-default">Submit</button>
+    <button type="submit" class="btn btn-default">Resgistrar</button>
   </form>
   </div>
 {%endblock%}

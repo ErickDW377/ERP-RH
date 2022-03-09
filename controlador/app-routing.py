@@ -32,7 +32,7 @@ def inicio():
 def login():    
     return  render_template('login/login.html')
 
-
+#Puestos
 @app.route('/puestos')
 def puestos():
     p=Puestos()     
@@ -85,28 +85,53 @@ def eliminarP(id):
     puesto.eliminar(id)
     flash('Puesto eliminado con exito')
     return  redirect(url_for('puestos'))
-#Turnos
+#Turnos-----------------------------------------------------
 @app.route('/turnos')
 def turnos():
-    t=Turnos()
-    turnos = t.consultarAll()   
-    return  render_template('Turnos/turnos.html', turnos = turnos)
+    t=Turnos() 
+    return  render_template('Turnos/turnos.html', turnos = t.consultarAll())
 
 @app.route('/registrarTurnos')
 def turnosR():
     return  render_template('Turnos/registrarTurnos.html')
 
-@app.route('/registrarT',methods=['post']
-           )
+@app.route('/editarTurnos/<int:id>')
+def turnosE(id):  
+    turno =  Turnos()
+    turno = turno.consultar(id)
+    return  render_template('Turnos/editarTurnos.html', turno = turno)
+
+@app.route('/registrarT',methods=['post'])
 def registrarT():
-    r=Turnos()
-    r.nombre= request.form['nombreTurno']
-    r.horaInicio=request.form['horaInicioT']                  
-    r.horaFin=request.form['horaFinT']                 
-    r.dias= request.form['diasT']
-    r.registrar()
+    turno=Turnos()
+    turno.nombre= request.form['nombreTurno']
+    turno.horaInicio=request.form['horaInicioT']                  
+    turno.horaFin=request.form['horaFinT']                 
+    turno.dias= request.form['diasT']
+    turno.registrar()
+    flash('Turno registrado con exito')
+    return  redirect(url_for('turnosR'))
+
+@app.route('/editarT/<int:id>',methods=['post'])
+def editarT(id):  
+    turno = Turnos()
+    turno.nombre= request.form['nombreTurno']
+    turno.horaInicio=request.form['horaInicioT']                  
+    turno.horaFin=request.form['horaFinT']                 
+    turno.dias= request.form['diasT']  
+    turno.idTurno= id
+    turno.actualizar()
+    flash('Puesto actualizado con exito')
+    return  redirect(url_for('turnosE', id= turno.idTurno))
+
+@app.route('/eliminarT/<int:id>')
+def eliminarT(id): 
+    turno = Turnos()
+    turno.eliminar(id)
+    flash('Turno eliminado con exito')
+    return  redirect(url_for('turnos'))
     
-    return  render_template('Turnos/registrarTurnos.html')
+   
 
 # Enrutamiento sucursales
 @app.route('/sucursales')
