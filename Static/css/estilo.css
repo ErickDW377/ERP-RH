@@ -8,6 +8,7 @@
 
 th{
     text-align: center !important;
+    color: green !important;
 }
 
 .contenedor-formulario{
@@ -40,4 +41,13 @@ th{
 nav a {
     color: rgb(0, 128, 0) !important;
     font-weight: bolder;
+}
+
+.titulo{
+    width: 90%;
+    margin: auto;    
+    font-size: 50px;
+    text-align: center;  
+    font-weight: bolder;
+    
 }
