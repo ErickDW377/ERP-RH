@@ -3,9 +3,10 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Sucursales,Turnos
+from DAO import db, Puestos,Sucursales,Turnos,Empleados
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
+
 
 app=Flask(__name__,template_folder='../Pages',static_folder='../Static')
 Bootstrap(app)
@@ -14,10 +15,10 @@ app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:Hola.123@127.0.0.1/r
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 app.secret_key='cl4v3'
 
-#login_manager=LoginManager()
-#login_manager.init_app(app)
-#login_manager.login_view = "login"
-#login_manager.login_message = u"! Debes iniciar sesión !"
+login_manager=LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+login_manager.login_message = u"! Debes iniciar sesión !"
 
 @app.route('/')
 def iniciar():    
@@ -32,104 +33,176 @@ def inicio():
 def login():    
     return  render_template('login/login.html')
 
+@app.route('/iniciarSesion',methods=['post'])
+def validarUsuario():
+    user=Empleados()
+    email=request.form['email']
+    password=request.form['password']
+    user=user.validar(email,password)
+    if user!=None:
+        login_user(user)
+        return redirect(url_for('inicio'))
+    else:
+        flash('!Datos de la sesión incorrectos!')
+        return redirect(url_for('login'))
+
+@app.route('/cerrarSesion')
+@login_required
+def cerrarSesion():
+    logout_user()
+    return redirect(url_for('inicio'))
+
+@login_manager.user_loader
+def load_user(id):
+    return Empleados.query.get(int(id))
+
 #Puestos
 @app.route('/puestos')
+@login_required
 def puestos():
-    p=Puestos()     
-    return  render_template('Puestos/puestos.html', puestos =p.consultarAll()  )
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        p=Puestos()     
+        return  render_template('Puestos/puestos.html', puestos =p.consultarAll()  )
+    else:
+        abort(404)
 
 @app.route('/registrarPuestos')
-def puestosR():  
-    return  render_template('Puestos/registrarPuestos.html')
+@login_required
+def puestosR():
+    if current_user.is_authenticated() and current_user.is_admin():  
+        return  render_template('Puestos/registrarPuestos.html')
+    else:
+        abort(404)
 
 @app.route('/editarPuestos/<int:id>')
-def puestosE(id):  
-    puesto =  Puestos()
-    puesto = puesto.consultar(id)
-    return  render_template('Puestos/editarPuestos.html', puesto = puesto)
+@login_required
+def puestosE(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        puesto =  Puestos()
+        puesto = puesto.consultar(id)
+        return  render_template('Puestos/editarPuestos.html', puesto = puesto)
+    else:
+        abort(404)
 
 @app.route('/registrarP',methods=['post'])
-def registarP():  
-    puesto = Puestos()
-    puesto.nombre = request.form['nombrePuesto']
-    puesto.salarioMinimo = request.form['salarioMinimo']
-    puesto.salarioMaximo = request.form['salarioMaximo']
-    estatus = request.values.get('estatus',False)
-    if estatus=="True":
-        puesto.estatus=True
+@login_required
+def registarP(): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        puesto = Puestos()
+        puesto.nombre = request.form['nombrePuesto']
+        puesto.salarioMinimo = request.form['salarioMinimo']
+        puesto.salarioMaximo = request.form['salarioMaximo']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            puesto.estatus=True
+        else:
+            puesto.estatus=False 
+        puesto.registrar()
+        flash('Puesto registrado con exito')
+        return  redirect(url_for('puestosR'))
     else:
-        puesto.estatus=False 
-    puesto.registrar()
-    flash('Puesto registrado con exito')
-    return  redirect(url_for('puestosR'))
+        abort(404)
 
 @app.route('/editarP/<int:id>',methods=['post'])
-def editarP(id):  
-    puesto = Puestos()
-    puesto.nombre = request.form['nombrePuesto']
-    puesto.salarioMinimo = request.form['salarioMinimo']
-    puesto.salarioMaximo = request.form['salarioMaximo']
-    estatus = request.values.get('estatus',False)
-    if estatus=="True":
-        puesto.estatus=True
+@login_required
+def editarP(id): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        puesto = Puestos()
+        puesto.nombre = request.form['nombrePuesto']
+        puesto.salarioMinimo = request.form['salarioMinimo']
+        puesto.salarioMaximo = request.form['salarioMaximo']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            puesto.estatus=True
+        else:
+            puesto.estatus=False  
+        puesto.idPuesto = id
+        puesto.actualizar()
+        flash('Puesto actualizado con exito')
+        return  redirect(url_for('puestosE', id= puesto.idPuesto))
     else:
-        puesto.estatus=False  
-    puesto.idPuesto = id
-    puesto.actualizar()
-    flash('Puesto actualizado con exito')
-    return  redirect(url_for('puestosE', id= puesto.idPuesto))
+        abort(404)
 
 @app.route('/eliminarP/<int:id>')
-def eliminarP(id): 
-    puesto = Puestos()
-    puesto.eliminar(id)
-    flash('Puesto eliminado con exito')
-    return  redirect(url_for('puestos'))
+@login_required
+def eliminarP(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        puesto = Puestos()
+        puesto.eliminar(id)
+        flash('Puesto eliminado con exito')
+        return  redirect(url_for('puestos'))
+    else:
+        abort(404)
+
 #Turnos-----------------------------------------------------
 @app.route('/turnos')
+@login_required
 def turnos():
-    t=Turnos() 
-    return  render_template('Turnos/turnos.html', turnos = t.consultarAll())
+    if current_user.is_authenticated() and current_user.is_admin():
+        t=Turnos() 
+        return  render_template('Turnos/turnos.html', turnos = t.consultarAll())
+    else:
+        abort(404)
 
 @app.route('/registrarTurnos')
+@login_required
 def turnosR():
-    return  render_template('Turnos/registrarTurnos.html')
+    if current_user.is_authenticated() and current_user.is_admin():
+        return  render_template('Turnos/registrarTurnos.html')
+    else:
+        abort(404)
 
 @app.route('/editarTurnos/<int:id>')
-def turnosE(id):  
-    turno =  Turnos()
-    turno = turno.consultar(id)
-    return  render_template('Turnos/editarTurnos.html', turno = turno)
+@login_required
+def turnosE(id):
+    if current_user.is_authenticated() and current_user.is_admin():
+        turno =  Turnos()
+        turno = turno.consultar(id)
+        return  render_template('Turnos/editarTurnos.html', turno = turno)
+    else:
+        abort(404)
 
 @app.route('/registrarT',methods=['post'])
+@login_required
 def registrarT():
-    turno=Turnos()
-    turno.nombre= request.form['nombreTurno']
-    turno.horaInicio=request.form['horaInicioT']                  
-    turno.horaFin=request.form['horaFinT']                 
-    turno.dias= request.form['diasT']
-    turno.registrar()
-    flash('Turno registrado con exito')
-    return  redirect(url_for('turnosR'))
+    if current_user.is_authenticated() and current_user.is_admin():
+        turno=Turnos()
+        turno.nombre= request.form['nombreTurno']
+        turno.horaInicio=request.form['horaInicioT']                  
+        turno.horaFin=request.form['horaFinT']                 
+        turno.dias= request.form['diasT']
+        turno.registrar()
+        flash('Turno registrado con exito')
+        return  redirect(url_for('turnosR'))
+    else:
+        abort(404)
 
 @app.route('/editarT/<int:id>',methods=['post'])
-def editarT(id):  
-    turno = Turnos()
-    turno.nombre= request.form['nombreTurno']
-    turno.horaInicio=request.form['horaInicioT']                  
-    turno.horaFin=request.form['horaFinT']                 
-    turno.dias= request.form['diasT']  
-    turno.idTurno= id
-    turno.actualizar()
-    flash('Puesto actualizado con exito')
-    return  redirect(url_for('turnosE', id= turno.idTurno))
+@login_required
+def editarT(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        turno = Turnos()
+        turno.nombre= request.form['nombreTurno']
+        turno.horaInicio=request.form['horaInicioT']                  
+        turno.horaFin=request.form['horaFinT']                 
+        turno.dias= request.form['diasT']  
+        turno.idTurno= id
+        turno.actualizar()
+        flash('Puesto actualizado con exito')
+        return  redirect(url_for('turnosE', id= turno.idTurno))
+    else:
+        abort(404)
 
 @app.route('/eliminarT/<int:id>')
-def eliminarT(id): 
-    turno = Turnos()
-    turno.eliminar(id)
-    flash('Turno eliminado con exito')
-    return  redirect(url_for('turnos'))
+@login_required
+def eliminarT(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        turno = Turnos()
+        turno.eliminar(id)
+        flash('Turno eliminado con exito')
+        return  redirect(url_for('turnos'))
+    else:
+        abort(404)
     
    
 

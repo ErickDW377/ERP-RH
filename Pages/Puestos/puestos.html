@@ -34,10 +34,16 @@
       <td>{{obj.salarioMaximo}}</td>
       <td>{{obj.estatus}}</td>
       <td>
-        <a href="/editarPuestos/{{obj.idPuesto}}" class="btn btn-success" role="button">editar</a>
+        <a href="/editarPuestos/{{obj.idPuesto}}" class="btn btn-success" role="button">
+          <span class="glyphicon glyphicon-pencil"></span>
+          Editar
+        </a>
       </td>   
       <td>
-        <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idPuesto}}">eliminar</a>
+        <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idPuesto}}">
+          <span class="glyphicon glyphicon-trash"></span>
+          Eliminar
+        </a>
       </td>               
     </tr>
     <div id="eliminar{{obj.idPuesto}}" class="modal fade" role="dialog">

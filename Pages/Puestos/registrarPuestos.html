@@ -18,21 +18,25 @@
   <form action="/registrarP" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label>Nombre:</label>
-      <input type="text" class="form-control input-lg" name="nombrePuesto">
+      <input type="text" class="form-control " name="nombrePuesto">
     </div>
     <div class="form-group">
       <label>Salario Mínimo:</label>
-      <input type="number" class="form-control input-lg" name="salarioMinimo">
+      <input type="number" class="form-control " name="salarioMinimo">
     </div> 
     <div class="form-group">
       <label>Salario Máximo:</label>
-      <input type="number" class="form-control input-lg" name="salarioMaximo">
+      <input type="number" class="form-control " name="salarioMaximo">
     </div> 
     <div class="form-group">
-      <input type="checkbox" name="estatus" value="True" class="form-control input-lg">
-      <label> Estatus </label>
+      <label>Estatus:</label>
+      <input type="checkbox" class="form-control " name="estatus" value="True" >     
     </div>    
-    <button type="submit" class="btn btn-default">Registrar</button>
+    <button type="submit" class="btn btn-primary btn-block">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/" class="btn btn-danger btn-block" role="button">Cancelar</a>
   </form>
 </div>
 

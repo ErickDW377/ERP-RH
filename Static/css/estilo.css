@@ -13,7 +13,8 @@ th{
 
 .contenedor-formulario{
     width: 40%;
-    margin: auto;    
+    margin: auto;
+    margin-bottom: 50px;    
     background-color: rgba(189, 189, 189, 0.438);
     border-radius: 10px;  
     padding: 40px; 
@@ -22,10 +23,11 @@ th{
 
 .encabezadoModulo{
     font-size: 100%;        
-    font-family: monospace;
-    background: black;
+    font-family: monospace !important;
+    background: rgba(0, 0, 0, 0.911);
     color: white;    
-    padding: 10px;
+    padding: 5px;
+    padding-right: 30px;
     text-align: right;
 }
 
@@ -61,3 +63,12 @@ nav a {
     border-radius: 10px; 
     padding: 40px;
 }
+
+.date{
+    font-size: 100%;        
+    font-family: monospace !important;     
+    padding: 5px;
+    padding-right: 30px;
+    text-align: right;
+}
+
