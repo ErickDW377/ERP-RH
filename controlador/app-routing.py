@@ -94,9 +94,9 @@ def registarP():
         puesto.salarioMaximo = request.form['salarioMaximo']
         estatus = request.values.get('estatus',False)
         if estatus=="True":
-            puesto.estatus=True
+            puesto.estatus='A'
         else:
-            puesto.estatus=False 
+            puesto.estatus='I' 
         puesto.registrar()
         flash('Puesto registrado con exito')
         return  redirect(url_for('puestosR'))
@@ -113,9 +113,9 @@ def editarP(id):
         puesto.salarioMaximo = request.form['salarioMaximo']
         estatus = request.values.get('estatus',False)
         if estatus=="True":
-            puesto.estatus=True
+            puesto.estatus='A'
         else:
-            puesto.estatus=False  
+            puesto.estatus='I'  
         puesto.idPuesto = id
         puesto.actualizar()
         flash('Puesto actualizado con exito')
