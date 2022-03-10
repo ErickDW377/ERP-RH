@@ -1,5 +1,5 @@
-create database RecuHum;
-use  recuhum;
+create database RH_ERP;
+use  RH_ERP;
 
 create table RH_Deducciones(
 idDeduccion int auto_increment,
@@ -14,21 +14,23 @@ nombre varchar(50),
 fechaInicio date,
 fechaFin date,
 estatus char,
-primary key(idPeriodo)
+primary key(idPeriodo),
+check(fechaInicio<fechaFin)
 );
 create table RH_FormasPago(
 idFormaPago int auto_increment,
-nombre varchar(50),
+nombre varchar(50) unique,
 estatus char,
 primary key(idFormaPago)
 );
 create table RH_Puestos(
 idPuesto int auto_increment,
-nombre varchar(60),
+nombre varchar(60) unique,
 salarioMinimo float,
 salarioMaximo float,
 estatus char,
-primary key (idPuesto)
+primary key (idPuesto),
+check(salarioMinimo<salarioMaximo)
 );
 
 create table RH_Percepciones(
@@ -50,14 +52,14 @@ primary key(idTurno)
 
 create table RH_Departamentos(
 idDepartamento int auto_increment,
-nombre varchar(20),
+nombre varchar(20) unique,
 estatus char,
 primary key (idDepartamento)
 );
 create table RH_Estados(
 idEstado int auto_increment,
-nombre varchar(60),
-siglas varchar(10),
+nombre varchar(60) unique,
+siglas varchar(10) unique,
 estatus char,
 primary key (idEstado)
 );
@@ -67,20 +69,22 @@ nombre varchar(80),
 idEstado int,
 estatus char,
 primary key (idCiudad),
-foreign key (idEstado) references RH_Estados (idEstado)
+foreign key (idEstado) references RH_Estados (idEstado),
+unique(nombre, idEstado)
 );
 create table RH_Sucursales(
  idSucursal int auto_increment,
  nombre varchar(50),
- telefono varchar(15),
- direccion varchar(80),
+ telefono varchar(15) unique,
+ direccion varchar(80) unique,
  colonia varchar(50),
  codigoPostal varchar(5),
  presupuesto float,
  estatus char,
  idCiudad int,
  Primary key(idSucursal),
- Foreign key (idCiudad) references RH_CIUDADES(idCiudad)
+ Foreign key (idCiudad) references RH_CIUDADES(idCiudad),
+ check(codigoPostal like '#####')
 );
 
 create table RH_Empleados(
@@ -90,11 +94,11 @@ apellidoPaterno varchar(30),
 apellidoMaterno varchar(30),
 sexo char,
 fechaNacimiento date,
-curp varchar(20),
+curp varchar(20) unique,
 estadoCivil varchar(20),
 fechaContratacion date,
 salarioDiario float,
-nss varchar(20),
+nss varchar(20) unique,
 diasVacaciones int,
 diasPermiso int,
 fotografia blob,
@@ -102,7 +106,7 @@ direccion varchar(20),
 colonia varchar(50),
 codigoPostal  varchar(5),
 escolaridad  varchar(80),
-email  varchar(100),
+email  varchar(100) unique,
 paassword  varchar(20),
 tipo  varchar(10),
 estatus char,
@@ -116,7 +120,11 @@ foreign key (idCiudad) references RH_Ciudades(idCiudad),
 foreign key (idPuesto) references RH_Puestos(idPuesto),
 foreign key (idDepartamento) references RH_Departamentos(idDepartamento),
 foreign key (idTurno) references RH_Turnos(idTurno),
-foreign key (idSucursal) references RH_Sucursales(idSucursal)
+foreign key (idSucursal) references RH_Sucursales(idSucursal),
+unique(nombre, apellidoPaterno,apellidoMaterno),
+check(sexo in ('M','F')),
+check(codigoPostal like '#####'),
+check(tipo in ('Admin','Staff','Empleado'))
 );
 create table RH_Asistencias(
 idAsistencia int auto_increment,
@@ -126,7 +134,8 @@ horaSalida date,
 dia varchar(20),
 idEmpleado int,
 primary key (idAsistencia),
-foreign key (idEmpleado) references RH_Empleados (idEmpleado)
+foreign key (idEmpleado) references RH_Empleados (idEmpleado),
+unique(idEmpleado, fecha)
 );
 create table RH_Ausencias_Justificadas(
 idAusencia int auto_increment,
@@ -193,7 +202,7 @@ foreign key (idDeduccion) references RH_Deducciones(idDeduccion)
 
 create table RH_NominasPercepciones(
 idNomina int,
-idPercepcion int auto_increment,
+idPercepcion int,
 importe float,
 primary key (idPercepcion,idNomina),
 foreign key (idNomina) references RH_Nominas(idNomina),
