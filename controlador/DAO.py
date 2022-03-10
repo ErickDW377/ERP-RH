@@ -36,6 +36,11 @@ class Puestos(db.Model):
         objeto=self.consultar(id)
         db.session.delete(objeto)
         db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = self.query.order_by(Puestos.idPuesto.asc()).paginate(pagina,per_page= 10, error_out=False)
+        return obj
+    
         
       #Turnos  
 class Turnos(db.Model):

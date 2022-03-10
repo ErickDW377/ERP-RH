@@ -89,8 +89,7 @@ create table RH_Sucursales(
  estatus char,
  idCiudad int,
  Primary key(idSucursal),
- Foreign key (idCiudad) references RH_CIUDADES(idCiudad),
- check(codigoPostal like '#####'),
+ Foreign key (idCiudad) references RH_Ciudades (idCiudad), 
  check(estatus in ('A','I'))
 );
 
@@ -130,7 +129,6 @@ foreign key (idTurno) references RH_Turnos(idTurno),
 foreign key (idSucursal) references RH_Sucursales(idSucursal),
 unique(nombre, apellidoPaterno,apellidoMaterno),
 check(sexo in ('M','F')),
-check(codigoPostal like '#####'),
 check(tipo in ('Admin','Staff','Empleado')),
 check(estatus in ('A','I'))
 );
@@ -219,6 +217,12 @@ foreign key (idNomina) references RH_Nominas(idNomina),
 foreign key (idPercepcion) references RH_Percepciones (idPercepcion)
 );
 
+INSERT INTO `rh_erp`.`RH_Puestos` (`nombre`, `salarioMinimo`, `salarioMaximo`, `estatus`) VALUES ('Administrador de BD', '20000', '30000', 'A');
+INSERT INTO `rh_erp`.`RH_Departamentos` (`nombre`, `estatus`) VALUES ('Base de Datos', 'A');
+INSERT INTO `rh_erp`.`RH_Estados` (`nombre`, `siglas`, `estatus`) VALUES ('Michoacan', 'MICH', 'A');
+INSERT INTO `rh_erp`.`RH_Ciudades` (`nombre`, `idEstado`, `estatus`) VALUES ('Zamora', '1', 'A');
+INSERT INTO `rh_erp`.`RH_Sucursales` (`nombre`, `telefono`, `direccion`, `colonia`, `codigoPostal`, `presupuesto`, `estatus`, `idCiudad`) VALUES ('Sucursal Zamora', '3511695859', 'Juarez poniente 2257', 'Juarez', '59632', '100000', 'A', '1');
+INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`) VALUES ('Vespertino', '2000-01-01 08:00:01', '2000-01-01 16:00:01', '7 a la semana');
 
 
 
