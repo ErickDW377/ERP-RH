@@ -15,13 +15,15 @@ fechaInicio date,
 fechaFin date,
 estatus char,
 primary key(idPeriodo),
-check(fechaInicio<fechaFin)
+check(fechaInicio<fechaFin),
+check(estatus in ('A','I'))
 );
 create table RH_FormasPago(
 idFormaPago int auto_increment,
 nombre varchar(50) unique,
 estatus char,
-primary key(idFormaPago)
+primary key(idFormaPago),
+check(estatus in ('A','I'))
 );
 create table RH_Puestos(
 idPuesto int auto_increment,
@@ -30,7 +32,8 @@ salarioMinimo float,
 salarioMaximo float,
 estatus char,
 primary key (idPuesto),
-check(salarioMinimo<salarioMaximo)
+check(salarioMinimo<salarioMaximo),
+check(estatus in ('A','I'))
 );
 
 create table RH_Percepciones(
@@ -54,14 +57,16 @@ create table RH_Departamentos(
 idDepartamento int auto_increment,
 nombre varchar(20) unique,
 estatus char,
-primary key (idDepartamento)
+primary key (idDepartamento),
+check(estatus in ('A','I'))
 );
 create table RH_Estados(
 idEstado int auto_increment,
 nombre varchar(60) unique,
 siglas varchar(10) unique,
 estatus char,
-primary key (idEstado)
+primary key (idEstado),
+check(estatus in ('A','I'))
 );
 create table RH_Ciudades(
 idCiudad int auto_increment,
@@ -70,7 +75,8 @@ idEstado int,
 estatus char,
 primary key (idCiudad),
 foreign key (idEstado) references RH_Estados (idEstado),
-unique(nombre, idEstado)
+unique(nombre, idEstado),
+check(estatus in ('A','I'))
 );
 create table RH_Sucursales(
  idSucursal int auto_increment,
@@ -84,7 +90,8 @@ create table RH_Sucursales(
  idCiudad int,
  Primary key(idSucursal),
  Foreign key (idCiudad) references RH_CIUDADES(idCiudad),
- check(codigoPostal like '#####')
+ check(codigoPostal like '#####'),
+ check(estatus in ('A','I'))
 );
 
 create table RH_Empleados(
@@ -124,7 +131,8 @@ foreign key (idSucursal) references RH_Sucursales(idSucursal),
 unique(nombre, apellidoPaterno,apellidoMaterno),
 check(sexo in ('M','F')),
 check(codigoPostal like '#####'),
-check(tipo in ('Admin','Staff','Empleado'))
+check(tipo in ('Admin','Staff','Empleado')),
+check(estatus in ('A','I'))
 );
 create table RH_Asistencias(
 idAsistencia int auto_increment,
@@ -150,7 +158,8 @@ estatus char,
 motivo varchar(100),
 primary key (idAusencia),
 foreign key (idEmpleadoAutoriza) references RH_Empleados(idEmpleado),
-foreign key (idEmpleadoSolicita) references RH_Empleados(idEmpleado)
+foreign key (idEmpleadoSolicita) references RH_Empleados(idEmpleado),
+check(estatus in ('A','I'))
 );
 create table RH_HistorialPuesto(
 idEmpleado int auto_increment,
@@ -188,7 +197,8 @@ idPeriodo int,
 primary key (idNomina),
 foreign key (idFormaPago) references RH_FormasPago(idFormaPago),
 foreign key (idPeriodo) references RH_Periodos(idPeriodo),
-foreign key (idEmpleado) references RH_Empleados(idEmpleado)
+foreign key (idEmpleado) references RH_Empleados(idEmpleado),
+check(estatus in ('A','I'))
 );
 
 create table RH_NominasDeducciones(
