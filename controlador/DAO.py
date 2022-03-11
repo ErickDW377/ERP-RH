@@ -159,7 +159,7 @@ class Empleados(db.Model):
 
     def validar(self,email,passw):
         usuario=Empleados();
-        usuario=self.query.filter(Empleados.email==email,Empleados.paassword==passw).first()
+        usuario=self.query.filter(Empleados.email==email,Empleados.paassword==passw,Empleados.estatus=='A').first()
         return usuario
 
     def is_authenticated(self):

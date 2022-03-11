@@ -19,25 +19,25 @@
   <form action="/editarT/{{turno.idTurno}}" method="post" enctype="multipart/form-data">   
     <div class="form-group">
       <label>Nombre</label>
-      <input type="text" class="form-control" name="nombreTurno" value="{{turno.nombre}}">
+      <input type="text" class="form-control" name="nombreTurno" value="{{turno.nombre}}" required>
     </div>
     <div class="form-group">
       <label>Hora Incio</label>
-      <input type="text" class="form-control" name="horaInicioT" value="{{turno.horaInicio}}">
+      <input type="time" class="form-control" name="horaInicioT" value="{{turno.horaInicio.time()}}" required>
     </div> 
     <div class="form-group">
       <label>Hora Fin</label>
-      <input type="text" class="form-control" name="horaFinT" value="{{turno.horaFin}}">
+      <input type="time" class="form-control" name="horaFinT" value="{{turno.horaFin.time()}}" required>
     </div> 
     <div class="form-group">
         <label>Dias</label>
-        <input type="text" class="form-control" name ="diasT" value="{{turno.dias}}">
+        <input type="text" class="form-control" name ="diasT" value="{{turno.dias}}" required>
       </div>
     <button type="submit" class="btn btn-primary btn-block">
       <span class="glyphicon glyphicon-floppy-disk"></span>
       Modificar
     </button>
-    <a href="/" class="btn btn-danger btn-block" role="button">Cancelar</a>
+    <a href="/turnos" class="btn btn-danger btn-block" role="button">Cancelar</a>
   </form>
 </div>
 {%endblock%}

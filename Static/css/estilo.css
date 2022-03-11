@@ -71,6 +71,8 @@ nav a {
     padding: 5px;
     padding-right: 30px;
     text-align: right;
+    background-color: rgba(31, 102, 31, 0.658);
+    color: white;
 }
 
 .paginacion{
@@ -81,5 +83,11 @@ nav a {
 
 .amarillo{
     background-color: rgb(241, 241, 11);
+}
+
+.contenedor{
+    width: 90%;
+    margin: auto;
+    margin-bottom: 60px;
 }
 

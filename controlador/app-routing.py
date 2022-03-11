@@ -160,7 +160,7 @@ def turnosR():
 @login_required
 def turnosE(id):
     if current_user.is_authenticated() and current_user.is_admin():
-        turno =  Turnos()
+        turno =  Turnos()        
         turno = turno.consultar(id)
         return  render_template('Turnos/editarTurnos.html', turno = turno)
     else:
@@ -172,8 +172,8 @@ def registrarT():
     if current_user.is_authenticated() and current_user.is_admin():
         turno=Turnos()
         turno.nombre= request.form['nombreTurno']
-        turno.horaInicio=request.form['horaInicioT']                  
-        turno.horaFin=request.form['horaFinT']                 
+        turno.horaInicio= "2000-01-01 " + request.form['horaInicioT']                  
+        turno.horaFin= "2000-01-01 " +  request.form['horaFinT']                 
         turno.dias= request.form['diasT']
         turno.registrar()
         flash('Turno registrado con exito')
@@ -187,8 +187,8 @@ def editarT(id):
     if current_user.is_authenticated() and current_user.is_admin():  
         turno = Turnos()
         turno.nombre= request.form['nombreTurno']
-        turno.horaInicio=request.form['horaInicioT']                  
-        turno.horaFin=request.form['horaFinT']                 
+        turno.horaInicio="2000-01-01 " + request.form['horaInicioT']                  
+        turno.horaFin="2000-01-01 " + request.form['horaFinT']                 
         turno.dias= request.form['diasT']  
         turno.idTurno= id
         turno.actualizar()

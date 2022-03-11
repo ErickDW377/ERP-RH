@@ -43,8 +43,8 @@
     <tr>
       <td>{{obj.idTurno}}</td>
       <td>{{obj.nombre}}</td>
-      <td>{{obj.horaInicio}}</td>
-      <td>{{obj.horaFin}}</td>
+      <td>{{obj.horaInicio.time()}}</td>
+      <td>{{obj.horaFin.time()}}</td>
       <td>{{obj.dias}}</td> 
       <td>
         <a href="/editarTurnos/{{obj.idTurno}}" class="btn btn-success" role="button">
