@@ -1,4 +1,5 @@
 {% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion.html' as macros %}
 {%block cuerpo%}
 
 {% if get_flashed_messages()%}
@@ -14,6 +15,12 @@
   <p>Catálogo Puestos</p>
 </div>
 
+<div class="container input-group">
+  <span class="input-group-addon amarillo"><i class="glyphicon glyphicon-search"></i></span>
+  <input class="form-control" id="myInput" type="text" placeholder="Search...">
+  <br>
+</div>
+
 <div class="tabla">
 <table class="table table-hover">
     <thead>
@@ -25,52 +32,59 @@
       <th></th>  
       <th></th>       
     </thead>
+    <tbody id="myTable">  
+      {%for obj in puestos%}      
+      <tr>
+        <td>{{obj.idPuesto}}</td>
+        <td>{{obj.nombre}}</td>
+        <td>{{obj.salarioMinimo}}</td>
+        <td>{{obj.salarioMaximo}}</td>
+        <td>{{obj.estatus}}</td>
+        <td>
+          <a href="/editarPuestos/{{obj.idPuesto}}" class="btn btn-success" role="button">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Editar
+          </a>
+        </td>   
+        <td>
+          <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idPuesto}}">
+            <span class="glyphicon glyphicon-trash"></span>
+            Eliminar
+          </a>
+        </td>               
+      </tr>    
+        <div id="eliminar{{obj.idPuesto}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">   
 
-    {%for obj in puestos%} 
-    <tr>
-      <td>{{obj.idPuesto}}</td>
-      <td>{{obj.nombre}}</td>
-      <td>{{obj.salarioMinimo}}</td>
-      <td>{{obj.salarioMaximo}}</td>
-      <td>{{obj.estatus}}</td>
-      <td>
-        <a href="/editarPuestos/{{obj.idPuesto}}" class="btn btn-success" role="button">
-          <span class="glyphicon glyphicon-pencil"></span>
-          Editar
-        </a>
-      </td>   
-      <td>
-        <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idPuesto}}">
-          <span class="glyphicon glyphicon-trash"></span>
-          Eliminar
-        </a>
-      </td>               
-    </tr>
-    <div id="eliminar{{obj.idPuesto}}" class="modal fade" role="dialog">
-      <div class="modal-dialog">   
-
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              &times;
-            </button>
-            <h4 class="modal-title">Confirmacion de proceso</h4>
-          </div>
-          <div class="modal-body">
-            <p>¿Estas seguro de eliminar el puesto: {{obj.nombre}} ?</p>
-          </div>
-          <div class="modal-footer">
-            <a href="/eliminarP/{{obj.idPuesto}}" class="btn btn-info"
-              >Aceptar</a
-            >
-            <button type="button" class="btn btn-default" data-dismiss="modal">
-              Cancelar
-            </button>
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                  &times;
+                </button>
+                <h4 class="modal-title">Confirmacion de proceso</h4>
+              </div>
+              <div class="modal-body">
+                <p>¿Estas seguro de eliminar el puesto: {{obj.nombre}} ?</p>
+              </div>
+              <div class="modal-footer">
+                <a href="/eliminarP/{{obj.idPuesto}}" class="btn btn-info"
+                  >Aceptar</a
+                >
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  Cancelar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
+    </tbody>
     </table>
   </div>
+  
+  <div class="paginacion">
+    {{ macros.pagination_widget(pagination, '.puestos') }}
+  </div>
+  
 {%endblock%}
+

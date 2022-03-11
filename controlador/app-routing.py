@@ -61,8 +61,10 @@ def load_user(id):
 @login_required
 def puestos():
     if current_user.is_authenticated() and current_user.is_admin(): 
-        p=Puestos()     
-        return  render_template('Puestos/puestos.html', puestos =p.consultarAll()  )
+        p=Puestos()
+        page = request.args.get('page', 1, type=int)
+        paginacion = p.consultarPagina(page)         
+        return  render_template('Puestos/puestos.html', puestos =paginacion.items, pagination = paginacion  )
     else:
         abort(404)
 
@@ -140,7 +142,9 @@ def eliminarP(id):
 def turnos():
     if current_user.is_authenticated() and current_user.is_admin():
         t=Turnos() 
-        return  render_template('Turnos/turnos.html', turnos = t.consultarAll())
+        page = request.args.get('page', 1, type=int)
+        paginacion = t.consultarPagina(page)         
+        return  render_template('Turnos/turnos.html', turnos = paginacion.items, pagination = paginacion)
     else:
         abort(404)
 

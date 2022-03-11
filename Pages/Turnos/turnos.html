@@ -1,4 +1,5 @@
 {% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion.html' as macros %}
 {%block encabezado%}
 <div class="encabezado txt-encabezado">
     <label class="margenes-I">ERP</label>        
@@ -19,6 +20,12 @@
   <p>Catálogo Turnos</p>
 </div>
 
+<div class="container input-group">
+  <span class="input-group-addon amarillo"><i class="glyphicon glyphicon-search"></i></span>
+  <input class="form-control" id="myInput" type="text" placeholder="Search...">
+  <br>
+</div>
+
 <div class="tabla"> 
   <table class="table table-hover">
     <thead>
@@ -31,6 +38,7 @@
       <th></th>    
     </thead>
 
+    <tbody id="myTable"> 
     {%for obj in turnos%} 
     <tr>
       <td>{{obj.idTurno}}</td>
@@ -39,10 +47,14 @@
       <td>{{obj.horaFin}}</td>
       <td>{{obj.dias}}</td> 
       <td>
-        <a href="/editarTurnos/{{obj.idTurno}}" class="btn btn-success" role="button">editar</a>
+        <a href="/editarTurnos/{{obj.idTurno}}" class="btn btn-success" role="button">
+          <span class="glyphicon glyphicon-pencil"></span>
+          Editar</a>
       </td>   
       <td>
-        <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idTurno}}">eliminar </a>
+        <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idTurno}}">
+          <span class="glyphicon glyphicon-trash"></span>
+          Eliminar </a>
       </td>           
     </tr>
     <div id="eliminar{{obj.idTurno}}" class="modal fade" role="dialog">
@@ -70,7 +82,12 @@
       </div>
     </div>
     {% endfor %}
+    </tbody>
 </table>
+</div>
+
+<div class="paginacion">
+  {{ macros.pagination_widget(pagination, '.turnos') }}
 </div>
 
 {%endblock%}
