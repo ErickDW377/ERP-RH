@@ -3,10 +3,9 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Sucursales,Turnos,Empleados
+from DAO import db, Puestos,Sucursales,Turnos,Empleados,Departamentos
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
-
 
 app=Flask(__name__,template_folder='../Pages',static_folder='../Static')
 Bootstrap(app)
@@ -192,7 +191,7 @@ def editarT(id):
         turno.dias= request.form['diasT']  
         turno.idTurno= id
         turno.actualizar()
-        flash('Puesto actualizado con exito')
+        flash('Turno actualizado con exito')
         return  redirect(url_for('turnosE', id= turno.idTurno))
     else:
         abort(404)
@@ -207,8 +206,83 @@ def eliminarT(id):
         return  redirect(url_for('turnos'))
     else:
         abort(404)
-    
-   
+
+#Departamentos--------------------------------------------------------   
+@app.route('/departamentos')
+@login_required
+def departamentos():
+    if current_user.is_authenticated() and current_user.is_admin():
+        d=Departamentos() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = d.consultarPagina(page)         
+        return  render_template('Departamentos/departamentos.html', departamentos = paginacion.items, pagination = paginacion)
+    else:
+        abort(404)
+
+@app.route('/registrarDepartamentos')
+@login_required
+def departamentosR():
+    if current_user.is_authenticated() and current_user.is_admin():
+        return  render_template('Departamentos/registrarDepartamentos.html')
+    else:
+        abort(404)
+
+@app.route('/editarDepartamentos/<int:id>')
+@login_required
+def departamentosE(id):
+    if current_user.is_authenticated() and current_user.is_admin():
+        departamento =  Departamentos()        
+        departamento = departamento.consultar(id)
+        return  render_template('Departamentos/editarDepartamentos.html', departamento = departamento)
+    else:
+        abort(404)
+
+@app.route('/registrarD',methods=['post'])
+@login_required
+def registrarD():
+    if current_user.is_authenticated() and current_user.is_admin():
+        departamento=Departamentos()
+        departamento.nombre= request.form['nombreDepartamento']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            departamento.estatus='A'
+        else:
+            departamento.estatus='I'      
+        departamento.registrar()
+        flash('Departamento registrado con exito')
+        return  redirect(url_for('departamentosR'))
+    else:
+        abort(404)
+
+@app.route('/editarD/<int:id>',methods=['post'])
+@login_required
+def editarD(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        departamento = Departamentos()
+        departamento.nombre= request.form['nombreDepartamento']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            departamento.estatus='A'
+        else:
+            departamento.estatus='I'   
+        departamento.idDepartamento= id
+        departamento.actualizar()
+        flash('Departamento actualizado con exito')
+        return  redirect(url_for('departamentosE', id= departamento.idDepartamento))
+    else:
+        abort(404)
+
+@app.route('/eliminarD/<int:id>')
+@login_required
+def eliminarD(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        departamento = Departamentos()
+        departamento.eliminar(id)
+        flash('Departamento eliminado con exito')
+        return  redirect(url_for('departamentos'))
+    else:
+        abort(404)
+
 
 # Enrutamiento sucursales
 @app.route('/sucursales')

@@ -1,9 +1,4 @@
 {% extends 'componentes/menu.html' %}
-{%block encabezado%}
-<div class="encabezado txt-encabezado">
-    <label class="margenes-I">ERP</label>        
-</div>
-{%endblock%}
 {%block cuerpo%}
 
 {% if get_flashed_messages()%}
@@ -14,6 +9,10 @@
     </div>
   {% endfor %}
 {% endif %}
+
+<div class="titulo">
+  <p>Modificar turno </p>
+</div>
 
 <div class="contenedor-formulario">
   <form action="/editarT/{{turno.idTurno}}" method="post" enctype="multipart/form-data">   

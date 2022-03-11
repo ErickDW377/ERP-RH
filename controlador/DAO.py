@@ -10,6 +10,7 @@ from flask_login import UserMixin
 
 db=SQLAlchemy()
 
+#Puestos-------------------------------------
 class Puestos(db.Model):
     __tablename__= 'RH_Puestos'
     idPuesto = Column(Integer, primary_key=True)
@@ -42,7 +43,7 @@ class Puestos(db.Model):
         return obj
     
         
-      #Turnos  
+#Turnos  -------------------------------------------------
 class Turnos(db.Model):
     __tablename__= 'RH_Turnos'
     idTurno = Column(Integer, primary_key=True)
@@ -73,10 +74,38 @@ class Turnos(db.Model):
     def consultarPagina(self, pagina):
         obj = self.query.order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
+
+class Departamentos(db.Model):
+    __tablename__= 'RH_Departamentos'
+    idDepartamento = Column(Integer, primary_key=True)
+    nombre = Column(String(50))   
+    estatus = Column(String(1))
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        db.session.delete(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = self.query.order_by(Departamentos.idDepartamento.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
         
 
-  #Sucursales      
-        
+#Sucursales ------------------------------------    
 class Sucursales(db.Model):
     __tablename__= 'RH_Sucursales'
     idSucursal = Column(Integer, primary_key=True)
@@ -107,7 +136,7 @@ class Sucursales(db.Model):
         db.session.delete(objeto)
         db.session.commit()
 
-    #Empleados
+#Empleados ----------------------------------
 class Empleados(db.Model):
     __tablename__= 'RH_Empleados'
     idEmpleado = Column(Integer, primary_key=True)
