@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Sucursales,Turnos,Empleados,Departamentos,Estado
+from DAO import db, Puestos,Sucursales,Turnos,Empleados,Departamentos,Estado,FormasdePago
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
 
@@ -367,6 +367,83 @@ def eliminarE(id):
         estado.eliminar(id)
         flash('Estado eliminado con exito')
         return  redirect(url_for('estado'))
+    else:
+        abort(404)
+
+
+#Formas de pago--------------------------------------------------------   
+@app.route('/formasdePago')
+@login_required
+def formasdePago():
+    if current_user.is_authenticated() and current_user.is_admin():
+        fp=FormasdePago() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = fp.consultarPagina(page)         
+        return  render_template('FormasDePago/formasdePago.html', formasdePago = paginacion.items, pagination = paginacion)
+    else:
+        abort(404)
+
+@app.route('/registrarFormasdePago')
+@login_required
+def formasdePagoR():
+    if current_user.is_authenticated() and current_user.is_admin():
+        return  render_template('FormasDePago/registrarFormasdePago.html')
+    else:
+        abort(404)
+
+@app.route('/editarFormasdePago/<int:id>')
+@login_required
+def formasdePagoE(id):
+    if current_user.is_authenticated() and current_user.is_admin():
+        formadepago =  FormasdePago()        
+        formadepago = formadepago.consultar(id)
+        return  render_template('FormasDePago/editarFormasdePago.html', formadePago = formadepago)
+    else:
+        abort(404)
+
+@app.route('/registrarFP',methods=['post'])
+@login_required
+def registrarFP():
+    if current_user.is_authenticated() and current_user.is_admin():
+        formadepago=FormasdePago()
+        formadepago.nombre= request.form['nombreFormadePago']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            formadepago.estatus='A'
+        else:
+            formadepago.estatus='I'      
+        formadepago.registrar()
+        flash('Forma de pago registrado con exito')
+        return  redirect(url_for('formasdePagoR'))
+    else:
+        abort(404)
+
+@app.route('/editarFP/<int:id>',methods=['post'])
+@login_required
+def editarFP(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        formadepago=FormasdePago()
+        formadepago.nombre= request.form['nombreFormadePago']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            formadepago.estatus='A'
+        else:
+            formadepago.estatus='I'     
+        formadepago.idFormaPago= id
+        formadepago.actualizar()
+        flash('Fomra de pago actualizado con exito')
+        return  redirect(url_for('formasdePagoE', id= formadepago.idFormaPago))
+    else:
+        abort(404)
+
+@app.route('/eliminarFP/<int:id>')
+@login_required
+def eliminarFP(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        formadepago = FormasdePago()
+        formadepago.eliminar(id)
+        flash('Forma de pago eliminado con exito')
+        return  redirect(url_for('formasdePago'))
     else:
         abort(404)
 
