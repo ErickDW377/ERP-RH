@@ -314,7 +314,7 @@ def  estadoR():
 
 @app.route('/editarEstado/<int:id>')
 @login_required
-def puestosE(id):
+def estadoE(id):
     if current_user.is_authenticated() and current_user.is_admin():  
         estado =  Estado()
         estado = estado.consultar(id)
@@ -327,7 +327,7 @@ def puestosE(id):
 def registarE(): 
     if current_user.is_authenticated() and current_user.is_admin():  
         estado = Estado()
-        estado.nombre = request.form['nombredelEstado']
+        estado.nombre = request.form['nombrdelEstado']
         estado.siglas = request.form['siglas']
         estatus = request.values.get('estatus',False)
         if estatus=="True":
