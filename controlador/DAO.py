@@ -220,6 +220,37 @@ class Empleados(db.Model):
             return True
         else:
             return False
+
+#Estados-------------------------------------
+class Estado(db.Model):
+    __tablename__= 'RH_Estados'
+    idEstado = Column(Integer, primary_key=True)
+    nombre = Column(String(60))
+    siglas = Column(String(10))
+    estatus = Column(String(1))
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        db.session.delete(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = self.query.order_by(Estado.idEstado.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
        
 
 

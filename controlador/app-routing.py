@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Sucursales,Turnos,Empleados,Departamentos
+from DAO import db, Puestos,Sucursales,Turnos,Empleados,Departamentos,Estado
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
 
@@ -290,6 +290,85 @@ def sucursales():
     s=Sucursales()
     sucursales= s.consultarAll() 
     return  render_template('sucursales/sucursales.html', sucursales=sucursales) 
+
+
+#Estados--------------------------------------------------------------------------
+@app.route('/estado')
+@login_required
+def estado():
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        e=Estado()
+        page = request.args.get('page', 1, type=int)
+        paginacion = e.consultarPagina(page)         
+        return  render_template('Estado/estado.html', estado =paginacion.items, pagination = paginacion  )
+    else:
+        abort(404)
+
+@app.route('/registrarEstado')
+@login_required
+def  estadoR():
+    if current_user.is_authenticated() and current_user.is_admin():  
+        return  render_template('Estado/registrarEstado.html')
+    else:
+        abort(404)
+
+@app.route('/editarEstado/<int:id>')
+@login_required
+def puestosE(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        estado =  Estado()
+        estado = estado.consultar(id)
+        return  render_template('Estado/editarEstado.html', estado = estado)
+    else:
+        abort(404)
+
+@app.route('/registrarE',methods=['post'])
+@login_required
+def registarE(): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        estado = Estado()
+        estado.nombre = request.form['nombredelEstado']
+        estado.siglas = request.form['siglas']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            estado.estatus='A'
+        else:
+            estado.estatus='I' 
+        estado.registrar()
+        flash('Estado registrado con exito')
+        return  redirect(url_for('estadoR'))
+    else:
+        abort(404)
+
+@app.route('/editarE/<int:id>',methods=['post'])
+@login_required
+def editarE(id): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        estado = Estado()
+        estado.nombre = request.form['nombredelEstado']
+        estado.siglas = request.form['siglas']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            estado.estatus='A'
+        else:
+            estado.estatus='I'  
+        estado.idEstado = id
+        estado.actualizar()
+        flash('Estado actualizado con exito')
+        return  redirect(url_for('estadoE', id= estado.idEstado))
+    else:
+        abort(404)
+
+@app.route('/eliminarE/<int:id>')
+@login_required
+def eliminarE(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        estado = Estado()
+        estado.eliminar(id)
+        flash('Estado eliminado con exito')
+        return  redirect(url_for('estado'))
+    else:
+        abort(404)
 
 
 if __name__=='__main__':
