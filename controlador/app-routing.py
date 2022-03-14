@@ -448,6 +448,10 @@ def eliminarFP(id):
         abort(404)
 
 
+@app.errorhandler(404)
+def error_404(e):
+    return redirect(url_for('inicio'))
+
 if __name__=='__main__':
     db.init_app(app)
     app.run(debug=True)

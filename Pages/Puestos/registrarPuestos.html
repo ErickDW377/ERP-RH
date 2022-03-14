@@ -15,24 +15,26 @@
 </div>
 
 <div class="contenedor-formulario">
-  <form action="/registrarP" method="post" enctype="multipart/form-data">
+  <form action="/registrarP" method="post" enctype="multipart/form-data" >
     <div class="form-group">
       <label>Nombre:</label>
       <input type="text" class="form-control " name="nombrePuesto" required>
     </div>
     <div class="form-group">
       <label>Salario Mínimo:</label>
-      <input type="number" class="form-control " name="salarioMinimo" required>
+      <input type="number" class="form-control " name="salarioMinimo" id="valorMin" required>
     </div> 
     <div class="form-group">
       <label>Salario Máximo:</label>
-      <input type="number" class="form-control " name="salarioMaximo" required>
+      <input type="number" class="form-control " name="salarioMaximo" id="valorMax" onchange="validarValoresMinMax()" required>
+      <div id="mensaje" style="background-color:brown;color:white"> 
+      </div>
     </div> 
     <div class="form-group">
       <label>Estatus:</label>
-      <input type="checkbox" class="form-control " name="estatus" value="True" >     
+      <input type="checkbox" class="form-control " name="estatus" value="True" >         
     </div>    
-    <button type="submit" class="btn btn-primary btn-block">
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
       <span class="glyphicon glyphicon-floppy-disk"></span>
       Registrar
     </button>

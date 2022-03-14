@@ -23,3 +23,21 @@ $(document).ready(function(){
     });
   });
 });
+
+
+function validarValoresMinMax(){
+  var mensaje = document.getElementById("mensaje");
+  var btnGuardar = document.getElementById("btnGuardar");
+  var valMin = document.getElementById("valorMin").value;
+  var valMax = document.getElementById("valorMax").value;
+ 
+  if(valMax<= valMin){
+    mensaje.innerHTML = "El valor debe ser mayor al valor menor";
+    btnGuardar.disabled = true;
+  }else{
+    mensaje.innerHTML = "";
+    btnGuardar.disabled = false;
+  }
+
+ 
+}
