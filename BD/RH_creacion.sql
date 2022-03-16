@@ -32,7 +32,7 @@ salarioMinimo float,
 salarioMaximo float,
 estatus char,
 primary key (idPuesto),
-check(salarioMinimo<salarioMaximo),
+check(salarioMinimo<=salarioMaximo),
 check(estatus in ('A','I'))
 );
 
@@ -50,6 +50,7 @@ nombre varchar(20),
 horaInicio timestamp,
 horaFin timestamp,
 dias varchar (30),
+estatus char,
 primary key(idTurno)
 );
 
@@ -222,7 +223,7 @@ INSERT INTO `rh_erp`.`RH_Departamentos` (`nombre`, `estatus`) VALUES ('Base de D
 INSERT INTO `rh_erp`.`RH_Estados` (`nombre`, `siglas`, `estatus`) VALUES ('Michoacan', 'MICH', 'A');
 INSERT INTO `rh_erp`.`RH_Ciudades` (`nombre`, `idEstado`, `estatus`) VALUES ('Zamora', '1', 'A');
 INSERT INTO `rh_erp`.`RH_Sucursales` (`nombre`, `telefono`, `direccion`, `colonia`, `codigoPostal`, `presupuesto`, `estatus`, `idCiudad`) VALUES ('Sucursal Zamora', '3511695859', 'Juarez poniente 2257', 'Juarez', '59632', '100000', 'A', '1');
-INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`) VALUES ('Vespertino', '2000-01-01 08:00:01', '2000-01-01 16:00:01', '7 a la semana');
+INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`,`estatus`) VALUES ('Vespertino', '2000-01-01 08:00:01', '2000-01-01 16:00:01', 'L,M','A');
 INSERT INTO `rh_erp`.`RH_Empleados` (`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`) VALUES ('Yuvia', 'Francisco', 'Diaz', 'F', '2000-12-1', 'WEWSDD', 'Soltero', '2021-01-01', '300', '23232123', '10', '10', 'DOMICILIO X', 'X', '58946', 'Ingeniero', 'ydiaz@gmail.com', 'Hola.123', 'Admin', 'A', '1', '1', '1', '1', '1');
 
 

@@ -64,7 +64,8 @@ class Turnos(db.Model):
     horaInicio = Column(TIMESTAMP)
     horaFin = Column(TIMESTAMP)
     dias = Column(String(30))
-    
+    estatus = Column(String(1))
+
     def registrar(self):
         db.session.add(self)
         db.session.commit()
@@ -81,14 +82,12 @@ class Turnos(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        #objeto.estatus = "I"
-        #db.session.merge(objeto)
-        db.session.delete(objeto)
+        objeto.estatus = "I"
+        db.session.merge(objeto)        
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        #obj = self.query.filter(Turnos.estatus=='A').order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)
-        obj = self.query.order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)
+        obj = self.query.filter(Turnos.estatus=='A').order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)        
         return obj
 
     def consultarNombre(self,nombre):

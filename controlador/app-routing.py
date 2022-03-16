@@ -227,6 +227,7 @@ def registrarT():
         else:
             turno.dias+=''      
         
+        turno.estatus = 'A'
         turno.registrar()
         flash('Turno registrado con exito')
         return  redirect(url_for('turnosR'))
