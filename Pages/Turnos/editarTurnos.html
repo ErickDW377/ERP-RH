@@ -18,7 +18,9 @@
   <form action="/editarT/{{turno.idTurno}}" method="post" enctype="multipart/form-data">   
     <div class="form-group">
       <label>Nombre</label>
-      <input type="text" class="form-control" name="nombreTurno" value="{{turno.nombre}}" required>
+      <input type="text" class="form-control" name="nombreTurno" value="{{turno.nombre}}" id="nombre"  onchange='consultarNombre("turnos")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
     </div>
     <div class="form-group">
       <label>Hora Incio</label>
@@ -30,9 +32,52 @@
     </div> 
     <div class="form-group">
         <label>Dias</label>
-        <input type="text" class="form-control" name ="diasT" value="{{turno.dias}}" required>
+        <div>   
+          {% if dias['L']%}       
+          <label class="checkbox-inline"><input type="checkbox" name="Lunes" value="True" checked>L</label>
+          {% else %}
+          <label class="checkbox-inline"><input type="checkbox" name="Lunes" value="True">L</label>
+          {% endif %}
+
+          {% if dias['M']%}       
+          <label class="checkbox-inline"><input type="checkbox" name="Martes" value="True" checked>M</label>
+          {% else %}
+          <label class="checkbox-inline"><input type="checkbox" name="Martes" value="True">M</label>
+          {% endif %}
+
+          {% if dias['X']%}       
+          <label class="checkbox-inline"><input type="checkbox" name="Miercoles" value="True" checked>X</label>
+          {% else %}
+          <label class="checkbox-inline"><input type="checkbox" name="Miercoles" value="True">X</label>
+          {% endif %}
+
+          {% if dias['J']%}       
+          <label class="checkbox-inline"><input type="checkbox" name="Jueves" value="True" checked>J</label>
+          {% else %}
+          <label class="checkbox-inline"><input type="checkbox" name="Jueves" value="True">J</label>
+          {% endif %}
+
+          {% if dias['V']%}       
+          <label class="checkbox-inline"><input type="checkbox" name="Viernes" value="True" checked>V</label>
+          {% else %}
+          <label class="checkbox-inline"><input type="checkbox" name="Viernes" value="True">V</label>
+          {% endif %}
+
+          {% if dias['S']%}       
+          <label class="checkbox-inline"><input type="checkbox" name="Sabado" value="True" checked>S</label>
+          {% else %}
+          <label class="checkbox-inline"><input type="checkbox" name="Sabado" value="True">S</label>
+          {% endif %}
+
+          {% if dias['D']%}       
+          <label class="checkbox-inline"><input type="checkbox" name="Domingo" value="True" checked>D</label>
+          {% else %}
+          <label class="checkbox-inline"><input type="checkbox" name="Domingo" value="True">D</label>
+          {% endif %}
+          
+        </div> 
       </div>
-    <button type="submit" class="btn btn-primary btn-block">
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
       <span class="glyphicon glyphicon-floppy-disk"></span>
       Modificar
     </button>

@@ -1,11 +1,14 @@
 from flask import Flask,render_template,request,flash, redirect, url_for, abort
 from flask_bootstrap import Bootstrap
+from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
 from DAO import db, Puestos,Sucursales,Turnos,Empleados,Departamentos,Estado,FormasdePago
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
+
+import json
 
 app=Flask(__name__,template_folder='../Pages',static_folder='../Static')
 Bootstrap(app)
@@ -135,6 +138,11 @@ def eliminarP(id):
     else:
         abort(404)
 
+@app.route('/puestos/nombre/<string:nombre>',methods=['get'])
+def consultarNombreP(nombre):
+    item=Puestos()    
+    return json.dumps(item.consultarNombre(nombre))
+
 #Turnos-----------------------------------------------------
 @app.route('/turnos')
 @login_required
@@ -161,7 +169,11 @@ def turnosE(id):
     if current_user.is_authenticated() and current_user.is_admin():
         turno =  Turnos()        
         turno = turno.consultar(id)
-        return  render_template('Turnos/editarTurnos.html', turno = turno)
+        dias={"L":False,"M":False,"X":False,"J":False,"V":False,"S":False,"D":False}
+        for d in turno.dias.split(sep=','):
+            dias[d]=True
+        print(dias)
+        return  render_template('Turnos/editarTurnos.html', turno = turno, dias = dias)
     else:
         abort(404)
 
@@ -173,7 +185,48 @@ def registrarT():
         turno.nombre= request.form['nombreTurno']
         turno.horaInicio= "2000-01-01 " + request.form['horaInicioT']                  
         turno.horaFin= "2000-01-01 " +  request.form['horaFinT']                 
-        turno.dias= request.form['diasT']
+        dia = request.values.get('Lunes',False)        
+        if dia=="True":
+            turno.dias='L,'
+        else:
+            turno.dias=''
+
+        dia = request.values.get('Martes',False)        
+        if dia=="True":
+            turno.dias+='M,'
+        else:
+            turno.dias+=''
+        
+        dia = request.values.get('Miercoles',False)        
+        if dia=="True":
+            turno.dias+='X,'
+        else:
+            turno.dias+=''
+        
+        dia = request.values.get('Jueves',False)        
+        if dia=="True":
+            turno.dias+='J,'
+        else:
+            turno.dias+=''
+        
+        dia = request.values.get('Viernes',False)        
+        if dia=="True":
+            turno.dias+='V,'
+        else:
+            turno.dias+=''
+
+        dia = request.values.get('Sabado',False)        
+        if dia=="True":
+            turno.dias+='S,'
+        else:
+            turno.dias+=''
+
+        dia = request.values.get('Domingo',False)        
+        if dia=="True":
+            turno.dias+='D'
+        else:
+            turno.dias+=''      
+        
         turno.registrar()
         flash('Turno registrado con exito')
         return  redirect(url_for('turnosR'))
@@ -188,7 +241,48 @@ def editarT(id):
         turno.nombre= request.form['nombreTurno']
         turno.horaInicio="2000-01-01 " + request.form['horaInicioT']                  
         turno.horaFin="2000-01-01 " + request.form['horaFinT']                 
-        turno.dias= request.form['diasT']  
+        dia = request.values.get('Lunes',False)        
+        if dia=="True":
+            turno.dias='L,'
+        else:
+            turno.dias=''
+
+        dia = request.values.get('Martes',False)        
+        if dia=="True":
+            turno.dias+='M,'
+        else:
+            turno.dias+=''
+        
+        dia = request.values.get('Miercoles',False)        
+        if dia=="True":
+            turno.dias+='X,'
+        else:
+            turno.dias+=''
+        
+        dia = request.values.get('Jueves',False)        
+        if dia=="True":
+            turno.dias+='J,'
+        else:
+            turno.dias+=''
+        
+        dia = request.values.get('Viernes',False)        
+        if dia=="True":
+            turno.dias+='V,'
+        else:
+            turno.dias+=''
+
+        dia = request.values.get('Sabado',False)        
+        if dia=="True":
+            turno.dias+='S,'
+        else:
+            turno.dias+=''
+
+        dia = request.values.get('Domingo',False)        
+        if dia=="True":
+            turno.dias+='D'
+        else:
+            turno.dias+=''
+
         turno.idTurno= id
         turno.actualizar()
         flash('Turno actualizado con exito')
@@ -206,6 +300,11 @@ def eliminarT(id):
         return  redirect(url_for('turnos'))
     else:
         abort(404)
+
+@app.route('/turnos/nombre/<string:nombre>',methods=['get'])
+def consultarNombreT(nombre):
+    item=Turnos()    
+    return json.dumps(item.consultarNombre(nombre))
 
 #Departamentos--------------------------------------------------------   
 @app.route('/departamentos')
@@ -283,14 +382,10 @@ def eliminarD(id):
     else:
         abort(404)
 
-
-# Enrutamiento sucursales
-@app.route('/sucursales')
-def sucursales():  
-    s=Sucursales()
-    sucursales= s.consultarAll() 
-    return  render_template('sucursales/sucursales.html', sucursales=sucursales) 
-
+@app.route('/departamentos/nombre/<string:nombre>',methods=['get'])
+def consultarNombreD(nombre):
+    item=Departamentos()    
+    return json.dumps(item.consultarNombre(nombre))
 
 #Estados--------------------------------------------------------------------------
 @app.route('/estado')
@@ -371,6 +466,11 @@ def eliminarE(id):
         abort(404)
 
 
+@app.route('/estados/nombre/<string:nombre>',methods=['get'])
+def consultarNombreE(nombre):
+    item=Estado()    
+    return json.dumps(item.consultarNombre(nombre))
+
 #Formas de pago--------------------------------------------------------   
 @app.route('/formasdePago')
 @login_required
@@ -447,7 +547,12 @@ def eliminarFP(id):
     else:
         abort(404)
 
+@app.route('/fp/nombre/<string:nombre>',methods=['get'])
+def consultarNombreFP(nombre):
+    item=FormasdePago()    
+    return json.dumps(item.consultarNombre(nombre))
 
+#Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)
 def error_404(e):
     return redirect(url_for('inicio'))

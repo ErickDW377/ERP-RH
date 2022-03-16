@@ -17,7 +17,8 @@
     <form action="/registrarT" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label > Nombre</label>
-      <input type="text" class="form-control" name="nombreTurno" required>
+      <input type="text" class="form-control" name="nombreTurno" id="nombre" onblur='consultarNombre("turnos")'  required>
+      <div id="mensajeNombre" style="background-color:brown;color:white"></div>
     </div>
     <div class="form-group">
       <label>Hora Inicio</label>
@@ -30,14 +31,22 @@
 
       <div class="form-group">
         <label>Dias</label>
-        <input type="text" class="form-control" name ="diasT" required>
+        <div>
+          <label class="checkbox-inline"><input type="checkbox" name="Lunes" value="True">L</label>
+          <label class="checkbox-inline"><input type="checkbox" name="Martes" value="True">M</label>
+          <label class="checkbox-inline"><input type="checkbox" name="Miercoles" value="True">X</label>
+          <label class="checkbox-inline"><input type="checkbox" name="Jueves" value="True">J</label>
+          <label class="checkbox-inline"><input type="checkbox" name="Viernes" value="True">V</label>
+          <label class="checkbox-inline"><input type="checkbox" name="Sabado" value="True">S</label>
+          <label class="checkbox-inline"><input type="checkbox" name="Domingo" value="True">D</label>
+        </div>        
       </div>
 
-    <button type="submit" class="btn btn-primary btn-block">
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
       <span class="glyphicon glyphicon-floppy-disk"></span>
       Resgistrar
     </button>
-    <a href="/puestos" class="btn btn-danger btn-block" role="button">Cancelar</a>
+    <a href="/turnos" class="btn btn-danger btn-block" role="button">Cancelar</a>
   </form>
   </div>
 {%endblock%}

@@ -31,13 +31,33 @@ function validarValoresMinMax(){
   var valMin = document.getElementById("valorMin").value;
   var valMax = document.getElementById("valorMax").value;
  
-  if(valMax<= valMin){
-    mensaje.innerHTML = "El valor debe ser mayor al valor menor";
+  if(valMax<valMin){
+    mensaje.innerHTML = "El valor minimo debe ser menor al maximo";
     btnGuardar.disabled = true;
   }else{
     mensaje.innerHTML = "";
     btnGuardar.disabled = false;
   }
-
- 
 }
+
+function consultarNombre(tabla) { 
+  var ajax = new XMLHttpRequest();
+  var btnGuardar = document.getElementById("btnGuardar");
+  var nombre = document.getElementById("nombre");
+  var url = "/"+tabla+"/nombre/" + nombre.value;
+  var mensaje = document.getElementById("mensajeNombre");
+  ajax.open("get", url, true);
+  ajax.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var respuesta=JSON.parse(this.responseText);
+      if(respuesta.estatus=="Error" ){
+        btnGuardar.disabled = true;   
+        mensaje.innerHTML=respuesta.mensaje;
+      }else{
+        mensaje.innerHTML = "";
+        btnGuardar.disabled = false;
+      }    
+    }
+  };
+  ajax.send();
+} 

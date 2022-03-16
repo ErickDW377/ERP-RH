@@ -18,7 +18,9 @@
   <form action="/editarFP/{{formadePago.idFormaPago}}" method="post" enctype="multipart/form-data">   
     <div class="form-group">
       <label>Nombre</label>
-      <input type="text" class="form-control" name="nombreFormadePago" value="{{formadePago.nombre}}" required>
+      <input type="text" class="form-control" name="nombreFormadePago" value="{{formadePago.nombre}}" id="nombre"  onblur='consultarNombre("fp")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
     </div>
 
     <div class="form-group">
@@ -30,7 +32,7 @@
       {% endif %}
     </div> 
    
-    <button type="submit" class="btn btn-primary btn-block">
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
       <span class="glyphicon glyphicon-floppy-disk"></span>
       Modificar
     </button>

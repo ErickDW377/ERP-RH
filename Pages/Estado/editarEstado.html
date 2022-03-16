@@ -18,7 +18,9 @@
   <form action="/editarE/{{estado.idEstado}}" method="post" enctype="multipart/form-data">   
     <div class="form-group">
       <label>Nombre:</label>
-      <input type="text" class="form-control" name="nombredelEstado" value="{{estado.nombre}}" required>
+      <input type="text" class="form-control" name="nombredelEstado" value="{{estado.nombre}}" id="nombre"  onblur='consultarNombre("estados")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
     </div>
  
 <div class="form-group">
@@ -34,7 +36,7 @@
       <input type="checkbox" class="form-control input-lg" name="estatus" value='True' >
       {% endif %}
     </div>
-    <button type="submit" class="btn btn-primary btn-block">
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
       <span class="glyphicon glyphicon-floppy-disk"></span>
       Modificar
     </button>

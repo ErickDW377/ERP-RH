@@ -35,12 +35,25 @@ class Puestos(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        db.session.delete(objeto)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
         db.session.commit()
 
-    def consultarPagina(self, pagina):
-        obj = self.query.order_by(Puestos.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
+    def consultarPagina(self, pagina):        
+        obj = self.query.filter(Puestos.estatus=='A').order_by(Puestos.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Puestos.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
     
         
 #Turnos  -------------------------------------------------
@@ -68,12 +81,27 @@ class Turnos(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
+        #objeto.estatus = "I"
+        #db.session.merge(objeto)
         db.session.delete(objeto)
         db.session.commit()
 
     def consultarPagina(self, pagina):
+        #obj = self.query.filter(Turnos.estatus=='A').order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)
         obj = self.query.order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
+
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Turnos.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
 
 #Departamentos-----------------------------------------------------------------
 class Departamentos(db.Model):
@@ -98,12 +126,25 @@ class Departamentos(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        db.session.delete(objeto)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        obj = self.query.order_by(Departamentos.idDepartamento.asc()).paginate(pagina,per_page= 5, error_out=False)
+        obj = self.query.filter(Departamentos.estatus=='A').order_by(Departamentos.idDepartamento.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Departamentos.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
 
 #Formas de pago------------------------------------------------------------------
 class FormasdePago(db.Model):
@@ -128,12 +169,25 @@ class FormasdePago(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        db.session.delete(objeto)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        obj = self.query.order_by(FormasdePago.idFormaPago.asc()).paginate(pagina,per_page= 5, error_out=False)
+        obj = self.query.filter(FormasdePago.estatus=='A').order_by(FormasdePago.idFormaPago.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(FormasdePago.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
         
 #Estados-------------------------------------
 class Estado(db.Model):
@@ -159,12 +213,25 @@ class Estado(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        db.session.delete(objeto)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        obj = self.query.order_by(Estado.idEstado.asc()).paginate(pagina,per_page= 5, error_out=False)
+        obj = self.query.filter(Estado.estatus=='A').order_by(Estado.idEstado.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Estado.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
 
 #Sucursales ------------------------------------    
 class Sucursales(db.Model):
@@ -194,7 +261,8 @@ class Sucursales(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        db.session.delete(objeto)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
         db.session.commit()
 
 #Empleados ----------------------------------
@@ -244,7 +312,8 @@ class Empleados(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        db.session.delete(objeto)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
         db.session.commit()
 
     def validar(self,email,passw):
