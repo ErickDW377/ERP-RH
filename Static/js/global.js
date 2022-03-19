@@ -32,7 +32,7 @@ function validarValoresMinMax(){
   var valMax = document.getElementById("valorMax").value;
  
   if(valMax<valMin){
-    mensaje.innerHTML = "El valor minimo debe ser menor al maximo";
+    mensaje.innerHTML = "El valor minimo debe ser menor o igual al maximo";
     btnGuardar.disabled = true;
   }else{
     mensaje.innerHTML = "";

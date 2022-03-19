@@ -3,9 +3,9 @@ from enum import unique
 from sqlalchemy.sql.expression import column
 from sqlalchemy.sql.sqltypes import VARCHAR
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import BLOB, TIMESTAMP, Column,Integer,String,Date,Float,ForeignKey,Boolean
+from sqlalchemy import BLOB, TIMESTAMP, Column,Integer,String,Date,Float,ForeignKey,Boolean, null
 from sqlalchemy.orm import relationship
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 
 
 db=SQLAlchemy()
@@ -39,8 +39,12 @@ class Puestos(db.Model):
         db.session.merge(objeto)
         db.session.commit()
 
-    def consultarPagina(self, pagina):        
-        obj = self.query.filter(Puestos.estatus=='A').order_by(Puestos.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
+    def consultarPagina(self, pagina):
+        obj = None;
+        if current_user.is_admin():        
+            obj = self.query.order_by(Puestos.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Puestos.estatus=='A').order_by(Puestos.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
     
     def consultarNombre(self,nombre):
@@ -87,7 +91,11 @@ class Turnos(db.Model):
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        obj = self.query.filter(Turnos.estatus=='A').order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)        
+        obj = None
+        if current_user.is_admin():
+            obj = self.query.order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)        
+        else:
+            obj = self.query.filter(Turnos.estatus=='A').order_by(Turnos.idTurno.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
 
     def consultarNombre(self,nombre):
@@ -130,7 +138,11 @@ class Departamentos(db.Model):
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        obj = self.query.filter(Departamentos.estatus=='A').order_by(Departamentos.idDepartamento.asc()).paginate(pagina,per_page= 5, error_out=False)
+        obj = None
+        if current_user.is_admin():
+            obj = self.query.order_by(Departamentos.idDepartamento.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Departamentos.estatus=='A').order_by(Departamentos.idDepartamento.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
     
     def consultarNombre(self,nombre):
@@ -173,7 +185,11 @@ class FormasdePago(db.Model):
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        obj = self.query.filter(FormasdePago.estatus=='A').order_by(FormasdePago.idFormaPago.asc()).paginate(pagina,per_page= 5, error_out=False)
+        obj = None
+        if current_user.is_admin():
+            obj = self.query.order_by(FormasdePago.idFormaPago.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+             obj = self.query.filter(FormasdePago.estatus=='A').order_by(FormasdePago.idFormaPago.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
     
     def consultarNombre(self,nombre):
@@ -217,7 +233,11 @@ class Estado(db.Model):
         db.session.commit()
 
     def consultarPagina(self, pagina):
-        obj = self.query.filter(Estado.estatus=='A').order_by(Estado.idEstado.asc()).paginate(pagina,per_page= 5, error_out=False)
+        obj = None
+        if current_user.is_admin():
+            obj = self.query.order_by(Estado.idEstado.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Estado.estatus=='A').order_by(Estado.idEstado.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
     
     def consultarNombre(self,nombre):
