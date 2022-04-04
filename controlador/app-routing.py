@@ -4,7 +4,7 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Sucursales,Turnos,Empleados,Departamentos,Estado,FormasdePago
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from array import array
 

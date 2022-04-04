@@ -176,7 +176,7 @@ create table RH_DocumentacionEmpleado(
 idDocumento int auto_increment,
 nombreDocumento varchar(80),
 fechaEntregga date,
-documento blob,
+documento mediumblob,
 idEmpleado int,
 primary key(idDocumento),
 foreign key(idEmpleado) references RH_Empleados(IdEmpleado)
