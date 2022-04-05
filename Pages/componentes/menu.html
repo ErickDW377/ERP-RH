@@ -3,94 +3,137 @@
   <nav class="navbar navbar-default">
     <div class="container-fluid">
       <ul class="nav navbar-nav">
-        <li><a href="/">
+        <li>
+          <a href="/">
             <span class="glyphicon glyphicon-home"></span>
             Inicio
-          </a></li>
-        {% if current_user.is_authenticated  %}
+          </a>
+        </li>
+        {% if current_user.is_authenticated %}
 
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Puestos
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"
+            >Puestos
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="/registrarPuestos">
+            <li>
+              <a href="/registrarPuestos">
                 <span class="glyphicon glyphicon-plus"></span>
                 Registrar
-              </a></li>
-            <li><a href="/puestos">
+              </a>
+            </li>
+            <li>
+              <a href="/puestos">
                 <span class="glyphicon glyphicon-list-alt"></span>
                 Ver catalogo
-              </a></li>
+              </a>
+            </li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Turnos
-            <span class="caret"></span></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"
+            >Turnos <span class="caret"></span
+          ></a>
           <ul class="dropdown-menu">
-            <li><a href="/registrarTurnos">
+            <li>
+              <a href="/registrarTurnos">
                 <span class="glyphicon glyphicon-plus"></span>
                 Registrar
-              </a></li>
-            <li><a href="/turnos">
+              </a>
+            </li>
+            <li>
+              <a href="/turnos">
                 <span class="glyphicon glyphicon-list-alt"></span>
                 Ver catalogo
-              </a></li>
+              </a>
+            </li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Departamentos
-            <span class="caret"></span></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"
+            >Departamentos <span class="caret"></span
+          ></a>
           <ul class="dropdown-menu">
-            <li><a href="/registrarDepartamentos">
+            <li>
+              <a href="/registrarDepartamentos">
                 <span class="glyphicon glyphicon-plus"></span>
                 Registrar
-              </a></li>
-            <li><a href="/departamentos">
+              </a>
+            </li>
+            <li>
+              <a href="/departamentos">
                 <span class="glyphicon glyphicon-list-alt"></span>
                 Ver catalogo
-              </a></li>
+              </a>
+            </li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Estados
-            <span class="caret"></span></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"
+            >Estados <span class="caret"></span
+          ></a>
           <ul class="dropdown-menu">
-            <li><a href="/registrarEstado">
+            <li>
+              <a href="/registrarEstado">
                 <span class="glyphicon glyphicon-plus"></span>
                 Registrar
-              </a></li>
-            <li><a href="/estado">
+              </a>
+            </li>
+            <li>
+              <a href="/estado">
                 <span class="glyphicon glyphicon-list-alt"></span>
                 Ver catalogo
-              </a></li>
+              </a>
+            </li>
           </ul>
         </li>
 
-        <li class ="dropdown" > 
-          <a class ="dropdown-toggle" data-toggle="dropdown" href="#" > 
-              Formas de pago
-              <span class ="caret" ></span>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            Formas de pago
+            <span class="caret"></span>
           </a>
-          <ul class ="dropdown-menu" >
-              <li> 
-                  <a href = "/registrarFormasdePago" >
-                  <span class ="glyphicon glyphicon-plus" > </span>
-                  Registrar
-                  </a>
-              </li>
-              <li> 
-                  <a href = "/formasdePago" >
-                  <span class ="glyphicon glyphicon-list-alt" > </span>
-                  Ver Catalogo
-                  </a> 
-              </li>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/registrarFormasdePago">
+                <span class="glyphicon glyphicon-plus"> </span>
+                Registrar
+              </a>
+            </li>
+            <li>
+              <a href="/formasdePago">
+                <span class="glyphicon glyphicon-list-alt"> </span>
+                Ver Catalogo
+              </a>
+            </li>
           </ul>
-      </li>
+        </li>
 
-        
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"
+            >Empleados
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/empleadosR">
+                <span class="glyphicon glyphicon-plus"></span>
+                Registrar
+              </a>
+            </li>
+            <li>
+              <a href="/empleados">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Ver catalogo
+              </a>
+            </li>
+          </ul>
+        </li>
+
         {% endif %}
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -98,18 +141,29 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span class="glyphicon glyphicon-user"></span>
-            {{current_user.nombre}} {{current_user.apellidoPaterno}} {{current_user.apellidoMaterno}}
+            {{current_user.nombre}} {{current_user.apellidoPaterno}}
+            {{current_user.apellidoMaterno}}
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="/cerrarSesion">
+            <li>
+              <a href="/cerrarSesion">
                 <span class="glyphicon glyphicon-log-out"></span>
                 Cerrar sesión
-              </a></li>
+              </a>
+            </li>
+            <li><a href="/empleadosVer/{{current_user.idEmpleado}}"">
+              <span class="glyphicon glyphicon-eye-open"></span>
+              Ver perfil
+            </a></li>
           </ul>
         </li>
         {% else %}
-        <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Inicia sesión</a></li>
+        <li>
+          <a href="/login"
+            ><span class="glyphicon glyphicon-log-in"></span> Inicia sesión</a
+          >
+        </li>
         {% endif %}
       </ul>
     </div>
@@ -117,17 +171,10 @@
 
   <footer class="navbar-fixed-bottom">
     <div class="date">
-        <label id="current_date">            
-        </label>
-        <label  id="current_time">            
-        </label>
-    </div >        
+      <label id="current_date"> </label>
+      <label id="current_time"> </label>
+    </div>
   </footer>
-
 </header>
 
-{%block cuerpo%}
-
-{%endblock%}
-
-{%endblock%}
+{%block cuerpo%} {%endblock%} {%endblock%}

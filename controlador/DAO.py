@@ -273,6 +273,7 @@ class Empleados(db.Model):
     colonia = Column(String(50))
     codigoPostal = Column(String(5))
     escolaridad = Column(String(80))
+    especialidad = Column(String(100))
     email = Column(String(100))
     paassword = Column(String(20))
     tipo = Column(String(10))
@@ -303,6 +304,96 @@ class Empleados(db.Model):
         db.session.merge(objeto)
         db.session.commit()
 
+    def consultarPagina(self, pagina):
+        obj = None;
+        if current_user.is_admin():        
+            obj = self.query.order_by(Empleados.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Empleados.estatus=='A').order_by(Empleados.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+
+    def getSucursal(self):
+        sucursal = Sucursales()
+        return sucursal.consultar(self.idSucursal).nombre
+
+    def getDepartamento(self):
+        dep = Departamentos()
+        return dep.consultar(self.idDepartamento).nombre
+    
+    def getTurno(self):
+        turno = Turnos()
+        return turno.consultar(self.idTurno).nombre
+    
+    def getPuesto(self):
+        puesto = Puestos()
+        return puesto.consultar(self.idPuesto).nombre
+    
+    def getCiudad(self):
+        ciudad = Ciudades()
+        return ciudad.consultar(self.idCiudad).nombre
+
+    def ExisteEmpleado(self, nombre, apP, apM):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Empleados.nombre==nombre, Empleados.apellidoPaterno == apP, Empleados.apellidoMaterno == apM).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El Empleado "+nombre + " " + apP +" "+ apM+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida
+
+    def ExisteEmail(self, email):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Empleados.email==email).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El enail  "+email+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El email "+email+" esta libre."
+        return salida
+    
+    def ExisteCURP(self, curp):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Empleados.curp==curp).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="La CURP "+ curp+" ya se encuentra registrada."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="La curp "+curp+" esta libre."
+        return salida
+    
+    def ExisteNSS(self, nss):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Empleados.nss==nss).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El NSS "+ nss+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El NSS "+nss+" esta libre."
+        return salida
+
+    def ValidarSalario(self, salario, puesto):
+        salida={"estatus":"","mensaje":""}
+        salarioP = Puestos()
+        salarioP = salarioP.consultar(puesto)        
+        if salario>= salarioP.salarioMinimo and salario <= salarioP.salarioMaximo:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El salario esta dentro de los limites"            
+        else:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El salario esta fuera de los limites del salario permitido para el puesto"
+        return salida  
+
+
+# METODOS DE PERFILAMIENTO PARA EL USUARIO---------------------------------------------------------------------------------
     def validar(self,email,passw):
         usuario=Empleados();
         usuario=self.query.filter(Empleados.email==email,Empleados.paassword==passw,Empleados.estatus=='A').first()
@@ -337,6 +428,53 @@ class Empleados(db.Model):
             return True
         else:
             return False
+
+
+
+#Documentacion---------------------------------------------------
+class DocumentosEmpleado(db.Model):
+    __tablename__= 'RH_DocumentacionEmpleado'
+    idDocumento = Column(Integer, primary_key=True)
+    nombreDocumento = Column(String(80))
+    fechaEntregga = Column(Date)
+    documento = Column(BLOB)
+    idEmpleado = Column(Integer)
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        db.session.delete(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None        
+        obj = self.query.order_by(DocumentosEmpleado.idDocumento.asc()).paginate(pagina,per_page= 5, error_out=False)        
+        return obj
+    
+    def consultarNombre(self,nombre,id):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(DocumentosEmpleado.nombreDocumento ==nombre,DocumentosEmpleado.idEmpleado ==id ).first()
+        if item!=None:
+           salida["estatus"]="Error"
+           salida["mensaje"]="El docuemnto "+ nombre +" ya se encuentra registrado."
+        else:
+           salida["estatus"]="Ok"
+           salida["mensaje"]="El documento "+ nombre +" esta libre."
+        return salida
 
 
 

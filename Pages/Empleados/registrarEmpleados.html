@@ -1,0 +1,249 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro de empleado </p>
+</div>
+
+
+<ul class="nav nav-tabs container ">
+  <li class="active"><a data-toggle="tab" href="#PestañaPeronal">Datos Personales</a></li>
+  <li><a data-toggle="tab" href="#PestañaDomicilio">Domicilio</a></li>
+  <li><a data-toggle="tab" href="#PestañaEscolares">Datos Escolares</a></li>
+  <li><a data-toggle="tab" href="#PestañaLaboral">Datos Laborales</a></li>
+  <li><a data-toggle="tab" href="#PestañaUsuario">Datos de Usuario</a></li>  
+</ul>
+<div class="contenedor2">
+  <form action="/registarEmpleado" method="post" enctype="multipart/form-data">  
+    
+    
+    <div class="tab-content">
+      <div id="PestañaPeronal" class="tab-pane fade in active">       
+        
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <label>Nombre </label>
+            <input type="text" class="form-control" name="nombre" id="nombre" required onblur="consultarNombreCompleto()">
+          </div>
+          <div class="form-group col-sm-4">
+            <label>Apellido Paterno </label>
+            <input type="text" class="form-control" name="apellidoPaterno" id="paterno" required onblur="consultarNombreCompleto()">
+          </div>
+          <div class="form-group col-sm-4">
+            <label>Apellido Materno </label>
+            <input type="text" class="form-control" name="apellidoMaterno" id="materno" required onblur="consultarNombreCompleto()">
+          </div>          
+          
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Fecha Nacimiento </label>
+            <input type="date" class="form-control" name="fechaNacimiento" id="nacimiento" required onblur="validarEdad()">
+            <div id="mensajeEdad" style="background-color:brown;color:white">
+            </div>
+          </div>
+          <div class="form-group col-sm-4">
+            <label>CURP</label>
+            <input type="text" class="form-control" name="curp" id="curp" pattern="^([A-Z][A-Z][A-Z][A-Z](\d)(\d)(\d)(\d)(\d)(\d)[HM][A-Z][A-Z][A-Z][A-Z][A-Z][A-Z\d])(\d)$" title="Todos los caractéres deben estar en mayúsculas y debe coincidir con el formato de la CURP" required onblur="consultarCURP()">
+            <div id="mensajeCURP" style="background-color:brown;color:white">
+            </div>
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Sexo </label>
+            <select class="form-control"  name="sexo" >
+              <option  value="M">Masculino</option>      
+              <option  value="F">Femenino</option>                   
+            </select>
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Estado Civil </label>
+            <select class="form-control"  name="estadoCivil" >
+              <option  value="Soltero">Soltero</option>      
+              <option  value="Casado">Casado</option>
+              <option  value="Divorciado">Divorciado</option>
+              <option  value="Viudo">Viudo</option>               
+            </select>            
+          </div>      
+        </div>
+      </div>    
+
+      <div id="PestañaDomicilio" class="tab-pane fade">
+        <div class="row">
+
+          <div class="form-group col-sm-3">
+            <label>Ciudad </label>
+            <select class="form-control"  name="idCiudad" >
+              {% for c in ciudades.consultarAll() %}        
+                <option value="{{c.idCiudad}}">
+                {{c.nombre}}                            
+                </option>        
+              {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Direccion</label>
+            <input type="text" class="form-control" name="direccion" required>
+          </div>
+          <div class="form-group col-sm-3">
+            <label>Colonia</label>
+            <input type="text" class="form-control" name="colonia" required>
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Codigo Postal</label>
+            <input type="text" class="form-control" name="codigoPostal" pattern="[0-9][0-9][0-9][0-9][0-9]" title="Deben ser 5 numero" required>
+          </div>         
+        </div>        
+      </div>
+
+      <div id="PestañaEscolares" class="tab-pane fade">
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <label>Escolaridad </label>
+            <select class="form-control"  name="escolaridad" >
+              <option  value="Bachillerato">Bachillerato</option>      
+              <option  value="Licenciatura">Licenciatura</option>
+              <option  value="Maestría">Maestría</option>      
+              <option  value="Doctorado">Doctorado</option>                                
+            </select>            
+          </div>
+          <div class="form-group col-sm-4">
+            <label>Especialidad</label>
+            <input type="text" class="form-control" name="especialidad" required>
+          </div>                 
+        </div>        
+      </div>
+
+      <div id="PestañaLaboral" class="tab-pane fade">        
+        <div class="row">
+
+          <div class="form-group col-sm-4">
+            <label>Fecha Contratacion</label>
+            <input type="date" class="form-control" name="fechaContratacion" required>
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Sucursal </label>
+            <select class="form-control"  name="idSucursal" >
+              {% for s in sucursales.consultarAll()  %}        
+                <option value="{{s.idSucursal}}">
+                {{s.nombre}}                            
+                </option>        
+              {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Departamento </label>
+            <select class="form-control"  name="idDepartamento" >
+              {% for d in departamentos.consultarAll()  %}        
+                <option value="{{d.idDepartamento}}">
+                {{d.nombre}}                            
+                </option>        
+              {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Turno </label>
+            <select class="form-control"  name="idTurno" >
+              {% for t in turnos.consultarAll()  %}        
+                <option value="{{t.idTurno}}">                
+                  {{t.nombre}},
+                  {{t.horaInicio.time()}} - {{t.horaInicio.time()}}, 
+                  ( {{t.dias}} )                                                         
+                </option>        
+              {% endfor %}                                
+            </select>
+          </div>  
+          
+          <div class="form-group col-sm-4">
+            <label>Puesto </label>
+            <select class="form-control"  name="idPuesto" id="puesto" onblur="validarSalario()">
+              {% for p in puestos.consultarAll()  %}        
+                <option value="{{p.idPuesto}}">
+                {{p.nombre}}                            
+                </option>        
+              {% endfor %}                                
+            </select>
+          </div>                
+
+          <div class="form-group col-sm-4">
+            <label>Salario Diario</label>
+            <input type="number" class="form-control" name="salarioDiario" id="salario" required onblur="validarSalario()">
+            <div id="mensajeSalario" style="background-color:brown;color:white">
+            </div>
+          </div>
+
+                      
+
+          <div class="form-group col-sm-4">
+            <label>Dias de Vacaciones</label>
+            <input type="number" class="form-control" name="diasVacaciones" min="1" pattern="^[0-9]+" step="1" required>
+          </div> 
+          <div class="form-group col-sm-4">
+            <label>Dias de Permiso</label>
+            <input type="number" class="form-control" name="diasPermiso" min="1" pattern="^[0-9]+" step="1" required>
+          </div>
+           
+          <div class="form-group col-sm-4">
+            <label>NSS</label>
+            <input type="text" class="form-control" name="nss" id="nss" required onblur="consultarNSS()">
+            <div id="mensajeNSS" style="background-color:brown;color:white">
+            </div>
+          </div>     
+        </div>
+
+      </div>   
+
+      <div id="PestañaUsuario" class="tab-pane fade">
+        
+        <div class="form-group">            
+            <label>Imagen:</label>         
+            <input   class="form-control"  type="file" name="foto" required >                      
+          </div>
+          
+          <div class="form-group col-sm-4">
+          <label>Email</label>
+          <input type="text" class="form-control" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Email invalido" required onblur="consultarEmail()">
+          <div id="mensajeEmail" style="background-color:brown;color:white">
+          </div>
+        </div>                                                         
+          <div class="form-group col-sm-4">
+          <label>Password</label>
+          <input type="password" class="form-control" pattern="^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$" title="La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter no alfanumérico." name="paassword" required>
+        </div> 
+        <div class="form-group col-sm-4">
+          <label>Tipo</label>
+          <select class="form-control"  name="tipo" >
+            <option  value="Admin">Administrador</option>      
+            <option  value="Staff">Staff</option>
+            <option  value="Empleado">Empleado</option>                                         
+          </select>            
+        </div>         
+        <div class="form-group">
+          <label>Estatus:</label>
+          <input type="checkbox" class="form-control " name="estatus" value="True" >         
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/empleados" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+
+<script src="{{url_for('static', filename='js/empleados.js')}}"></script>
+{%endblock%}

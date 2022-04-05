@@ -4,9 +4,9 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
-from array import array
+from datetime import datetime
 
 import json
 
@@ -30,7 +30,7 @@ def iniciar():
 def inicio():    
     return  render_template('inicio/inicio.html')
  
-# Enrutamiento login
+# Enrutamiento login---------------------------------------------------------------------------------------------
 @app.route('/login')
 def login():    
     return  render_template('login/login.html')
@@ -58,7 +58,7 @@ def cerrarSesion():
 def load_user(id):
     return Empleados.query.get(int(id))
 
-#Puestos
+#Puestos----------------------------------------------------------------------------------------------------
 @app.route('/puestos')
 @login_required
 def puestos():
@@ -552,6 +552,266 @@ def eliminarFP(id):
 def consultarNombreFP(nombre):
     item=FormasdePago()    
     return json.dumps(item.consultarNombre(nombre))
+
+# Enrutamiento Empleados----------------------------------------------------------------------
+@app.route('/empleados')
+@login_required
+def empleados():
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        p=Empleados()
+        page = request.args.get('page', 1, type=int)
+        paginacion = p.consultarPagina(page)         
+        return  render_template('Empleados/empleados.html', empleados =paginacion.items, pagination = paginacion  )
+    else:
+        abort(404)
+
+@app.route('/empleadosR')
+@login_required
+def empleadosR():
+    if current_user.is_authenticated() and current_user.is_admin():
+        p = Puestos()
+        d = Departamentos()
+        s = Sucursales()
+        c = Ciudades()
+        t = Turnos()
+        return  render_template('Empleados/registrarEmpleados.html', puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t)
+    else:
+        abort(404)
+
+@app.route('/empleadosE/<int:id>')
+@login_required
+def empleadosE(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        empleados =  Empleados()
+        p = Puestos()
+        d = Departamentos()
+        s = Sucursales()
+        c = Ciudades()
+        t = Turnos()
+        empleados = empleados.consultar(id)
+        return  render_template('Empleados/editarEmpleados.html', empleado = empleados, puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t)
+    else:
+        abort(404)
+
+@app.route('/registarEmpleado',methods=['post'])
+@login_required
+def registarEmpleado(): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        empleado = Empleados()        
+        empleado.nombre = request.form["nombre"]
+        empleado.apellidoPaterno = request.form["apellidoPaterno"]
+        empleado.apellidoMaterno = request.form["apellidoMaterno"]
+        empleado.sexo = request.form["sexo"]
+        empleado.fechaNacimiento = request.form["fechaNacimiento"]
+        empleado.curp = request.form["curp"]
+        empleado.estadoCivil = request.form["estadoCivil"]
+        empleado.fechaContratacion = request.form["fechaContratacion"]
+        empleado.salarioDiario = request.form["salarioDiario"]
+        empleado.nss = request.form["nss"]
+        empleado.diasVacaciones = request.form["diasVacaciones"]
+        empleado.diasPermiso = request.form["diasPermiso"]
+        empleado.fotografia=request.files['foto'].read()     
+        empleado.direccion = request.form["direccion"]
+        empleado.colonia = request.form["colonia"]
+        empleado.codigoPostal = request.form["codigoPostal"]
+        empleado.escolaridad = request.form["escolaridad"]
+        empleado.especialidad = request.form["especialidad"]
+        empleado.email = request.form["email"]
+        empleado.paassword = request.form["paassword"]
+        empleado.tipo = request.form["tipo"]
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            empleado.estatus='A'
+        else:
+            empleado.estatus='I'
+        empleado.idDepartamento = request.form["idDepartamento"]
+        empleado.idPuesto = request.form["idPuesto"]
+        empleado.idCiudad = request.form["idCiudad"]
+        empleado.idSucursal = request.form["idSucursal"]
+        empleado.idTurno = request.form["idTurno"]
+               
+         
+        empleado.registrar()
+        flash('Empleado registrado con exito')
+        return  redirect(url_for('empleadosR'))
+    else:
+        abort(404)
+
+@app.route('/editarEmpleado/<int:id>',methods=['post'])
+@login_required
+def editarEmpelado(id): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        empleado = Empleados()        
+        empleado.nombre = request.form["nombre"]
+        empleado.apellidoPaterno = request.form["apellidoPaterno"]
+        empleado.apellidoMaterno = request.form["apellidoMaterno"]
+        empleado.sexo = request.form["sexo"]
+        empleado.fechaNacimiento = request.form["fechaNacimiento"]
+        empleado.curp = request.form["curp"]
+        empleado.estadoCivil = request.form["estadoCivil"]
+        empleado.fechaContratacion = request.form["fechaContratacion"]
+        empleado.salarioDiario = request.form["salarioDiario"]
+        empleado.nss = request.form["nss"]
+        empleado.diasVacaciones = request.form["diasVacaciones"]
+        empleado.diasPermiso = request.form["diasPermiso"]
+        imagen = request.files['foto'].read()  
+        if imagen:
+            empleado.fotografia=  imagen 
+        empleado.direccion = request.form["direccion"]
+        empleado.colonia = request.form["colonia"]
+        empleado.codigoPostal = request.form["codigoPostal"]
+        empleado.escolaridad = request.form["escolaridad"]
+        empleado.especialidad = request.form["especialidad"]
+        empleado.email = request.form["email"]
+        empleado.paassword = request.form["paassword"]
+        empleado.tipo = request.form["tipo"]
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            empleado.estatus='A'
+        else:
+            empleado.estatus='I'
+        empleado.idDepartamento = request.form["idDepartamento"]
+        empleado.idPuesto = request.form["idPuesto"]
+        empleado.idCiudad = request.form["idCiudad"]
+        empleado.idSucursal = request.form["idSucursal"]
+        empleado.idTurno = request.form["idTurno"] 
+
+        empleado.idEmpleado = id
+        empleado.actualizar()
+        flash('Empleado actualizado con exito')
+        return  redirect(url_for('empleadosE', id= empleado.idEmpleado))
+    else:
+        abort(404)
+
+@app.route('/eliminarEmpleado/<int:id>')
+@login_required
+def eliminarEmpleado(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        empleado = Empleados()
+        empleado.eliminar(id)
+        flash('Empleado eliminado con exito')
+        return  redirect(url_for('empleados'))
+    else:
+        abort(404)
+
+@app.route('/empleadosVer/<int:id>')
+@login_required
+def empleadosVer(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        empleados =  Empleados()
+        p = Puestos()
+        d = Departamentos()
+        s = Sucursales()
+        c = Ciudades()
+        t = Turnos()
+        doc = DocumentosEmpleado()
+        doc = doc.consultarAll()
+        empleados = empleados.consultar(id)
+        return  render_template('Empleados/verPerfil.html', empleado = empleados, puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t, documentos = doc, len = len(doc))
+    else:
+        abort(404)
+
+@app.route('/fortografia/<int:id>')
+def getFotografia(id):
+    e=Empleados()
+    return e.consultar(id).fotografia
+
+@app.route('/empleados/nombre/<string:nombre>/<string:apP>/<string:apM>',methods=['get'])
+def consultarNombreE(nombre, apP, apM):
+    item=Empleados()    
+    return json.dumps(item.ExisteEmpleado(nombre,apP,apM))
+
+@app.route('/empleados/email/<string:email>',methods=['get'])
+def consultarEmail(email):
+    item=Empleados()    
+    return json.dumps(item.ExisteEmail(email))
+
+@app.route('/empleados/curp/<string:curp>',methods=['get'])
+def consultarCURP(curp):
+    item=Empleados()    
+    return json.dumps(item.ExisteCURP(curp))
+
+@app.route('/empleados/nss/<string:nss>',methods=['get'])
+def consultarNSS(nss):
+    item=Empleados()    
+    return json.dumps(item.ExisteNSS(nss))
+
+@app.route('/empleados/salario/<int:salario>/<int:puesto>',methods=['get'])
+def validarSalario(salario, puesto):
+    item=Empleados()    
+    return json.dumps(item.ValidarSalario(salario,puesto))
+
+#Documentos de empleados------------------------------------------------------------------------------------------------
+@app.route('/documentacionER/<int:empleado>')
+@login_required
+def documentacionER(empleado):
+    if current_user.is_authenticated() and current_user.is_admin():              
+        return  render_template('Empleados/registrarDocumentos.html', idEmpleado = empleado)
+    else:
+        abort(404)
+
+@app.route('/documentacionEE/<int:id>')
+@login_required
+def documentacionEE(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        documento = DocumentosEmpleado()        
+        return  render_template('Empleados/editarDocumentos.html',documento = documento.consultar(id) )
+    else:
+        abort(404)
+
+@app.route('/registrarDocumentacion/<int:empleado>',methods=['post'])
+@login_required
+def registrarDocumentacion(empleado):
+    if current_user.is_authenticated() and current_user.is_admin():
+        documento=DocumentosEmpleado()
+        documento.nombreDocumento= request.form['nombreDocumento']
+        documento.fechaEntregga = datetime.today() 
+        documento.documento = request.files['documento'].read()
+        documento.idEmpleado = empleado            
+        documento.registrar()
+        flash('Documento registrado con exito')
+        return  redirect(url_for('documentacionER', empleado = empleado))
+    else:
+        abort(404)
+
+@app.route('/editarDocumentacion/<int:id>',methods=['post'])
+@login_required
+def editarDocumentacion(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        documento=DocumentosEmpleado()
+        documento.nombreDocumento= request.form['nombreDocumento']
+        documento.fechaEntregga = datetime.today() 
+        doc = request.files['documento'].read()
+        if doc:
+            documento.documento = doc
+        documento.actualizar()
+        flash('Documento actualizado con exito')
+        return  redirect(url_for('documentacionEE', id= id))
+    else:
+        abort(404)
+
+@app.route('/documento/<int:id>')
+def getDocumento(id):
+    doc=DocumentosEmpleado()
+    doc = doc.consultar(id).documento  
+    return doc
+
+@app.route('/documento/nombre/<string:nombre>/<int:id>',methods=['get'])
+def consultarNombreDocumento(nombre,id):
+    item=DocumentosEmpleado()    
+    return json.dumps(item.consultarNombre(nombre,id))
+
+@app.route('/eliminarDocumento/<int:id>')
+@login_required
+def eliminarDocumento(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        doc = DocumentosEmpleado()
+        empleado = doc.consultar(id).idEmpleado
+        doc.eliminar(id)
+        flash('Documento eliminado con exito')
+        return  redirect(url_for('empleadosVer', id= empleado))
+    else:
+        abort(404)
 
 #Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)

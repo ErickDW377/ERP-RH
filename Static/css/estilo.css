@@ -91,3 +91,24 @@ nav a {
     margin-bottom: 60px;
 }
 
+.contenedor2{
+    width: 80%;
+    margin: auto;
+    margin-bottom: 50px;    
+    background-color: rgba(189, 189, 189, 0.438);
+    border-radius: 10px;  
+    padding: 40px;    
+}
+
+.foto{
+    width: 77%;
+    margin: auto;
+    margin-bottom: 15px;     
+}
+
+
+.scroll {
+    overflow:scroll;
+    height:300px;
+    width:100%;
+}

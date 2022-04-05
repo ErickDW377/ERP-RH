@@ -1,0 +1,242 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>
+    <img src="/fortografia/{{empleado.idEmpleado}}" width="6%", height="6%" >  
+   {{empleado.nombre}} {{empleado.apellidoPaterno}} {{empleado.apellidoMaterno}}  </p>
+</div>
+
+
+<ul class="nav nav-tabs container ">
+  <li class="active"><a data-toggle="tab" href="#PestañaPeronal">Datos Personales</a></li>
+  <li><a data-toggle="tab" href="#PestañaDomicilio">Domicilio</a></li>
+  <li><a data-toggle="tab" href="#PestañaEscolares">Datos Escolares</a></li>
+  <li><a data-toggle="tab" href="#PestañaLaboral">Datos Laborales</a></li>
+  <li><a data-toggle="tab" href="#PestañaUsuario">Datos de Usuario</a></li>
+  <li onclick=" doc = documentos.consultarAll()"><a data-toggle="tab" href="#PestañaDocumentos">Documentos</a></li>    
+</ul>
+<div class="contenedor2">   
+    <div class="tab-content row">
+      <div id="PestañaPeronal" class="tab-pane fade in active">       
+        <table class="table  tabla">
+            <thead>                           
+              <th>Fecha de Nacimiento</th>      
+              <th>CURP</th>
+              <th>Sexo</th>
+              <th>Estado Civil</th> 
+            </thead>
+        
+            <tbody id="myTable"> 
+              <tr>
+                <td>{{empleado.fechaNacimiento}}</td>
+                <td>{{empleado.curp}}</td>
+                <td>{{empleado.sexo}}</td>
+                <td>{{empleado.estadoCivil}}</td>
+              </tr>
+            </tbody>
+        </table>    
+        </div>
+         
+
+      <div id="PestañaDomicilio" class="tab-pane fade">
+        <table class="table  tabla">
+          <thead>                           
+            <th>Ciudad</th>      
+            <th>Direccion</th>
+            <th>Colonia</th>
+            <th>Codigo Postal</th> 
+          </thead>
+      
+          <tbody id="myTable"> 
+            <tr>
+              <td>{{empleado.getCiudad()}}</td>
+              <td>{{empleado.direccion}}</td>
+              <td>{{empleado.colonia}}</td>
+              <td>{{empleado.codigoPostal}}</td>
+            </tr>
+          </tbody>
+      </table>                 
+        </div>        
+      
+
+      <div id="PestañaEscolares" class="tab-pane fade">
+        <table class="table  tabla">
+          <thead>                           
+            <th>Escolaridad</th>      
+            <th>Especialidad</th>
+            
+          </thead>
+      
+          <tbody id="myTable"> 
+            <tr>
+              <td>{{empleado.escolaridad}}</td>
+              <td>{{empleado.especialidad}}</td>
+              
+            </tr>
+          </tbody>
+      </table> 
+                        
+        </div>        
+     
+
+      <div id="PestañaLaboral" class="tab-pane fade">        
+        <table class="table  tabla">
+          <thead>                           
+            <th>Fecha Contratacion</th>      
+            <th>Sucursal</th>
+            <th>Departamento</th>
+            <th>Turno</th>            
+            <th>NSS</th>      
+          </thead>
+      
+          <tbody id="myTable"> 
+            <tr>
+              <td>{{empleado.fechaContratacion}}</td>
+              <td>{{empleado.getSucursal()}}</td>
+              <td>{{empleado.getDepartamento()}}</td>
+              <td>{{empleado.getTurno()}}</td>              
+              <td>{{empleado.nss}}</td>
+            </tr>
+          </tbody>
+      </table> 
+
+      <table class="table  tabla">
+        <thead>          
+          <th>Puesto</th>      
+          <th>Salario Diario</th>
+          <th>Dias de Vacaciones</th>
+          <th>Dias de Permiso</th>              
+        </thead>
+    
+        <tbody id="myTable"> 
+          <tr>            
+            <td>{{empleado.getPuesto()}}</td>
+            <td>{{empleado.salarioDiario}}</td>
+            <td>{{empleado.diasVacaciones}}</td>
+            <td>{{empleado.diasPermiso}}</td>            
+          </tr>
+        </tbody>
+    </table>  
+
+        </div>   
+
+      <div id="PestañaUsuario" class="tab-pane fade">
+        <table class="table  tabla">
+          <thead>          
+            <th>Email</th>      
+            <th>Password</th>
+            <th>Tipo</th>
+            <th>Estatus</th>              
+          </thead>
+      
+          <tbody id="myTable"> 
+            <tr>            
+              <td>{{empleado.email}}</td>
+              <td>{{empleado.paassword}}</td>
+              <td>{{empleado.tipo}}</td>
+              <td>{{empleado.estatus}}</td>            
+            </tr>
+          </tbody>
+      </table>   
+         
+      </div>
+    
+      <div id="PestañaDocumentos" class="tab-pane fade">          
+        
+        <a type="button" class="btn btn-default" href="/documentacionER/{{empleado.idEmpleado}}">
+          <span class="glyphicon glyphicon-plus"></span>
+          Agregar Documento
+        </a>
+        {% if len == 0 %}
+          <h1 class="text-center"><small>No hay documentos</small></h1>
+        {% else %}        
+        <div class="scroll">
+        <table class="table table-hover   tabla ">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Documento</th>
+              <th>Fecha de Actualización</th>
+              <th></th>      
+              <th></th>
+            </tr>
+          </thead>
+          
+          <tbody >
+            
+            {% for  obj in documentos %}
+            <tr >
+              <td>{{obj.nombreDocumento}}</td>
+              <td><a data-toggle="modal" data-target="#verDoc{{obj.idDocumento}}">{{obj.nombreDocumento}}.pdf</a></td>
+              <td>{{obj.fechaEntregga}}</td>
+              <td>
+                <a href="/documentacionEE/{{obj.idDocumento}}" class="btn btn-success" role="button">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  Editar</a>
+              </td>                 
+              <td>
+                <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idDocumento}}">
+                  <span class="glyphicon glyphicon-trash"></span>
+                  Eliminar </a>
+              </td>
+            </tr>
+            <div id="verDoc{{obj.idDocumento}}" class="modal fade" role="dialog" >
+              <div class="modal-dialog modal-lg">        
+                <div class="modal-content" >
+                  <div class="modal-header">                    
+                    <h4 class="modal-title">{{obj.nombreDocumento}}</h4>                    
+                  </div>                   
+                    <embed  src="/documento/{{obj.idDocumento}}" type="application/pdf" width="100%" height="550px"/> 
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+                    </div>                                
+                </div>
+              </div>
+            </div>
+
+            <div id="eliminar{{obj.idDocumento}}" class="modal fade" role="dialog">
+              <div class="modal-dialog">   
+        
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                      &times;
+                    </button>
+                    <h4 class="modal-title">Confirmacion de proceso</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>¿Estas seguro de eliminar el documento: {{obj.nombreDocumento}} ?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="/eliminarDocumento/{{obj.idDocumento}}" class="btn btn-info"
+                      >Aceptar</a
+                    >
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}                     
+          </tbody>
+        
+        </table>
+      </div>      
+      {% endif %}
+        
+    </div>
+    </div>
+</div>
+
+<script src="{{url_for('static', filename='js/empleados.js')}}"></script>
+{%endblock%}

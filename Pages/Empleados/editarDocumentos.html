@@ -1,0 +1,42 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificacion de documento de empleado </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/registrarDocumentacion/{{idEmpleado}}" method="post" enctype="multipart/form-data">   
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" class="form-control" name="nombreDocumento" id="nombre"  onchange='consultarDocumento("documento","{{documento.idEmpleado}}")' value="{{documento.nombreDocumento}}"  required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+    <div class="form-group">
+        <div class="">
+        <label>Documento:</label>
+        </div>
+        <div class="">
+        <input type="file" name="documento" accept=".pdf"  required >
+        </div>
+      </div>       
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/empleadosVer/{{documento.idEmpleado}}" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+
+<script src="{{url_for('static', filename='js/empleados.js')}}"></script>
+{%endblock%}

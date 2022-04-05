@@ -1,0 +1,340 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificar empleado </p>
+</div>
+
+<div class="foto">
+  <img src="/fortografia/{{empleado.idEmpleado}}" width="8%", height="8%" >
+  <div class="form-group">    
+    <input type="file" name="foto"  value="{{empleado.fotografia}}" >      
+  </div>
+</div>
+
+
+<div>
+  <form action="/editarEmpleado/{{empleado.idEmpleado}}" method="post" enctype="multipart/form-data">  
+  
+  
+    
+    <ul class="nav nav-tabs container ">
+      <li class="active"><a data-toggle="tab" href="#PestañaPeronal">Datos Personales</a></li>
+      <li><a data-toggle="tab" href="#PestañaDomicilio">Domicilio</a></li>
+      <li><a data-toggle="tab" href="#PestañaEscolares">Datos Escolares</a></li>
+      <li><a data-toggle="tab" href="#PestañaLaboral">Datos Laborales</a></li>
+      <li><a data-toggle="tab" href="#PestañaUsuario">Datos de Usuario</a></li>  
+    </ul>
+<div class="contenedor2">
+    <div class="tab-content">
+      <div id="PestañaPeronal" class="tab-pane fade in active">       
+        
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <label>Nombre </label>
+            <input type="text" class="form-control" name="nombre" id="nombre" required onchange="consultarNombreCompleto()" value="{{empleado.nombre}}">
+          </div>
+          <div class="form-group col-sm-4">
+            <label>Apellido Paterno </label>
+            <input type="text" class="form-control" name="apellidoPaterno" id="paterno" required onchange="consultarNombreCompleto()" value="{{empleado.apellidoPaterno}}">
+          </div>
+          <div class="form-group col-sm-4">
+            <label>Apellido Materno </label>
+            <input type="text" class="form-control" name="apellidoMaterno" id="materno" required onchange="consultarNombreCompleto()" value="{{empleado.apellidoMaterno}}">
+          </div>          
+          
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Fecha Nacimiento </label>
+            <input type="date" class="form-control" name="fechaNacimiento" id="nacimiento" required onchange="validarEdad()" value="{{empleado.fechaNacimiento}}">
+            <div id="mensajeEdad" style="background-color:brown;color:white">
+            </div>
+          </div>
+          <div class="form-group col-sm-4">
+            <label>CURP</label>
+            <input type="text" class="form-control" name="curp" id="curp" pattern="^([A-Z][A-Z][A-Z][A-Z](\d)(\d)(\d)(\d)(\d)(\d)[HM][A-Z][A-Z][A-Z][A-Z][A-Z][A-Z\d])(\d)$" title="Todos los caractéres deben estar en mayúsculas y debe coincidir con el formato de la CURP" required onchange="consultarCURP()"  value="{{empleado.curp}}">
+            <div id="mensajeCURP" style="background-color:brown;color:white">
+            </div>
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Sexo </label>
+            <select class="form-control"  name="sexo" >
+              {% if empleado.sexo == 'M' %}
+              <option  value="M">Masculino</option>      
+              <option  value="F">Femenino</option>
+              {% else %}
+              <option  value="F">Femenino</option>
+              <option  value="M">Masculino</option>           
+              {% endif %}                  
+            </select>
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Estado Civil </label>
+            <select class="form-control"  name="estadoCivil" >
+              {% if empleado.estadoCivil == "Soltero" %}
+              <option  value="Soltero" selected>Soltero</option> 
+              {% else %}
+              <option  value="Soltero" >Soltero</option>              
+              {%endif%} 
+              {% if empleado.estadoCivil == "Casado" %}
+              <option  value="Casado" selected>Casado</option>
+              {% else %}
+              <option  value="Casado">Casado</option>
+              {%endif%} 
+              {% if empleado.estadoCivil == "Divorciado" %}
+              <option  value="Divorciado" selected>Divorciado</option>
+              {% else %}
+              <option  value="Divorciado">Divorciado</option>
+              {%endif%} 
+              {% if empleado.estadoCivil == "Viudo"%}
+              <option  value="Viudo" selected>Viudo</option>
+              {% else %}
+              <option  value="Viudo">Viudo</option>
+              {%endif%}      
+                         
+            </select>            
+          </div>      
+        </div>
+      </div>    
+
+      <div id="PestañaDomicilio" class="tab-pane fade">
+        <div class="row">
+
+          <div class="form-group col-sm-3">
+            <label>Ciudad </label>
+            <select class="form-control"  name="idCiudad" >
+              {% for c in ciudades.consultarAll() %}        
+              {% if empleado.idCiudad == c.idCiudad %}  
+              <option value="{{c.idCiudad}}" selected>
+                {{c.nombre}}                            
+                </option> 
+              {% else %}
+              <option value="{{c.idCiudad}}">
+                {{c.nombre}}                            
+                </option> 
+              {% endif %}
+              {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Direccion</label>
+            <input type="text" class="form-control" name="direccion" required value="{{empleado.direccion}}">
+          </div>
+          <div class="form-group col-sm-3">
+            <label>Colonia</label>
+            <input type="text" class="form-control" name="colonia" required value="{{empleado.colonia}}">
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Codigo Postal</label>
+            <input type="text" class="form-control" name="codigoPostal" pattern="[0-9][0-9][0-9][0-9][0-9]" title="Deben ser 5 numero" required value="{{empleado.codigoPostal}}">
+          </div>         
+        </div>        
+      </div>
+
+      <div id="PestañaEscolares" class="tab-pane fade">
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <label>Escolaridad </label>
+            <select class="form-control"  name="escolaridad" >
+              {%if empleado.escolaridad == 'Bachillerato'%}
+              <option  value="Bachillerato" selected>Bachillerato</option>
+              {%else%}
+              <option  value="Bachillerato">Bachillerato</option>
+              {%endif%}
+              {%if empleado.escolaridad == 'Licenciatura'%}      
+              <option  value="Licenciatura" selected>Licenciatura</option>
+              {%else%}
+              <option  value="Licenciatura">Licenciatura</option>
+              {%endif%}
+              {%if empleado.escolaridad == 'Maestría'%}
+              <option  value="Maestría" selected>Maestría</option>
+              {%else%}
+              <option  value="Maestría">Maestría</option>
+              {%endif%}
+              {%if empleado.escolaridad == 'Doctorado'%}      
+              <option  value="Doctorado" selected>Doctorado</option>
+              {%else%}
+              <option  value="Doctorado">Doctorado</option>
+              {%endif%}                                
+            </select>            
+          </div>
+          <div class="form-group col-sm-4">
+            <label>Especialidad</label>
+            <input type="text" class="form-control" name="especialidad" required value="{{empleado.especialidad}}">
+          </div>                 
+        </div>        
+      </div>
+
+      <div id="PestañaLaboral" class="tab-pane fade">        
+        <div class="row">
+
+          <div class="form-group col-sm-4">
+            <label>Fecha Contratacion</label>
+            <input type="date" class="form-control" name="fechaContratacion" required value="{{empleado.fechaContratacion}}">
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Sucursal </label>
+            <select class="form-control"  name="idSucursal" >
+              {% for s in sucursales.consultarAll()  %}        
+              {% if empleado.idSucursal == s.idSucursal%}  
+              <option value="{{s.idSucursal}}" selected>
+                {{s.nombre}}                            
+                </option>
+              {% else %}
+              <option value="{{s.idSucursal}}">
+                {{s.nombre}}                            
+                </option>
+              {% endif %}
+              {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Departamento </label>
+            <select class="form-control"  name="idDepartamento" >
+              {% for d in departamentos.consultarAll()  %}        
+              {% if empleado.Departamento == d.Departamento %}  
+              <option value="{{d.idDepartamento}}" selected>
+                {{d.nombre}}                            
+                </option>
+              {% else %}
+              <option value="{{d.idDepartamento}}">
+                {{d.nombre}}                            
+                </option>
+              {% endif %}
+              {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-4">
+            <label>Turno </label>
+            <select class="form-control"  name="idTurno" >
+              {% for t in turnos.consultarAll()  %}
+              {% if empleado.idTurno == t.idTurno %}       
+                <option value="{{t.idTurno}}" selected>                
+                  {{t.nombre}},
+                  {{t.horaInicio.time()}} - {{t.horaInicio.time()}}, 
+                  ( {{t.dias}} )                                                         
+                </option>
+              {% else %}
+                <option value="{{t.idTurno}}">                
+                  {{t.nombre}},
+                  {{t.horaInicio.time()}} - {{t.horaInicio.time()}}, 
+                  ( {{t.dias}} )                                                         
+                </option>
+              {% endif %}
+              {% endfor %}                                
+            </select>
+          </div>  
+          
+          <div class="form-group col-sm-4">
+            <label>Puesto </label>
+            <select class="form-control"  name="idPuesto" id="puesto" onchange="validarSalario()">
+              {% for p in puestos.consultarAll()  %}        
+              {% if empleado.idPuesto == p.idPuesto %}  
+              <option value="{{p.idPuesto}}" selected>
+                {{p.nombre}}                            
+                </option>
+              {% else %}
+              <option value="{{p.idPuesto}}">
+                {{p.nombre}}                            
+                </option>
+              {% endif %}
+              {% endfor %}                                
+            </select>
+          </div>                
+
+          <div class="form-group col-sm-4">
+            <label>Salario Diario</label>
+            <input type="number" class="form-control" name="salarioDiario" id="salario" required onchange="validarSalario()" value="{{empleado.salarioDiario}}">
+            <div id="mensajeSalario" style="background-color:brown;color:white">
+            </div>
+          </div>
+
+                      
+
+          <div class="form-group col-sm-4">
+            <label>Dias de Vacaciones</label>
+            <input type="number" class="form-control" name="diasVacaciones" min="1" pattern="^[0-9]+" step="1" required value="{{empleado.diasVacaciones}}">
+          </div> 
+          <div class="form-group col-sm-4">
+            <label>Dias de Permiso</label>
+            <input type="number" class="form-control" name="diasPermiso" min="1" pattern="^[0-9]+" step="1" required value="{{empleado.diasPermiso}}">
+          </div>
+           
+          <div class="form-group col-sm-4">
+            <label>NSS</label>
+            <input type="text" class="form-control" name="nss" id="nss" required onchange="consultarNSS()"  pattern="\d{11}$"  title="El nss debe tener una extencion de 11 dígitos" value="{{empleado.nss}}">
+            <div id="mensajeNSS" style="background-color:brown;color:white">
+            </div>
+          </div>     
+        </div>
+
+      </div>   
+
+      <div id="PestañaUsuario" class="tab-pane fade">
+          
+          <div class="form-group col-sm-4">
+          <label>Email</label>
+          <input type="text" class="form-control" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Email invalido" required onchange="consultarEmail()" value="{{empleado.email}}">
+          <div id="mensajeEmail" style="background-color:brown;color:white">
+          </div>
+        </div>                                                         
+          <div class="form-group col-sm-4">
+          <label>Password</label>
+          <input type="password" class="form-control" pattern="^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$" title="La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter no alfanumérico." name="paassword" required value="{{empleado.paassword}}">
+        </div> 
+        <div class="form-group col-sm-4">
+          <label>Tipo</label>
+          <select class="form-control"  name="tipo" >
+            {% if empleado.tipo == "Administrador" %}
+            <option  value="Admin" selected>Administrador</option>
+            {%else%}
+            <option  value="Admin">Administrador</option>
+            {%endif%}
+            {% if empleado.tipo == "Staff" %}      
+            <option  value="Staff" selected>Staff</option>
+            {%else%}
+            <option  value="Staff">Staff</option>
+            {%endif%}
+            {% if empleado.tipo == "Empleado" %}
+            <option  value="Empleado" selected>Empleado</option>
+            {%else%}
+            <option  value="Empleado">Empleado</option>
+            {%endif%}                                         
+          </select>            
+        </div>         
+        <div class="form-group">
+          <label>Estatus:</label>
+          {% if empleado.estatus == 'A'%}
+          <input type="checkbox" class="form-control " name="estatus" value="True" checked>
+          {%else%}
+          <input type="checkbox" class="form-control " name="estatus" value="True" >
+          {%endif%}
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/empleados" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </div>    
+  </form>
+</div>
+
+<script src="{{url_for('static', filename='js/empleados.js')}}"></script>
+{%endblock%}
