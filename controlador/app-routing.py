@@ -4,7 +4,7 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales 
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 
@@ -812,6 +812,113 @@ def eliminarDocumento(id):
         return  redirect(url_for('empleadosVer', id= empleado))
     else:
         abort(404)
+#CIUDADES-----------------------------------------------------------------------------------
+@app.route('/ciudades')
+@login_required
+def ciudades():
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        c=Ciudades()
+        page = request.args.get('page', 1, type=int)
+        paginacion = c.consultarPagina(page)         
+        return  render_template('Ciudades/ciudades.html', ciudades =paginacion.items, pagination = paginacion  )
+    else:
+        abort(404)
+        
+@app.route('/registrarCiudades')
+@login_required
+def ciudadesR():
+    if current_user.is_authenticated() and current_user.is_admin():        
+        estados = Estado()
+        return  render_template('Ciudades/registrarCiudades.html', estados = estados.consultarAll())
+    else:
+        abort(404)
+
+@app.route('/editarCiudades/<int:id>')
+@login_required
+def ciudadesE(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        ciudad = Ciudades()
+        ciudad = ciudad.consultar(id)
+        return  render_template('Ciudades/editarCiudades.html', ciudad= ciudad)
+    else:
+        abort(404)
+
+@app.route('/registrarC',methods=['post'])
+@login_required
+def registarC(): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        ciudad = Ciudades()
+        ciudad.nombre = request.form['nombreCiudad']
+        ciudad.idEstado=request.form['idestado']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            ciudad.estatus='A'
+        else:
+            ciudad.estatus='I' 
+        ciudad.registrar()
+        flash('Ciudad registrado con exito')
+        return  redirect(url_for('ciudadesR'))
+    else:
+        abort(404)
+@app.route('/autos/guardar/<int:editar>',methods=['post'])
+@login_required
+def guardarAutos(editar):
+    if current_user.is_authenticated and current_user.is_admin(): 
+        c=Ciudades()
+        c.idCliente= request.form['cliente']
+        c.placa= request.form['placa']
+        c.marca=request.form['marca']                  
+        c.modelo=request.form['modelo']                 
+        c.color= request.form['color']
+        c.año= request.form['año']
+        c.transmicion=request.form['transmicion']
+        if editar==1:
+            c.idAutomovil= int(request.form['id'])                             
+            c.actualizar()
+            flash('Auto editado con exito')                       
+        else:             
+                c.registrar()
+                flash('Auto registrado exitosamente')
+                
+        return  editarC(c.idEstado)
+    else:
+        abort(404)
+    
+
+@app.route('/editarC/<int:id>',methods=['post'])
+@login_required
+def editarC(id): 
+    if current_user.is_authenticated() and current_user.is_admin():  
+        ciudad = Ciudades()
+        ciudad.nombre = request.form['nombreCiudad']
+        ciudad.idEstado = request.form['idestado']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            ciudad.estatus='A'
+        else:
+            ciudad.estatus='I'  
+        ciudad.idCiudad = id
+        ciudad.actualizar()
+        flash('La Ciudad fue actualizado con exito')
+        return  redirect(url_for('ciudadesE', id= ciudad.idCiudad))
+    else:
+        abort(404)
+
+@app.route('/eliminarCiudad/<int:id>')
+@login_required
+def eliminarCiudad(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        ciudad = Ciudades()
+        ciudad.eliminar(id)
+        flash('Ciudad eliminada con exito')
+        return  redirect(url_for('ciudades'))
+    else:
+        abort(404)
+
+@app.route('/ciudades/nombre/<string:nombre>',methods=['get'])
+def consultarNombreC(nombre):
+    item=Ciudades()    
+    return json.dumps(item.consultarNombre(nombre))
 
 #Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)
@@ -821,4 +928,3 @@ def error_404(e):
 if __name__=='__main__':
     db.init_app(app)
     app.run(debug=True)
-    

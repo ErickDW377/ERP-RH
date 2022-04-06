@@ -423,7 +423,7 @@ class Empleados(db.Model):
         else:
             return False
 
-    def is_staff(self):
+    def is_empleado(self):
         if self.tipo=='Empleado':
             return True
         else:
@@ -476,7 +476,58 @@ class DocumentosEmpleado(db.Model):
            salida["mensaje"]="El documento "+ nombre +" esta libre."
         return salida
 
+#Ciudades-----------------------------------
+class Ciudades(db.Model):
+    __tablename__= 'RH_Ciudades'
+    idCiudad = Column(Integer, primary_key=True)
+    nombre = Column(String(60))
+    idEstado = Column(Integer)
+    estatus = Column(String(1))
 
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
+        db.session.commit()
+        
+    def getEstados(self):
+        estados =Estado()
+        estados= estados.consultar(self.idEstado)
+        return estados.nombre
+
+    def consultarPagina(self, pagina):
+        obj = None;
+        if current_user.is_admin():        
+            obj = self.query.order_by(Ciudades.idCiudad.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Ciudades.estatus=='A').order_by(Ciudades.idCiudad.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Ciudades.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
 
 
        

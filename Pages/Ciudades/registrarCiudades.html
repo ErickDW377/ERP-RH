@@ -1,0 +1,51 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro de Ciudades </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/registrarC" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input type="text" class="form-control " name="nombreCiudad" id="nombre"  onblur='consultarNombreC("ciudades")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+   
+
+<div class="form-group">
+      <form action="/action_page.php">
+          <label for="idestado">ID Estado:</label>
+          <select  name="estados"  id="idEstado" class="form-control ">
+            {%for obj in estados %}   
+            <option value="{{obj.idEstado}}">{{obj.nombre}}</option>
+            {% endfor %} 
+          </select>
+          <br><br>
+        </form>
+    </div>
+
+    <div class="form-group">
+      <label>Estatus:</label>
+      <input type="checkbox" class="form-control " name="estatus" value="True" >     
+    </div>    
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/estado" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+
+{%endblock%}
