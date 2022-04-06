@@ -849,41 +849,16 @@ def registarC():
     if current_user.is_authenticated() and current_user.is_admin():  
         ciudad = Ciudades()
         ciudad.nombre = request.form['nombreCiudad']
-        ciudad.idEstado=request.form['idestado']
         estatus = request.values.get('estatus',False)
         if estatus=="True":
             ciudad.estatus='A'
         else:
             ciudad.estatus='I' 
         ciudad.registrar()
-        flash('Ciudad registrado con exito')
+        flash('Ciudad registrada con exito')
         return  redirect(url_for('ciudadesR'))
     else:
         abort(404)
-@app.route('/autos/guardar/<int:editar>',methods=['post'])
-@login_required
-def guardarAutos(editar):
-    if current_user.is_authenticated and current_user.is_admin(): 
-        c=Ciudades()
-        c.idCliente= request.form['cliente']
-        c.placa= request.form['placa']
-        c.marca=request.form['marca']                  
-        c.modelo=request.form['modelo']                 
-        c.color= request.form['color']
-        c.año= request.form['año']
-        c.transmicion=request.form['transmicion']
-        if editar==1:
-            c.idAutomovil= int(request.form['id'])                             
-            c.actualizar()
-            flash('Auto editado con exito')                       
-        else:             
-                c.registrar()
-                flash('Auto registrado exitosamente')
-                
-        return  editarC(c.idEstado)
-    else:
-        abort(404)
-    
 
 @app.route('/editarC/<int:id>',methods=['post'])
 @login_required
@@ -891,7 +866,7 @@ def editarC(id):
     if current_user.is_authenticated() and current_user.is_admin():  
         ciudad = Ciudades()
         ciudad.nombre = request.form['nombreCiudad']
-        ciudad.idEstado = request.form['idestado']
+        ciudad.idEstado = request.form['idEstado']
         estatus = request.values.get('estatus',False)
         if estatus=="True":
             ciudad.estatus='A'
@@ -919,6 +894,9 @@ def eliminarCiudad(id):
 def consultarNombreC(nombre):
     item=Ciudades()    
     return json.dumps(item.consultarNombre(nombre))
+
+
+
 
 #Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)

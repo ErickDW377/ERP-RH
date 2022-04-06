@@ -523,7 +523,7 @@ class Ciudades(db.Model):
         item=self.query.filter(Ciudades.nombre==nombre).first()
         if item!=None:
             salida["estatus"]="Error"
-            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+            salida["mensaje"]="La ciudad "+nombre+" ya se encuentra registrado."
         else:
             salida["estatus"]="Ok"
             salida["mensaje"]="El nombre "+nombre+" esta libre."
