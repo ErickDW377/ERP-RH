@@ -1,0 +1,94 @@
+{% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion.html' as macros %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Catálogo Sucursales</p>
+</div>
+
+<div class="container input-group">
+  <span class="input-group-addon amarillo"><i class="glyphicon glyphicon-search"></i></span>
+  <input class="form-control" id="myInput" type="text" placeholder="Search...">
+  <br>
+</div>
+
+<div class="tabla"> 
+  <table class="table table-hover">
+    <thead>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Telefono</th>
+      <th>Direccion</th>
+      <th>Colonia</th>
+      <th>codigoPostal</th>
+      <th>Presupuesto</th>
+      <th>Estatus</th>      
+      <th></th>      
+      <th></th>    
+    </thead>
+
+    <tbody id="myTable"> 
+    {%for obj in sucursales%} 
+    <tr>
+      <td>{{obj.idSucursal}}</td>
+      <td>{{obj.nombre}}</td>
+      <td>{{obj.telefono}}</td>
+      <td>{{obj.direccion}} </td>
+      <td>{{obj.colonia}}</td>
+      <td>{{obj.CodigoPostal}}</td>
+      <td>{{obj.presupuesto}}</td>
+      <td>{{obj.estatus}}</td>       
+      <td>
+        <a href="/editarSucursal/{{obj.idSucursal}}" class="btn btn-success" role="button">
+          <span class="glyphicon glyphicon-pencil"></span>
+          Editar</a>
+      </td>   
+      <td>
+        <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idSucursal}}">
+          <span class="glyphicon glyphicon-trash"></span>
+          Eliminar </a>
+      </td>           
+    </tr>
+    <div id="eliminar{{obj.idSucursal}}" class="modal fade" role="dialog">
+      <div class="modal-dialog">   
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h4 class="modal-title">Confirmacion de proceso</h4>
+          </div>
+          <div class="modal-body">
+            <p>¿Estas seguro de eliminar el departamento: {{obj.nombre}} ?</p>
+          </div>
+          <div class="modal-footer">
+            <a href="/eliminarS/{{obj.idSucursal}}" class="btn btn-info"
+              >Aceptar</a
+            >
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<div class="paginacion">
+  {{ macros.pagination_widget(pagination, '.sucursales') }}
+</div>
+
+{%endblock%}

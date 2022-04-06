@@ -4,7 +4,7 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales 
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 
@@ -896,7 +896,96 @@ def consultarNombreC(nombre):
     return json.dumps(item.consultarNombre(nombre))
 
 
+# Enrutamiento sucursales-------------------------------------------------------------------
+@app.route('/sucursales')
+@login_required
+def sucursales():
+    if current_user.is_authenticated() and current_user.is_admin():
+        S=Sucursales() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = S.consultarPagina(page)         
+        return  render_template('Sucursales/sucursales.html', sucursales = paginacion.items, pagination = paginacion)
+    else:
+        abort(404)
 
+@app.route('/registrarSucursales')
+@login_required
+def sucursalesR():
+    if current_user.is_authenticated() and current_user.is_admin():
+        return  render_template('Sucursales/registrarSucursales.html')
+    else:
+        abort(404)
+        
+@app.route('/editarSucursal/<int:id>')
+@login_required
+def sucurE(id):
+    if current_user.is_authenticated() and current_user.is_admin():
+        sucursal = Sucursales()        
+        sucursal = sucursal.consultar(id)
+        return  render_template('Sucursales/editarSucursal.html', sucursales = sucursal)
+    else:
+        abort(404)
+        
+@app.route('/registrarS',methods=['post'])
+@login_required
+def registrarS():
+    if current_user.is_authenticated() and current_user.is_admin():
+        sucursal=Sucursales()
+        sucursal.nombre= request.form['nombreSucursales']
+        sucursal.telefono=  request.form['telefono']                  
+        sucursal.direccion=  request.form['direccion'] 
+        sucursal.colonia=  request.form['colonia']                   
+        sucursal.codigoPostal= request.form['codigoPostal']
+        sucursal.presupuesto=  request.form['presupuesto'] 
+        estatus = request.values.get('estatus',False)    
+        if estatus=="True":
+                sucursal.estatus='A'
+        else:
+            sucursal.estatus='I' 
+        sucursal.registrar()
+        flash('Sucursal registrada con exito')
+        return  redirect(url_for('sucursalesR'))
+    else:
+        abort(404)
+
+@app.route('/editaS/<int:id>',methods=['post'])
+@login_required
+def editaS(id):
+    if current_user.is_authenticated() and current_user.is_admin():  
+        sucursal=Sucursales()
+        sucursal.nombre= request.form['nombreSucursales']
+        sucursal.telefono=request.form['telefono']                
+        sucursal.direccion=  request.form['direccion'] 
+        sucursal.colonia=  request.form['colonia']                   
+        sucursal.codigoPostal= request.form['codigoPostal']
+        sucursal.presupuesto= request.form['presupuesto'] 
+        estatus = request.values.get('estatus',False) 
+        if estatus=="True":
+                 sucursal.estatus='A'
+        else:
+            sucursal.estatus='I'  
+        sucursal.idSucursal = id
+        sucursal.actualizar()
+        flash('Sucursal actualizada con exito')
+        return  redirect(url_for('sucurE', id= sucursal.idSucursal))
+    else:
+        abort(404)
+
+@app.route('/eliminarS/<int:id>')
+@login_required
+def eliminarS(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        sucursal = Sucursales()
+        sucursal.eliminar(id)
+        flash('Sucursal eliminado con exito')
+        return  redirect(url_for('sucursales'))
+    else:
+        abort(404)
+
+@app.route('/sucursales/nombre/<string:nombre>',methods=['get'])
+def consultarNombreS(nombre):
+    item=Sucursales()    
+    return json.dumps(item.consultarNombre(nombre))
 
 #Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)

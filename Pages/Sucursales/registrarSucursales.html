@@ -1,0 +1,60 @@
+{% extends 'componentes/menu.html' %}
+{%block encabezado%}
+<div class="encabezado txt-encabezado">
+    <label class="margenes-I">ERP</label>        
+</div>
+{%endblock%}
+{%block cuerpo%}
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro de Sucursales </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/registrarS" method="post" enctype="multipart/form-data">   
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" class="form-control" name="nombreSucursales"  onblur="consultarNombre('sucursales')" id="nombre" required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Telefono:</label>
+      <input type="text" class="form-control " name="telefono" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" required>
+    </div> 
+    <div class="form-group">
+      <label>Direccion:</label>
+      <input type="text" class="form-control " name="direccion" required>
+    </div> 
+    <div class="form-group">
+      <label>Colonia:</label>
+      <input type="text" class="form-control " name="colonia" required>
+     </div> 
+    <div class="form-group">
+        <label>Codigo Postal:</label>
+        <input type="text" class="form-control " name="codigoPostal"  pattern="[0-9][0-9][0-9][0-9][0-9]" title="Deben ser 5 numero"  required >
+    </div> 
+    <div class="form-group">
+        <label>Presupuesto:</label>
+        <input type="number" class="form-control " name="presupuesto" required>
+    </div>   
+    <div class="form-group">
+      <label>Estatus:</label>
+      <input type="checkbox" class="form-control " name="estatus" value="True" >     
+    </div>       
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/sucursales" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+{%endblock%}

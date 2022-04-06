@@ -1,0 +1,61 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificar Sucursales </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/editaS/{{sucursales.idSucursal}}" method="post" enctype="multipart/form-data">   
+    <div class="form-group">
+      <label>Nombre<label>
+      <input type="text" class="form-control" name="nombreSucursales" value="{{sucursales.nombre}}" onchange="consultarNombre('sucursales')" id="nombre"  required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+    <div>
+      <label> Telefono <label>
+      <input type="text" class="form-control" name="telefono" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" required value="{{sucursales.telefono}}" >
+    </div>
+
+    <div class="form-group">
+      <label>Direccion</label>
+      <input type="text" class="form-control" name="direccion" value="{{sucursales.direccion}}" required>
+    </div>
+    <div class="form-group">
+      <label>Colonia</label>
+      <input type="text" class="form-control" name="colonia" value="{{sucursales.colonia}}" required>
+    </div>
+    <div class="form-group">
+      <label>Codigo Postal</label>
+      <input type="text" class="form-control" name="codigoPostal" pattern="[0-9][0-9][0-9][0-9][0-9]" title="Deben ser 5 numero" required  value="{{sucursales.codigoPostal}}" >
+    </div>
+    <div class="form-group">
+      <label>Presupuesto:</label>
+      <input type="number" class="form-control " name="presupuesto" value="{{sucursales.presupuesto}}"  required>
+    </div>  
+    <div class="form-group">
+      <label>Estatus</label>
+      {% if sucursales.estatus=='A' %}
+      <input type="checkbox" class="form-control input-lg" name="estatus"  value='True' checked>
+      {% else %}
+      <input type="checkbox" class="form-control input-lg" name="estatus" value='True' >
+      {% endif %}
+    </div>   
+    <button type="submit" class="btn btn-primary btn-block">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Modificar
+    </button>
+    <a href="/sucursales" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+{%endblock%}

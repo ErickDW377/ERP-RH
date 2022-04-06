@@ -529,7 +529,56 @@ class Ciudades(db.Model):
             salida["mensaje"]="El nombre "+nombre+" esta libre."
         return salida 
 
+#Sucursales ------------------------------------    
+class Sucursales(db.Model):
+    __tablename__= 'RH_Sucursales'
+    idSucursal = Column(Integer, primary_key=True)
+    nombre = Column(String(50),nullable= False)
+    telefono= Column(String(15),nullable= False)
+    direccion = Column(String(80),nullable= False)
+    colonia = Column(String(50),nullable= False)
+    codigoPostal = Column(String(5),nullable= False)
+    presupuesto = Column(Float,nullable= False)
+    estatus = Column(String(1),nullable= False)
 
-       
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+        
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None;
+        if current_user.is_admin():        
+            obj = self.query.order_by(Sucursales.idSucursal.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Sucursales.estatus=='A').order_by(Sucursales.idSucursal.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Sucursales.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="La sucursal "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="La sucursal"+nombre+" esta libre."
+        return salida
 
 
