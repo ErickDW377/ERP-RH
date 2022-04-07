@@ -1,0 +1,52 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificar periodo </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/editarPeriodo/{{periodo.idPeriodo}}" method="post" enctype="multipart/form-data">   
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input type="text" class="form-control " name="nombre" id="nombre" value="{{periodo.nombre}}" required onblur='consultarNombre("periodos")'>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Fecha Inicio:</label>
+      <input type="date" class="form-control" name="fechaInicio" id="valorMin" value="{{periodo.fechaInicio}}" onblur="validarValoresMinMaxFechas()" required>
+    </div> 
+    <div class="form-group">
+      <label>Fecha Fin:</label>
+      <input type="date" class="form-control " name="fechaFin" id="valorMax" value="{{periodo.fechaFin}}" onblur="validarValoresMinMaxFechas()" required>      
+    </div> 
+
+    <div id="mensaje" style="background-color:brown;color:white"> 
+    </div>
+    
+    <div class="form-group">
+      <label>Estatus:</label>
+      {% if periodo.estatus=='A' %}
+      <input type="checkbox" class="form-control input-lg" name="estatus"  value='True' checked>
+      {% else %}
+      <input type="checkbox" class="form-control input-lg" name="estatus" value='True' >
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/periodos" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+{%endblock%}
