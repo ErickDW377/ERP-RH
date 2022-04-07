@@ -289,7 +289,8 @@ class Empleados(db.Model):
         db.session.commit()
 
     def consultar(self,id):
-        return self.query.get(id)
+        return self.query.get(id)  
+    
 
     def consultarAll(self):        
         return self.query.all()
@@ -307,9 +308,9 @@ class Empleados(db.Model):
     def consultarPagina(self, pagina):
         obj = None;
         if current_user.is_admin():        
-            obj = self.query.order_by(Empleados.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
+            obj = self.query.order_by(Empleados.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
         else:
-            obj = self.query.filter(Empleados.estatus=='A').order_by(Empleados.idPuesto.asc()).paginate(pagina,per_page= 5, error_out=False)
+            obj = self.query.filter(Empleados.estatus=='A').order_by(Empleados.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
 
     def getSucursal(self):
@@ -446,6 +447,12 @@ class DocumentosEmpleado(db.Model):
 
     def consultar(self,id):
         return self.query.get(id)
+    
+    def consultarDocs(self,id):             
+        return self.query.filter(DocumentosEmpleado.idEmpleado ==id)
+    
+    def contarDocs(self,id):             
+        return self.query.filter(DocumentosEmpleado.idEmpleado ==id).count()
 
     def consultarAll(self):        
         return self.query.all()

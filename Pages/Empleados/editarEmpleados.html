@@ -13,18 +13,18 @@
   <p>Modificar empleado </p>
 </div>
 
-<div class="foto">
-  <img src="/fortografia/{{empleado.idEmpleado}}" width="8%", height="8%" >
-  <div class="form-group">    
-    <input type="file" name="foto"  value="{{empleado.fotografia}}" >      
-  </div>
-</div>
+
 
 
 <div>
   <form action="/editarEmpleado/{{empleado.idEmpleado}}" method="post" enctype="multipart/form-data">  
   
-  
+    <div class="foto">
+      <img src="/fortografia/{{empleado.idEmpleado}}" width="8%", height="8%" >
+      <div class="form-group">    
+        <input type="file" name="foto"  value="{{empleado.fotografia}}" >      
+      </div>
+    </div>
     
     <ul class="nav nav-tabs container ">
       <li class="active"><a data-toggle="tab" href="#PestañaPeronal">Datos Personales</a></li>

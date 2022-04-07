@@ -705,9 +705,9 @@ def empleadosVer(id):
         c = Ciudades()
         t = Turnos()
         doc = DocumentosEmpleado()
-        doc = doc.consultarAll()
+        docs = doc.consultarDocs(id)
         empleados = empleados.consultar(id)
-        return  render_template('Empleados/verPerfil.html', empleado = empleados, puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t, documentos = doc, len = len(doc))
+        return  render_template('Empleados/verPerfil.html', empleado = empleados, puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t, documentos = docs, len = doc.contarDocs(id))
     else:
         abort(404)
 
@@ -717,7 +717,7 @@ def getFotografia(id):
     return e.consultar(id).fotografia
 
 @app.route('/empleados/nombre/<string:nombre>/<string:apP>/<string:apM>',methods=['get'])
-def consultarNombreE(nombre, apP, apM):
+def consultarNombreEm(nombre, apP, apM):
     item=Empleados()    
     return json.dumps(item.ExisteEmpleado(nombre,apP,apM))
 
@@ -784,6 +784,7 @@ def editarDocumentacion(id):
         doc = request.files['documento'].read()
         if doc:
             documento.documento = doc
+        documento.idDocumento  = id
         documento.actualizar()
         flash('Documento actualizado con exito')
         return  redirect(url_for('documentacionEE', id= id))
@@ -806,7 +807,8 @@ def consultarNombreDocumento(nombre,id):
 def eliminarDocumento(id):
     if current_user.is_authenticated() and current_user.is_admin(): 
         doc = DocumentosEmpleado()
-        empleado = doc.consultar(id).idEmpleado
+        empleado = doc.consultar(id)
+        empleado = empleado.idEmpleado
         doc.eliminar(id)
         flash('Documento eliminado con exito')
         return  redirect(url_for('empleadosVer', id= empleado))
