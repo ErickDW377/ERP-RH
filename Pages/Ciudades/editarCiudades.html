@@ -18,14 +18,21 @@
   <form action="/editarC/{{ciudad.idCiudad}}" method="post" enctype="multipart/form-data">   
     <div class="form-group">
       <label>Nombre:</label>
-      <input type="text" class="form-control" name="nombreCiudad" value="{{ciudad.nombre}}" id="nombre"  onblur='consultarNombreC("ciudades")' required>
+      <input type="text" class="form-control" name="nombreCiudad" value="{{ciudad.nombre}}" id="nombre"  onchange='consultarNombre("ciudades")' required>
       <div id="mensajeNombre" style="background-color:brown;color:white">
       </div>
     </div>
  
-<div class="form-group">
-        <label>ID Estado:</label>
-        <input type="text" class="form-control" name="idEstado" value="{{ciudad.idEstado}}" required>
+    <div class="form-group">
+      
+      <label for="idestado">ID Estado:</label>
+      <select  name="idEstado"  id="idEstado" class="form-control ">
+        {%for obj in estados %}   
+        <option value="{{obj.idEstado}}">{{obj.nombre}}</option>
+        {% endfor %} 
+      </select>
+      
+    
     </div>
 
 <div class="form-group">

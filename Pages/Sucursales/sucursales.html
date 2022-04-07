@@ -27,13 +27,20 @@
       <th>ID</th>
       <th>Nombre</th>
       <th>Telefono</th>
+      <th>CIudad</th>
       <th>Direccion</th>
       <th>Colonia</th>
       <th>codigoPostal</th>
       <th>Presupuesto</th>
-      <th>Estatus</th>      
-      <th></th>      
-      <th></th>    
+      <th>Estatus</th> 
+      {% if current_user.is_staff() or current_user.is_admin() %}
+<th></th>  
+        {% endif %}     
+       
+      {% if current_user.is_admin() %}
+<th></th>  
+        {% endif %}   
+        
     </thead>
 
     <tbody id="myTable"> 
@@ -42,23 +49,31 @@
       <td>{{obj.idSucursal}}</td>
       <td>{{obj.nombre}}</td>
       <td>{{obj.telefono}}</td>
+      <td>{{obj.getCiudad()}} </td>
       <td>{{obj.direccion}} </td>
       <td>{{obj.colonia}}</td>
-      <td>{{obj.CodigoPostal}}</td>
+      <td>{{obj.codigoPostal}}</td>
       <td>{{obj.presupuesto}}</td>
-      <td>{{obj.estatus}}</td>       
-      <td>
+      <td>{{obj.estatus}}</td>  
+      {% if current_user.is_staff() or current_user.is_admin() %}
+<td>
         <a href="/editarSucursal/{{obj.idSucursal}}" class="btn btn-success" role="button">
           <span class="glyphicon glyphicon-pencil"></span>
           Editar</a>
-      </td>   
-      <td>
+      </td> 
+        {% endif %}     
+       
+      {% if current_user.is_admin() %}
+<td>
         <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idSucursal}}">
           <span class="glyphicon glyphicon-trash"></span>
           Eliminar </a>
-      </td>           
+      </td> 
+        {% endif %} 
+                
     </tr>
-    <div id="eliminar{{obj.idSucursal}}" class="modal fade" role="dialog">
+    {% if current_user.is_admin() %}
+<div id="eliminar{{obj.idSucursal}}" class="modal fade" role="dialog">
       <div class="modal-dialog">   
 
         <div class="modal-content">
@@ -82,6 +97,8 @@
         </div>
       </div>
     </div>
+        {% endif %}
+    
     {% endfor %}
     </tbody>
 </table>

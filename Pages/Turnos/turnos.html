@@ -29,8 +29,14 @@
       <th>Horario inicio</th>
       <th>Horario fin</th>
       <th>Dias</th> 
-      <th></th>      
-      <th></th>    
+      {% if current_user.is_staff() or current_user.is_admin() %}
+<th></th> 
+        {% endif %}
+        
+      {% if current_user.is_admin() %}
+<th></th>  
+        {% endif %}   
+        
     </thead>
 
     <tbody id="myTable"> 
@@ -41,18 +47,25 @@
       <td>{{obj.horaInicio.time()}}</td>
       <td>{{obj.horaFin.time()}}</td>
       <td>{{obj.dias}}</td> 
-      <td>
+      {% if current_user.is_staff() or current_user.is_admin() %}
+<td>
         <a href="/editarTurnos/{{obj.idTurno}}" class="btn btn-success" role="button">
           <span class="glyphicon glyphicon-pencil"></span>
           Editar</a>
-      </td>   
-      <td>
+      </td> 
+        {% endif %}
+       
+      {% if current_user.is_admin() %}
+ <td>
         <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idTurno}}">
           <span class="glyphicon glyphicon-trash"></span>
           Eliminar </a>
-      </td>           
+      </td>
+        {% endif %} 
+                
     </tr>
-    <div id="eliminar{{obj.idTurno}}" class="modal fade" role="dialog">
+    {% if current_user.is_admin() %}
+<div id="eliminar{{obj.idTurno}}" class="modal fade" role="dialog">
       <div class="modal-dialog">   
 
         <div class="modal-content">
@@ -76,6 +89,8 @@
         </div>
       </div>
     </div>
+        {% endif %}
+    
     {% endfor %}
     </tbody>
 </table>

@@ -4,7 +4,7 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 
@@ -62,7 +62,7 @@ def load_user(id):
 @app.route('/puestos')
 @login_required
 def puestos():
-    if current_user.is_authenticated() and current_user.is_admin(): 
+    if current_user.is_authenticated(): 
         p=Puestos()
         page = request.args.get('page', 1, type=int)
         paginacion = p.consultarPagina(page)         
@@ -73,7 +73,7 @@ def puestos():
 @app.route('/registrarPuestos')
 @login_required
 def puestosR():
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         return  render_template('Puestos/registrarPuestos.html')
     else:
         abort(404)
@@ -81,7 +81,7 @@ def puestosR():
 @app.route('/editarPuestos/<int:id>')
 @login_required
 def puestosE(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         puesto =  Puestos()
         puesto = puesto.consultar(id)
         return  render_template('Puestos/editarPuestos.html', puesto = puesto)
@@ -91,7 +91,7 @@ def puestosE(id):
 @app.route('/registrarP',methods=['post'])
 @login_required
 def registarP(): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         puesto = Puestos()
         puesto.nombre = request.form['nombrePuesto']
         puesto.salarioMinimo = request.form['salarioMinimo']
@@ -110,7 +110,7 @@ def registarP():
 @app.route('/editarP/<int:id>',methods=['post'])
 @login_required
 def editarP(id): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         puesto = Puestos()
         puesto.nombre = request.form['nombrePuesto']
         puesto.salarioMinimo = request.form['salarioMinimo']
@@ -140,14 +140,17 @@ def eliminarP(id):
 
 @app.route('/puestos/nombre/<string:nombre>',methods=['get'])
 def consultarNombreP(nombre):
-    item=Puestos()    
-    return json.dumps(item.consultarNombre(nombre))
+    if current_user.is_authenticated():
+        item=Puestos()    
+        return json.dumps(item.consultarNombre(nombre))
+    else:
+        abort(404)
 
 #Turnos-----------------------------------------------------
 @app.route('/turnos')
 @login_required
 def turnos():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated():
         t=Turnos() 
         page = request.args.get('page', 1, type=int)
         paginacion = t.consultarPagina(page)         
@@ -158,7 +161,7 @@ def turnos():
 @app.route('/registrarTurnos')
 @login_required
 def turnosR():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         return  render_template('Turnos/registrarTurnos.html')
     else:
         abort(404)
@@ -166,7 +169,7 @@ def turnosR():
 @app.route('/editarTurnos/<int:id>')
 @login_required
 def turnosE(id):
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         turno =  Turnos()        
         turno = turno.consultar(id)
         dias={"L":False,"M":False,"X":False,"J":False,"V":False,"S":False,"D":False}
@@ -180,7 +183,7 @@ def turnosE(id):
 @app.route('/registrarT',methods=['post'])
 @login_required
 def registrarT():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         turno=Turnos()
         turno.nombre= request.form['nombreTurno']
         turno.horaInicio= "2000-01-01 " + request.form['horaInicioT']                  
@@ -237,7 +240,7 @@ def registrarT():
 @app.route('/editarT/<int:id>',methods=['post'])
 @login_required
 def editarT(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         turno = Turnos()
         turno.nombre= request.form['nombreTurno']
         turno.horaInicio="2000-01-01 " + request.form['horaInicioT']                  
@@ -304,14 +307,17 @@ def eliminarT(id):
 
 @app.route('/turnos/nombre/<string:nombre>',methods=['get'])
 def consultarNombreT(nombre):
-    item=Turnos()    
-    return json.dumps(item.consultarNombre(nombre))
-
+    if current_user.is_authenticated():
+        item=Turnos()    
+        return json.dumps(item.consultarNombre(nombre))
+    else:
+        abort(404)
+        
 #Departamentos--------------------------------------------------------   
 @app.route('/departamentos')
 @login_required
 def departamentos():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated():
         d=Departamentos() 
         page = request.args.get('page', 1, type=int)
         paginacion = d.consultarPagina(page)         
@@ -322,7 +328,7 @@ def departamentos():
 @app.route('/registrarDepartamentos')
 @login_required
 def departamentosR():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         return  render_template('Departamentos/registrarDepartamentos.html')
     else:
         abort(404)
@@ -330,7 +336,7 @@ def departamentosR():
 @app.route('/editarDepartamentos/<int:id>')
 @login_required
 def departamentosE(id):
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         departamento =  Departamentos()        
         departamento = departamento.consultar(id)
         return  render_template('Departamentos/editarDepartamentos.html', departamento = departamento)
@@ -340,7 +346,7 @@ def departamentosE(id):
 @app.route('/registrarD',methods=['post'])
 @login_required
 def registrarD():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         departamento=Departamentos()
         departamento.nombre= request.form['nombreDepartamento']
         estatus = request.values.get('estatus',False)
@@ -357,7 +363,7 @@ def registrarD():
 @app.route('/editarD/<int:id>',methods=['post'])
 @login_required
 def editarD(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         departamento = Departamentos()
         departamento.nombre= request.form['nombreDepartamento']
         estatus = request.values.get('estatus',False)
@@ -385,14 +391,18 @@ def eliminarD(id):
 
 @app.route('/departamentos/nombre/<string:nombre>',methods=['get'])
 def consultarNombreD(nombre):
-    item=Departamentos()    
-    return json.dumps(item.consultarNombre(nombre))
+    if current_user.is_authenticated(): 
+        item=Departamentos()    
+        return json.dumps(item.consultarNombre(nombre))
+    else:
+            abort(404)
+
 
 #Estados--------------------------------------------------------------------------
 @app.route('/estado')
 @login_required
 def estado():
-    if current_user.is_authenticated() and current_user.is_admin(): 
+    if current_user.is_authenticated(): 
         e=Estado()
         page = request.args.get('page', 1, type=int)
         paginacion = e.consultarPagina(page)         
@@ -403,7 +413,7 @@ def estado():
 @app.route('/registrarEstado')
 @login_required
 def  estadoR():
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         return  render_template('Estado/registrarEstado.html')
     else:
         abort(404)
@@ -411,7 +421,7 @@ def  estadoR():
 @app.route('/editarEstado/<int:id>')
 @login_required
 def estadoE(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         estado =  Estado()
         estado = estado.consultar(id)
         return  render_template('Estado/editarEstado.html', estado = estado)
@@ -421,7 +431,7 @@ def estadoE(id):
 @app.route('/registrarE',methods=['post'])
 @login_required
 def registarE(): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         estado = Estado()
         estado.nombre = request.form['nombrdelEstado']
         estado.siglas = request.form['siglas']
@@ -439,7 +449,7 @@ def registarE():
 @app.route('/editarE/<int:id>',methods=['post'])
 @login_required
 def editarE(id): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         estado = Estado()
         estado.nombre = request.form['nombredelEstado']
         estado.siglas = request.form['siglas']
@@ -469,14 +479,17 @@ def eliminarE(id):
 
 @app.route('/estados/nombre/<string:nombre>',methods=['get'])
 def consultarNombreE(nombre):
-    item=Estado()    
-    return json.dumps(item.consultarNombre(nombre))
+    if current_user.is_authenticated(): 
+        item=Estado()    
+        return json.dumps(item.consultarNombre(nombre))
+    else:
+        abort(404)
 
 #Formas de pago--------------------------------------------------------   
 @app.route('/formasdePago')
 @login_required
 def formasdePago():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated():
         fp=FormasdePago() 
         page = request.args.get('page', 1, type=int)
         paginacion = fp.consultarPagina(page)         
@@ -487,7 +500,7 @@ def formasdePago():
 @app.route('/registrarFormasdePago')
 @login_required
 def formasdePagoR():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         return  render_template('FormasDePago/registrarFormasdePago.html')
     else:
         abort(404)
@@ -495,7 +508,7 @@ def formasdePagoR():
 @app.route('/editarFormasdePago/<int:id>')
 @login_required
 def formasdePagoE(id):
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         formadepago =  FormasdePago()        
         formadepago = formadepago.consultar(id)
         return  render_template('FormasDePago/editarFormasdePago.html', formadePago = formadepago)
@@ -505,7 +518,7 @@ def formasdePagoE(id):
 @app.route('/registrarFP',methods=['post'])
 @login_required
 def registrarFP():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         formadepago=FormasdePago()
         formadepago.nombre= request.form['nombreFormadePago']
         estatus = request.values.get('estatus',False)
@@ -522,7 +535,7 @@ def registrarFP():
 @app.route('/editarFP/<int:id>',methods=['post'])
 @login_required
 def editarFP(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         formadepago=FormasdePago()
         formadepago.nombre= request.form['nombreFormadePago']
         estatus = request.values.get('estatus',False)
@@ -540,7 +553,7 @@ def editarFP(id):
 @app.route('/eliminarFP/<int:id>')
 @login_required
 def eliminarFP(id):
-    if current_user.is_authenticated() and current_user.is_admin(): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
         formadepago = FormasdePago()
         formadepago.eliminar(id)
         flash('Forma de pago eliminado con exito')
@@ -550,14 +563,17 @@ def eliminarFP(id):
 
 @app.route('/fp/nombre/<string:nombre>',methods=['get'])
 def consultarNombreFP(nombre):
-    item=FormasdePago()    
-    return json.dumps(item.consultarNombre(nombre))
+    if current_user.is_authenticated():
+        item=FormasdePago()    
+        return json.dumps(item.consultarNombre(nombre))
+    else:
+        abort(404)
 
 # Enrutamiento Empleados----------------------------------------------------------------------
 @app.route('/empleados')
 @login_required
 def empleados():
-    if current_user.is_authenticated() and current_user.is_admin(): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
         p=Empleados()
         page = request.args.get('page', 1, type=int)
         paginacion = p.consultarPagina(page)         
@@ -568,7 +584,7 @@ def empleados():
 @app.route('/empleadosR')
 @login_required
 def empleadosR():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         p = Puestos()
         d = Departamentos()
         s = Sucursales()
@@ -581,7 +597,7 @@ def empleadosR():
 @app.route('/empleadosE/<int:id>')
 @login_required
 def empleadosE(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated():  
         empleados =  Empleados()
         p = Puestos()
         d = Departamentos()
@@ -596,7 +612,7 @@ def empleadosE(id):
 @app.route('/registarEmpleado',methods=['post'])
 @login_required
 def registarEmpleado(): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         empleado = Empleados()        
         empleado.nombre = request.form["nombre"]
         empleado.apellidoPaterno = request.form["apellidoPaterno"]
@@ -640,7 +656,7 @@ def registarEmpleado():
 @app.route('/editarEmpleado/<int:id>',methods=['post'])
 @login_required
 def editarEmpelado(id): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated():  
         empleado = Empleados()        
         empleado.nombre = request.form["nombre"]
         empleado.apellidoPaterno = request.form["apellidoPaterno"]
@@ -697,7 +713,7 @@ def eliminarEmpleado(id):
 @app.route('/empleadosVer/<int:id>')
 @login_required
 def empleadosVer(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated():  
         empleados =  Empleados()
         p = Puestos()
         d = Departamentos()
@@ -745,7 +761,7 @@ def validarSalario(salario, puesto):
 @app.route('/documentacionER/<int:empleado>')
 @login_required
 def documentacionER(empleado):
-    if current_user.is_authenticated() and current_user.is_admin():              
+    if current_user.is_authenticated():              
         return  render_template('Empleados/registrarDocumentos.html', idEmpleado = empleado)
     else:
         abort(404)
@@ -753,7 +769,7 @@ def documentacionER(empleado):
 @app.route('/documentacionEE/<int:id>')
 @login_required
 def documentacionEE(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated():  
         documento = DocumentosEmpleado()        
         return  render_template('Empleados/editarDocumentos.html',documento = documento.consultar(id) )
     else:
@@ -762,7 +778,7 @@ def documentacionEE(id):
 @app.route('/registrarDocumentacion/<int:empleado>',methods=['post'])
 @login_required
 def registrarDocumentacion(empleado):
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated():
         documento=DocumentosEmpleado()
         documento.nombreDocumento= request.form['nombreDocumento']
         documento.fechaEntregga = datetime.today() 
@@ -777,7 +793,7 @@ def registrarDocumentacion(empleado):
 @app.route('/editarDocumentacion/<int:id>',methods=['post'])
 @login_required
 def editarDocumentacion(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated():  
         documento=DocumentosEmpleado()
         documento.nombreDocumento= request.form['nombreDocumento']
         documento.fechaEntregga = datetime.today() 
@@ -805,7 +821,7 @@ def consultarNombreDocumento(nombre,id):
 @app.route('/eliminarDocumento/<int:id>')
 @login_required
 def eliminarDocumento(id):
-    if current_user.is_authenticated() and current_user.is_admin(): 
+    if current_user.is_authenticated(): 
         doc = DocumentosEmpleado()
         empleado = doc.consultar(id)
         empleado = empleado.idEmpleado
@@ -818,7 +834,7 @@ def eliminarDocumento(id):
 @app.route('/ciudades')
 @login_required
 def ciudades():
-    if current_user.is_authenticated() and current_user.is_admin(): 
+    if current_user.is_authenticated(): 
         c=Ciudades()
         page = request.args.get('page', 1, type=int)
         paginacion = c.consultarPagina(page)         
@@ -829,7 +845,7 @@ def ciudades():
 @app.route('/registrarCiudades')
 @login_required
 def ciudadesR():
-    if current_user.is_authenticated() and current_user.is_admin():        
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):        
         estados = Estado()
         return  render_template('Ciudades/registrarCiudades.html', estados = estados.consultarAll())
     else:
@@ -838,19 +854,21 @@ def ciudadesR():
 @app.route('/editarCiudades/<int:id>')
 @login_required
 def ciudadesE(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         ciudad = Ciudades()
         ciudad = ciudad.consultar(id)
-        return  render_template('Ciudades/editarCiudades.html', ciudad= ciudad)
+        estados = Estado()
+        return  render_template('Ciudades/editarCiudades.html', ciudad= ciudad, estados = estados.consultarAll())
     else:
         abort(404)
 
 @app.route('/registrarC',methods=['post'])
 @login_required
 def registarC(): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         ciudad = Ciudades()
         ciudad.nombre = request.form['nombreCiudad']
+        ciudad.idEstado = request.form['idEstado']
         estatus = request.values.get('estatus',False)
         if estatus=="True":
             ciudad.estatus='A'
@@ -865,7 +883,7 @@ def registarC():
 @app.route('/editarC/<int:id>',methods=['post'])
 @login_required
 def editarC(id): 
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         ciudad = Ciudades()
         ciudad.nombre = request.form['nombreCiudad']
         ciudad.idEstado = request.form['idEstado']
@@ -902,7 +920,7 @@ def consultarNombreC(nombre):
 @app.route('/sucursales')
 @login_required
 def sucursales():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated():
         S=Sucursales() 
         page = request.args.get('page', 1, type=int)
         paginacion = S.consultarPagina(page)         
@@ -913,25 +931,29 @@ def sucursales():
 @app.route('/registrarSucursales')
 @login_required
 def sucursalesR():
-    if current_user.is_authenticated() and current_user.is_admin():
-        return  render_template('Sucursales/registrarSucursales.html')
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        ciudad = Ciudades()
+        ciudad = ciudad.consultarAll()
+        return  render_template('Sucursales/registrarSucursales.html', ciudades =ciudad)
     else:
         abort(404)
         
 @app.route('/editarSucursal/<int:id>')
 @login_required
 def sucurE(id):
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         sucursal = Sucursales()        
         sucursal = sucursal.consultar(id)
-        return  render_template('Sucursales/editarSucursal.html', sucursales = sucursal)
+        ciudad = Ciudades()
+        ciudad = ciudad.consultarAll()
+        return  render_template('Sucursales/editarSucursal.html', sucursales = sucursal, ciudades =ciudad)
     else:
         abort(404)
         
 @app.route('/registrarS',methods=['post'])
 @login_required
 def registrarS():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         sucursal=Sucursales()
         sucursal.nombre= request.form['nombreSucursales']
         sucursal.telefono=  request.form['telefono']                  
@@ -943,7 +965,8 @@ def registrarS():
         if estatus=="True":
                 sucursal.estatus='A'
         else:
-            sucursal.estatus='I' 
+            sucursal.estatus='I'
+        sucursal.idCiudad = request.form['idCiudad'] 
         sucursal.registrar()
         flash('Sucursal registrada con exito')
         return  redirect(url_for('sucursalesR'))
@@ -953,7 +976,7 @@ def registrarS():
 @app.route('/editaS/<int:id>',methods=['post'])
 @login_required
 def editaS(id):
-    if current_user.is_authenticated() and current_user.is_admin():  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         sucursal=Sucursales()
         sucursal.nombre= request.form['nombreSucursales']
         sucursal.telefono=request.form['telefono']                
@@ -966,6 +989,7 @@ def editaS(id):
                  sucursal.estatus='A'
         else:
             sucursal.estatus='I'  
+        sucursal.idCiudad = request.form['idCiudad'] 
         sucursal.idSucursal = id
         sucursal.actualizar()
         flash('Sucursal actualizada con exito')
@@ -988,6 +1012,92 @@ def eliminarS(id):
 def consultarNombreS(nombre):
     item=Sucursales()    
     return json.dumps(item.consultarNombre(nombre))
+
+#Periodos----------------------------------------------------------------------------------------------------
+@app.route('/periodos')
+@login_required
+def periodos():
+    if current_user.is_authenticated(): 
+        p=Periodos()
+        page = request.args.get('page', 1, type=int)
+        paginacion = p.consultarPagina(page)         
+        return  render_template('Periodos/periodos.html', periodos =paginacion.items, pagination = paginacion  )
+    else:
+        abort(404)
+
+@app.route('/registrarPeriodos')
+@login_required
+def registrarPeriodos():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        return  render_template('Periodos/registrarPeriodos.html')
+    else:
+        abort(404)
+
+@app.route('/editarPeriodos/<int:id>')
+@login_required
+def editarPeriodos(id):
+    if current_user.is_authenticated() (current_user.is_admin() or current_user.is_staff()):  
+        periodo =  Periodos()
+        periodo = periodo.consultar(id)
+        return  render_template('Periodos/editarPeriodos.html', periodo = periodo)
+    else:
+        abort(404)
+
+@app.route('/registrarPeriodo',methods=['post'])
+@login_required
+def registrarPeriodo(): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        periodo = Periodos ()
+        periodo.nombre = request.form['nombre']
+        periodo.fechaInicio = request.form['fechaInicio']
+        periodo.fechaFin = request.form['fechaFin']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            periodo.estatus='A'
+        else:
+            periodo.estatus='I' 
+        periodo.registrar()
+        flash('Periodo registrado con exito')
+        return  redirect(url_for('registrarPeriodos'))
+    else:
+        abort(404)
+
+@app.route('/editarPeriodo/<int:id>',methods=['post'])
+@login_required
+def editarPeriodo(id): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        periodo = Periodos ()
+        periodo.nombre = request.form['nombre']
+        periodo.fechaInicio = request.form['fechaInicio']
+        periodo.fechaFin = request.form['fechaFin']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            periodo.estatus='A'
+        else:
+            periodo.estatus='I'  
+        periodo.idPeriodo = id
+        periodo.actualizar()
+        flash('Periodo actualizado con exito')
+        return  redirect(url_for('editarPeriodos', id= periodo.idPeriodo))
+    else:
+        abort(404)
+
+@app.route('/eliminarPeriodo/<int:id>')
+@login_required
+def eliminarPeriodo(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        periodo = Periodos()
+        periodo.eliminar(id)
+        flash('Periodo eliminado con exito')
+        return  redirect(url_for('periodos'))
+    else:
+        abort(404)
+
+@app.route('/periodos/nombre/<string:nombre>',methods=['get'])
+def consultarNombrePeriodos(nombre):
+    item=Periodos()    
+    return json.dumps(item.consultarNombre(nombre))
+
 
 #Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)

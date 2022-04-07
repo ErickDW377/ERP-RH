@@ -3,12 +3,12 @@
 {%block cuerpo%}
 
 {% if get_flashed_messages()%}
-  {% for m in get_flashed_messages()%}
-    <div class="alert alert-success alert-dismissible alertas-txt">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong>{{m}}</strong>
-    </div>
-  {% endfor %}
+{% for m in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible alertas-txt">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{m}}</strong>
+</div>
+{% endfor %}
 {% endif %}
 
 <div class="titulo">
@@ -22,67 +22,78 @@
 </div>
 
 <div class="tabla">
-<table class="table table-hover">
+  <table class="table table-hover">
     <thead>
       <th>ID</th>
       <th>Nombre</th>
       <th>ID Estado</th>
-      <th>Estatus</th>  
-      <th></th>  
-      <th></th>       
+      <th>Estatus</th>
+      {% if current_user.is_staff() or current_user.is_admin() %}
+      <th></th>
+      {% endif %}
+      {% if current_user.is_admin() %}
+      <th></th>
+      {% endif %}
+
     </thead>
-    <tbody id="myTable">  
-      {%for obj in ciudades%}      
+    <tbody id="myTable">
+      {%for obj in ciudades%}
       <tr>
-        <td>{{obj.idPuesto}}</td>
+        <td>{{obj.idCiudad}}</td>
         <td>{{obj.nombre}}</td>
         <td>{{obj.idEstado}}</td>
         <td>{{obj.estatus}}</td>
+        {% if current_user.is_staff() or current_user.is_admin() %}
         <td>
           <a href="/editarCiudades/{{obj.idCiudad}}" class="btn btn-success" role="button">
             <span class="glyphicon glyphicon-pencil"></span>
             Editar
           </a>
-        </td>   
+        </td>
+        {% endif %}
+
+        {% if current_user.is_admin() %}
         <td>
           <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idCiudad}}">
             <span class="glyphicon glyphicon-trash"></span>
             Eliminar
           </a>
-        </td>               
-      </tr>    
-        <div id="eliminar{{obj.idCiudad}}" class="modal fade" role="dialog">
-          <div class="modal-dialog">   
+        </td>
+        {% endif %}
 
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                  &times;
-                </button>
-                <h4 class="modal-title">Confirmacion de proceso</h4>
-              </div>
-              <div class="modal-body">
-                <p>¿Estas seguro de eliminar la ciudad: {{obj.nombre}} ?</p>
-              </div>
-              <div class="modal-footer">
-                <a href="/eliminarC/{{obj.idCiudad}}" class="btn btn-info"
-                  >Aceptar</a
-                >
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancelar
-                </button>
-              </div>
+      </tr>
+      {% if current_user.is_admin() %}
+      <div id="eliminar{{obj.idCiudad}}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                &times;
+              </button>
+              <h4 class="modal-title">Confirmacion de proceso</h4>
+            </div>
+            <div class="modal-body">
+              <p>¿Estas seguro de eliminar la ciudad: {{obj.nombre}} ?</p>
+            </div>
+            <div class="modal-footer">
+              <a href="/eliminarCiudad/{{obj.idCiudad}}" class="btn btn-info">Aceptar</a>
+              <button type="button" class="btn btn-default" data-dismiss="modal">
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
-        {% endfor %}
-    </tbody>
-    </table>
-  </div>
-  
-  <div class="paginacion">
-    {{ macros.pagination_widget(pagination, '.ciudades') }}
-  </div>
-  
-{%endblock%}
+      </div>
+      {% endif %}
 
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="paginacion">
+  {{ macros.pagination_widget(pagination, '.ciudades') }}
+</div>
+
+{%endblock%}

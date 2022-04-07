@@ -34,7 +34,10 @@
       <th>Estatus</th>                   
       <th></th>      
       <th></th>
-      <th></th> 
+      {% if current_user.is_admin() %}
+<th></th> 
+        {% endif %}
+      
     </thead>
 
     <tbody id="myTable"> 
@@ -57,14 +60,18 @@
         <a href="/empleadosVer/{{obj.idEmpleado}}" class="btn btn-warning" role="button">
           <span class="glyphicon glyphicon-eye-open"></span>
           Ver</a>
-      </td>   
-      <td>
+      </td> 
+      {% if current_user.is_admin() %}
+<td>
         <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idEmpleado}}">
           <span class="glyphicon glyphicon-trash"></span>
           Eliminar </a>
-      </td>           
+      </td>
+        {% endif %}  
+                 
     </tr>
-    <div id="eliminar{{obj.idEmpleado}}" class="modal fade" role="dialog">
+    {% if current_user.is_admin() %}
+<div id="eliminar{{obj.idEmpleado}}" class="modal fade" role="dialog">
       <div class="modal-dialog">   
 
         <div class="modal-content">
@@ -88,6 +95,8 @@
         </div>
       </div>
     </div>
+        {% endif %}
+    
     {% endfor %}
     </tbody>
 </table>

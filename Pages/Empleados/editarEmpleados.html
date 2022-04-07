@@ -30,7 +30,10 @@
       <li class="active"><a data-toggle="tab" href="#PestañaPeronal">Datos Personales</a></li>
       <li><a data-toggle="tab" href="#PestañaDomicilio">Domicilio</a></li>
       <li><a data-toggle="tab" href="#PestañaEscolares">Datos Escolares</a></li>
-      <li><a data-toggle="tab" href="#PestañaLaboral">Datos Laborales</a></li>
+      {% if current_user.is_staff() or current_user.is_admin() %}
+<li><a data-toggle="tab" href="#PestañaLaboral">Datos Laborales</a></li>
+        {% endif %}
+      
       <li><a data-toggle="tab" href="#PestañaUsuario">Datos de Usuario</a></li>  
     </ul>
 <div class="contenedor2">
@@ -175,8 +178,8 @@
           </div>                 
         </div>        
       </div>
-
-      <div id="PestañaLaboral" class="tab-pane fade">        
+      {% if current_user.is_admin()or current_user.is_staff%}
+<div id="PestañaLaboral" class="tab-pane fade">        
         <div class="row">
 
           <div class="form-group col-sm-4">
@@ -282,7 +285,9 @@
           </div>     
         </div>
 
-      </div>   
+      </div>
+      {% endif %}
+         
 
       <div id="PestañaUsuario" class="tab-pane fade">
           
@@ -296,7 +301,8 @@
           <label>Password</label>
           <input type="password" class="form-control" pattern="^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$" title="La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter no alfanumérico." name="paassword" required value="{{empleado.paassword}}">
         </div> 
-        <div class="form-group col-sm-4">
+        {% if current_user.is_staff() or current_user.is_admin() %}
+<div class="form-group col-sm-4">
           <label>Tipo</label>
           <select class="form-control"  name="tipo" >
             {% if empleado.tipo == "Administrador" %}
@@ -315,8 +321,10 @@
             <option  value="Empleado">Empleado</option>
             {%endif%}                                         
           </select>            
-        </div>         
-        <div class="form-group">
+        </div>  
+        {% endif %}
+        {% if current_user.is_admin() %}
+<div class="form-group">
           <label>Estatus:</label>
           {% if empleado.estatus == 'A'%}
           <input type="checkbox" class="form-control " name="estatus" value="True" checked>
@@ -324,6 +332,8 @@
           <input type="checkbox" class="form-control " name="estatus" value="True" >
           {%endif%}
         </div>
+        {% endif %}    
+        
       </div>
     </div>
 
@@ -331,6 +341,7 @@
       <span class="glyphicon glyphicon-floppy-disk"></span>
       Registrar
     </button>
+    
     <a href="/empleados" class="btn btn-danger btn-block" role="button">Cancelar</a>
   </div>    
   </form>

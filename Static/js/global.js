@@ -40,6 +40,38 @@ function validarValoresMinMax(){
   }
 }
 
+function validarValoresMinMaxFechas(){
+  var mensaje = document.getElementById("mensaje");
+  var btnGuardar = document.getElementById("btnGuardar");
+  var valMin = document.getElementById("valorMin").value;
+  var valMax = document.getElementById("valorMax").value;
+  valMin = new Date(valMin)
+  valMax = new Date(valMax)
+  if(valMax.getFullYear()<valMin.getFullYear()){
+    mensaje.innerHTML = "La fecha inicio debe ser menor o a la fehca fin";
+    btnGuardar.disabled = true;
+  }else if(valMax.getFullYear()==valMin.getFullYear()){
+      if(valMax.getMonth()<valMin.getMonth()){
+          mensaje.innerHTML = "La fecha inicio debe ser menor o a la fehca fin";
+          btnGuardar.disabled = true;
+        }else if(valMax.getMonth()==valMin.getMonth()){
+          if(valMax.getDate()<=valMin.getDate()){
+              mensaje.innerHTML = "La fecha inicio debe ser menor o a la fehca fin";
+              btnGuardar.disabled = true;
+            }else{
+              mensaje.innerHTML = "";
+              btnGuardar.disabled = false;
+            }      
+        }else{
+          mensaje.innerHTML = "";
+          btnGuardar.disabled = false;
+        }      
+  }else{
+      mensaje.innerHTML = "";
+      btnGuardar.disabled = false;
+  }
+}
+
 function consultarNombre(tabla) { 
   var ajax = new XMLHttpRequest();
   var btnGuardar = document.getElementById("btnGuardar");

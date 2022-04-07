@@ -15,22 +15,33 @@
 </div>
 
 <div class="contenedor-formulario">
-  <form action="/editaS/{{sucursales.idSucursal}}" method="post" enctype="multipart/form-data">   
+  <form action="/editaS/{{sucursales.idSucursal}}" method="post" enctype="multipart/form-data">
+
     <div class="form-group">
-      <label>Nombre<label>
-      <input type="text" class="form-control" name="nombreSucursales" value="{{sucursales.nombre}}" onchange="consultarNombre('sucursales')" id="nombre"  required>
+      <label>Nombre</label>
+      <input type="text" class="form-control" name="nombreSucursales"  onchange="consultarNombre('sucursales')" id="nombre" value="{{sucursales.nombre}}" required>
       <div id="mensajeNombre" style="background-color:brown;color:white">
       </div>
     </div>
-    <div>
-      <label> Telefono <label>
-      <input type="text" class="form-control" name="telefono" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" required value="{{sucursales.telefono}}" >
-    </div>
+    <div class="form-group">
+      <label>Telefono:</label>
+      <input type="text" class="form-control " name="telefono" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" value="{{sucursales.telefono}}" required>
+    </div> 
 
+    <div class="form-group">
+      
+      <label >ID Estado:</label>
+      <select  name="idCiudad" class="form-control ">
+        {%for obj in ciudades %}   
+        <option value="{{obj.idEstado}}">{{obj.nombre}}</option>
+        {% endfor %} 
+      </select>
+    </div>
     <div class="form-group">
       <label>Direccion</label>
       <input type="text" class="form-control" name="direccion" value="{{sucursales.direccion}}" required>
     </div>
+
     <div class="form-group">
       <label>Colonia</label>
       <input type="text" class="form-control" name="colonia" value="{{sucursales.colonia}}" required>

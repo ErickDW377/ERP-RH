@@ -26,9 +26,13 @@
     <thead>
       <th>ID</th>
       <th>Nombre</th>
-      <th>Estatus</th>      
-      <th></th>      
-      <th></th>    
+      <th>Estatus</th> 
+      {% if current_user.is_staff() or current_user.is_admin() %}
+<th></th> 
+<th></th>  
+        {% endif %}     
+           
+        
     </thead>
 
     <tbody id="myTable"> 
@@ -36,8 +40,9 @@
     <tr>
       <td>{{obj.idFormaPago}}</td>
       <td>{{obj.nombre}}</td>
-      <td>{{obj.estatus}}</td>       
-      <td>
+      <td>{{obj.estatus}}</td>    
+      {% if current_user.is_staff() or current_user.is_admin() %}
+<td>
         <a href="/editarFormasdePago/{{obj.idFormaPago}}" class="btn btn-success" role="button">
           <span class="glyphicon glyphicon-pencil"></span>
           Editar</a>
@@ -46,9 +51,12 @@
         <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idFormaPago}}">
           <span class="glyphicon glyphicon-trash"></span>
           Eliminar </a>
-      </td>           
+      </td>
+        {% endif %}   
+                 
     </tr>
-    <div id="eliminar{{obj.idFormaPago}}" class="modal fade" role="dialog">
+    {% if current_user.is_staff() or current_user.is_admin() %}
+<div id="eliminar{{obj.idFormaPago}}" class="modal fade" role="dialog">
       <div class="modal-dialog">   
         <div class="modal-content">
           <div class="modal-header">
@@ -72,6 +80,8 @@
         </div>
       </div>
     </div>
+        {% endif %}
+    
     {% endfor %}
     </tbody>
 </table>

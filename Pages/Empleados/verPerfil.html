@@ -22,7 +22,7 @@
   <li><a data-toggle="tab" href="#PestañaEscolares">Datos Escolares</a></li>
   <li><a data-toggle="tab" href="#PestañaLaboral">Datos Laborales</a></li>
   <li><a data-toggle="tab" href="#PestañaUsuario">Datos de Usuario</a></li>
-  <li onclick=" doc = documentos.consultarAll()"><a data-toggle="tab" href="#PestañaDocumentos">Documentos</a></li>    
+  <li><a data-toggle="tab" href="#PestañaDocumentos">Documentos</a></li>    
 </ul>
 <div class="contenedor2">   
     <div class="tab-content row">
@@ -132,7 +132,7 @@
       <div id="PestañaUsuario" class="tab-pane fade">
         <table class="table  tabla">
           <thead>          
-            <th>Email</th>      
+            <th>Email</th>                  
             <th>Password</th>
             <th>Tipo</th>
             <th>Estatus</th>              
@@ -141,7 +141,12 @@
           <tbody id="myTable"> 
             <tr>            
               <td>{{empleado.email}}</td>
+              {% if current_user.is_admin()or current_user.idEmpleado==empleado.idEmpleado %}
               <td>{{empleado.paassword}}</td>
+              {% else %}
+              <td>***********</td>
+        {% endif %}
+              
               <td>{{empleado.tipo}}</td>
               <td>{{empleado.estatus}}</td>            
             </tr>

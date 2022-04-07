@@ -10,6 +10,55 @@ from flask_login import UserMixin, current_user
 
 db=SQLAlchemy()
 
+#Periodos-------------------------------------
+class Periodos(db.Model):
+    __tablename__= 'RH_Periodos'
+    idPeriodo = Column(Integer, primary_key=True)
+    nombre = Column(String(50))
+    fechaInicio = Column(Date)
+    fechaFin = Column(Date)
+    estatus = Column(String(1))
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None;
+        if current_user.is_admin():        
+            obj = self.query.order_by(Periodos.idPeriodo.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Periodos.estatus=='A').order_by(Periodos.idPeriodo.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Periodos.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
+
 #Puestos-------------------------------------
 class Puestos(db.Model):
     __tablename__= 'RH_Puestos'
@@ -390,7 +439,7 @@ class Empleados(db.Model):
             salida["mensaje"]="El salario esta dentro de los limites"            
         else:
             salida["estatus"]="Error"
-            salida["mensaje"]="El salario esta fuera de los limites del salario permitido para el puesto"
+            salida["mensaje"]="El salario debe estar dentro de los limites de: ($"+ str(salarioP.salarioMinimo)+" - $"+ str(salarioP.salarioMaximo)+")"
         return salida  
 
 
@@ -547,6 +596,7 @@ class Sucursales(db.Model):
     codigoPostal = Column(String(5),nullable= False)
     presupuesto = Column(Float,nullable= False)
     estatus = Column(String(1),nullable= False)
+    idCiudad = Column(Integer)
 
     def registrar(self):
         db.session.add(self)
@@ -587,5 +637,9 @@ class Sucursales(db.Model):
             salida["estatus"]="Ok"
             salida["mensaje"]="La sucursal"+nombre+" esta libre."
         return salida
+    
+    def getCiudad(self):
+        ciudad = Ciudades()
+        return ciudad.consultar(self.idCiudad).nombre
 
 

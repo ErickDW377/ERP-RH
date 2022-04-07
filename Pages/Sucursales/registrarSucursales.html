@@ -31,6 +31,17 @@
       <input type="text" class="form-control " name="telefono" pattern="[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]" required>
     </div> 
     <div class="form-group">
+      
+      <label >ID Estado:</label>
+      <select  name="idCiudad" class="form-control ">
+        {%for obj in ciudades %}   
+        <option value="{{obj.idEstado}}">{{obj.nombre}}</option>
+        {% endfor %} 
+      </select>
+      
+    
+</div>
+    <div class="form-group">
       <label>Direccion:</label>
       <input type="text" class="form-control " name="direccion" required>
     </div> 

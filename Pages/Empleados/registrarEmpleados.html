@@ -197,7 +197,7 @@
            
           <div class="form-group col-sm-4">
             <label>NSS</label>
-            <input type="text" class="form-control" name="nss" id="nss" required onblur="consultarNSS()">
+            <input type="text" class="form-control" name="nss" id="nss"  pattern="\d{11}$"  title="El nss debe tener una extencion de 11 dígitos" required onblur="consultarNSS()">
             <div id="mensajeNSS" style="background-color:brown;color:white">
             </div>
           </div>     
