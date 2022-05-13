@@ -244,7 +244,7 @@
           
           <div class="form-group col-sm-4">
             <label>Puesto </label>
-            <select class="form-control"  name="idPuesto" id="puesto" onchange="validarSalario()">
+            <select class="form-control"  name="idPuesto" id="puesto" onblur="validarSalario()">
               {% for p in puestos.consultarAll()  %}        
               {% if empleado.idPuesto == p.idPuesto %}  
               <option value="{{p.idPuesto}}" selected>

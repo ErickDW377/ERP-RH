@@ -15,7 +15,7 @@ fechaInicio date,
 fechaFin date,
 estatus char,
 primary key(idPeriodo),
-check(fechaInicio<fechaFin),
+check(fechaInicio<=fechaFin),
 check(estatus in ('A','I'))
 );
 create table RH_FormasPago(

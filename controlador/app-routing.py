@@ -1036,7 +1036,7 @@ def registrarPeriodos():
 @app.route('/editarPeriodos/<int:id>')
 @login_required
 def editarPeriodos(id):
-    if current_user.is_authenticated() (current_user.is_admin() or current_user.is_staff()):  
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         periodo =  Periodos()
         periodo = periodo.consultar(id)
         return  render_template('Periodos/editarPeriodos.html', periodo = periodo)
