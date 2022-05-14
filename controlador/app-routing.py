@@ -174,8 +174,7 @@ def turnosE(id):
         turno = turno.consultar(id)
         dias={"L":False,"M":False,"X":False,"J":False,"V":False,"S":False,"D":False}
         for d in turno.dias.split(sep=','):
-            dias[d]=True
-        print(dias)
+            dias[d]=True        
         return  render_template('Turnos/editarTurnos.html', turno = turno, dias = dias)
     else:
         abort(404)

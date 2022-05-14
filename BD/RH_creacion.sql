@@ -137,10 +137,11 @@ check(estatus in ('A','I'))
 create table RH_Asistencias(
 idAsistencia int auto_increment,
 fecha date,
-horaEntrada date,
-horaSalida date,
+horaEntrada timestamp,
+horaSalida timestamp,
 dia varchar(20),
 idEmpleado int,
+estatus char,
 primary key (idAsistencia),
 foreign key (idEmpleado) references RH_Empleados (idEmpleado),
 unique(idEmpleado, fecha)
