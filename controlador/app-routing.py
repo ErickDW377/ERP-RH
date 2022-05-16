@@ -586,10 +586,9 @@ def empleadosR():
     if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
         p = Puestos()
         d = Departamentos()
-        s = Sucursales()
-        c = Ciudades()
+        e = Estado()
         t = Turnos()
-        return  render_template('Empleados/registrarEmpleados.html', puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t)
+        return  render_template('Empleados/registrarEmpleados.html', puestos = p, departamentos = d, estados = e, turnos=t)
     else:
         abort(404)
 
@@ -600,11 +599,10 @@ def empleadosE(id):
         empleados =  Empleados()
         p = Puestos()
         d = Departamentos()
-        s = Sucursales()
-        c = Ciudades()
+        e = Estado()
         t = Turnos()
         empleados = empleados.consultar(id)
-        return  render_template('Empleados/editarEmpleados.html', empleado = empleados, puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t)
+        return  render_template('Empleados/editarEmpleados.html', empleado = empleados, puestos = p, departamentos = d,  estados = e, turnos=t)
     else:
         abort(404)
 
@@ -719,10 +717,12 @@ def empleadosVer(id):
         s = Sucursales()
         c = Ciudades()
         t = Turnos()
-        doc = DocumentosEmpleado()
-        docs = doc.consultarDocs(id)
+        doc = DocumentosEmpleado()        
+        page = request.args.get('page', 1, type=int)
+        paginacion = doc.consultarPagina(page)
+        #docs = doc.consultarDocs(id)
         empleados = empleados.consultar(id)
-        return  render_template('Empleados/verPerfil.html', empleado = empleados, puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t, documentos = docs, len = doc.contarDocs(id))
+        return  render_template('Empleados/verPerfil.html', empleado = empleados, puestos = p, departamentos = d, sucursales = s, ciudades = c, turnos=t, documentos =paginacion.items, pagination = paginacion, len = doc.contarDocs(id))
     else:
         abort(404)
 
@@ -914,6 +914,13 @@ def consultarNombreC(nombre):
     item=Ciudades()    
     return json.dumps(item.consultarNombre(nombre))
 
+@app.route('/ciudadesEstado/<int:id>',methods=['get'])
+def ciudadesEstado(id):
+    if current_user.is_authenticated():
+        item= Ciudades()        
+        return json.dumps(item.consultarCiudadesEstado(id))
+    else:
+        abort(404)
 
 # Enrutamiento sucursales-------------------------------------------------------------------
 @app.route('/sucursales')
@@ -1011,6 +1018,14 @@ def eliminarS(id):
 def consultarNombreS(nombre):
     item=Sucursales()    
     return json.dumps(item.consultarNombre(nombre))
+
+@app.route('/sucursalesCiudad/<int:id>',methods=['get'])
+def sucursalesCiudad(id):
+    if current_user.is_authenticated():
+        item= Sucursales()        
+        return json.dumps(item.consultarSucursalesCiudad(id))
+    else:
+        abort(404)
 
 #Periodos----------------------------------------------------------------------------------------------------
 @app.route('/periodos')

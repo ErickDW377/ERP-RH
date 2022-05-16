@@ -163,3 +163,55 @@ function consultarDocumento(tabla,id) {
 } 
 
 
+function llenarSucursales(){
+  var ajax = new XMLHttpRequest();
+  ciudad = document.getElementById("ciudad");
+  select = document.getElementById("sucursales");
+  for(i = 0; i<=select.options.length;i++){
+    select.remove(0);
+  }
+  var url = "/sucursalesCiudad/" + ciudad.value; 
+  ajax.open("get", url, true);
+  ajax.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var respuesta=JSON.parse(this.responseText);
+      for(var i in respuesta){
+        option = document.createElement("option");
+        option.value = respuesta[i].id;
+        option.text = respuesta[i].nombre;
+        select.appendChild(option);        
+      }
+      select.disabled = false
+    }
+  };
+  ajax.send();
+ 
+  
+}
+
+function llenarCiudades(){
+  var ajax = new XMLHttpRequest();
+  estado = document.getElementById("estado");
+  select = document.getElementById("ciudad");
+  for(i = 0; i<=select.options.length;i++){
+    select.remove(0);
+  }
+  var url = "/ciudadesEstado/" + estado.value; 
+  ajax.open("get", url, true);
+  ajax.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var respuesta=JSON.parse(this.responseText);
+      for(var i in respuesta){
+        option = document.createElement("option");
+        option.value = respuesta[i].id;
+        option.text = respuesta[i].nombre;
+        select.appendChild(option);        
+      }
+      select.disabled = false
+      llenarSucursales()
+    }
+  };
+  ajax.send();
+ 
+ 
+}

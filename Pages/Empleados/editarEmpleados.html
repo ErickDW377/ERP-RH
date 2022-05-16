@@ -114,19 +114,24 @@
         <div class="row">
 
           <div class="form-group col-sm-3">
-            <label>Ciudad </label>
-            <select class="form-control"  name="idCiudad" >
-              {% for c in ciudades.consultarAll() %}        
-              {% if empleado.idCiudad == c.idCiudad %}  
-              <option value="{{c.idCiudad}}" selected>
-                {{c.nombre}}                            
-                </option> 
-              {% else %}
-              <option value="{{c.idCiudad}}">
-                {{c.nombre}}                            
-                </option> 
-              {% endif %}
+            <label>Estado </label>
+            <select class="form-control"  name="idEstado" id="estado"  onblur="llenarCiudades()">
+              {% for e in estados.consultarAll() %}        
+                <option value="{{e.idEstado}}">
+                {{e.nombre}}                            
+                </option>        
               {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-3">
+            <label>Ciudad </label>
+            <select class="form-control"  name="idCiudad"  id="ciudad"  onblur="llenarSucursales()" disabled="true">
+               
+              <option value="{{empleado.idCiudad}}" selected>
+                {{empleado.getCiudad()}}                            
+                </option> 
+                                            
             </select>
           </div>
 
@@ -189,18 +194,12 @@
 
           <div class="form-group col-sm-4">
             <label>Sucursal </label>
-            <select class="form-control"  name="idSucursal" >
-              {% for s in sucursales.consultarAll()  %}        
-              {% if empleado.idSucursal == s.idSucursal%}  
-              <option value="{{s.idSucursal}}" selected>
-                {{s.nombre}}                            
+            <select class="form-control"  name="idSucursal" id="sucursales" disabled="true">
+               
+              <option value="{{empleado.idSucursal}}" selected>
+                {{empleado.getSucursal()}}                            
                 </option>
-              {% else %}
-              <option value="{{s.idSucursal}}">
-                {{s.nombre}}                            
-                </option>
-              {% endif %}
-              {% endfor %}                                
+                                            
             </select>
           </div>
 

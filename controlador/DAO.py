@@ -584,6 +584,20 @@ class Ciudades(db.Model):
             salida["estatus"]="Ok"
             salida["mensaje"]="El nombre "+nombre+" esta libre."
         return salida 
+    
+    def consultarCiudadesEstado(self,id):     
+        salida=[]        
+        item=None
+        item=self.query.filter(Ciudades.idEstado ==id)
+        if item!=None:
+            for i in item:     
+                obj = {"id":"","nombre":""}            
+                obj["id"]=i.idCiudad
+                obj["nombre"]=i.nombre
+                salida.append(obj)
+        else:
+           salida = []
+        return salida
 
 #Sucursales ------------------------------------    
 class Sucursales(db.Model):
@@ -641,5 +655,19 @@ class Sucursales(db.Model):
     def getCiudad(self):
         ciudad = Ciudades()
         return ciudad.consultar(self.idCiudad).nombre
+    
+    def consultarSucursalesCiudad(self,id):     
+        salida=[]        
+        item=None
+        item=self.query.filter(Sucursales.idCiudad ==id)
+        if item!=None:
+            for i in item:     
+                obj = {"id":"","nombre":""}            
+                obj["id"]=i.idSucursal
+                obj["nombre"]=i.nombre
+                salida.append(obj)
+        else:
+           salida = []
+        return salida
 
 

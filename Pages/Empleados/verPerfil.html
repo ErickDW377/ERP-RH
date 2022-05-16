@@ -1,4 +1,5 @@
 {% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion2.html' as macros %}
 {%block cuerpo%}
 {% if get_flashed_messages()%}
   {% for m in get_flashed_messages()%}
@@ -236,6 +237,9 @@
           </tbody>
         
         </table>
+        <div class="paginacion">
+          {{ macros.pagination_widget2(pagination, '.empleadosVer',empleado.idEmpleado) }}
+        </div>
       </div>      
       {% endif %}
         

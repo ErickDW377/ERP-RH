@@ -80,13 +80,20 @@
         <div class="row">
 
           <div class="form-group col-sm-3">
-            <label>Ciudad </label>
-            <select class="form-control"  name="idCiudad" >
-              {% for c in ciudades.consultarAll() %}        
-                <option value="{{c.idCiudad}}">
-                {{c.nombre}}                            
+            <label>Estado </label>
+            <select class="form-control"  name="idEstado" id="estado"  onblur="llenarCiudades()">
+              {% for e in estados.consultarAll() %}        
+                <option value="{{e.idEstado}}">
+                {{e.nombre}}                            
                 </option>        
               {% endfor %}                                
+            </select>
+          </div>
+
+          <div class="form-group col-sm-3">
+            <label>Ciudad </label>
+            <select class="form-control"  name="idCiudad" id="ciudad" disabled="true" onblur="llenarSucursales()">
+                                            
             </select>
           </div>
 
@@ -133,12 +140,8 @@
 
           <div class="form-group col-sm-4">
             <label>Sucursal </label>
-            <select class="form-control"  name="idSucursal" >
-              {% for s in sucursales.consultarAll()  %}        
-                <option value="{{s.idSucursal}}">
-                {{s.nombre}}                            
-                </option>        
-              {% endfor %}                                
+            <select class="form-control" id="sucursales" name="idSucursal"  disabled="true">
+                                          
             </select>
           </div>
 
