@@ -6,7 +6,9 @@ idDeduccion int auto_increment,
 nombre varchar(30),
 descripcion varchar(80),
 porcentaje float,
-primary key(idDeduccion)
+estatus char,
+primary key(idDeduccion),
+check(estatus in ('A','I'))
 );
 create table RH_Periodos(
 idPeriodo int auto_increment,
@@ -41,7 +43,9 @@ idPercepcion int auto_increment,
 nombre varchar(30),
 descripcion varchar(80),
 diasPagar int,
-primary key(idPercepcion)
+estatus char,
+primary key(idPercepcion),
+check(estatus in ('A','I'))
 );
 
 create table RH_Turnos(
@@ -141,7 +145,6 @@ horaEntrada timestamp,
 horaSalida timestamp,
 dia varchar(20),
 idEmpleado int,
-estatus char,
 primary key (idAsistencia),
 foreign key (idEmpleado) references RH_Empleados (idEmpleado),
 unique(idEmpleado, fecha)
@@ -159,8 +162,7 @@ estatus char,
 motivo varchar(100),
 primary key (idAusencia),
 foreign key (idEmpleadoAutoriza) references RH_Empleados(idEmpleado),
-foreign key (idEmpleadoSolicita) references RH_Empleados(idEmpleado),
-check(estatus in ('A','I'))
+foreign key (idEmpleadoSolicita) references RH_Empleados(idEmpleado)
 );
 create table RH_HistorialPuesto(
 idEmpleado int auto_increment,
