@@ -1,0 +1,50 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro de Percepciones </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/agregaPercepcion" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input type="text" class="form-control " name="nombrePercepcion" id="nombre"  onblur='consultarNombre("percepcion")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+   
+<div class="form-group">
+      <label>Descripcion</label>
+      <input type="text" class="form-control" name="descripcion"  required>
+    </div>
+
+<div class="form-group">
+      <label> Dias Pagados </label>
+      <input type="number" class="form-control" name="diasPagar" min="0"  required>
+    </div>
+    
+
+<div class="form-group">
+      <label>Estatus:</label>
+      <input type="checkbox" class="form-control " name="estatus" value="True" >     
+    </div>    
+
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/percepcion" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+
+{%endblock%}

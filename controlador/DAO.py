@@ -790,3 +790,52 @@ class AusenciasJustificadas(db.Model):
             salida["estatus"]="Ok"
             salida["mensaje"]="Todo bien"
         return salida 
+
+#Percepcion ------------------------------------    
+class Percepciones(db.Model):
+    __tablename__= 'RH_Percepciones'
+    idPercepcion = Column(Integer, primary_key=True)
+    nombre = Column(String(30))
+    descripcion = Column(String(80))
+    diasPagar = Column(Integer)
+    estatus = Column(String(1))
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+        
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None;
+        if current_user.is_admin():        
+            obj = self.query.order_by(Percepciones.idPercepcion.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Percepciones.estatus=='A').order_by(Percepciones.idPercepcion.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Percepciones.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="La Percepcion "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="Correcto"
+        return salida

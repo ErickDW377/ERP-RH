@@ -4,7 +4,7 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 
@@ -1371,6 +1371,93 @@ def evidencia(id):
     doc = doc.consultar(id).evidencia  
     return doc
 
+
+# Enrutamiento Percepcion-------------------------------------------------------------------
+@app.route('/percepcion')
+@login_required
+def  percepcion():
+    if current_user.is_authenticated() and current_user.is_admin():
+        PE=Percepciones() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = PE.consultarPagina(page)         
+        return  render_template('Percepciones/percepcion.html', Percepcion = paginacion.items, pagination = paginacion)
+    else:
+        abort(404)
+        
+@app.route('/registroPercepcion')
+@login_required
+def registroPercepcion():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        percepcion1 = Percepciones()
+        percepcion1 = percepcion1.consultarAll()
+        return  render_template('Percepciones/registroPercepcion.html')
+    else:
+        abort(404)
+        
+@app.route('/editarPercepcion/<int:id>')
+@login_required
+def editarPercepcion(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        percepcion1 = Percepciones()        
+        percepcion1 = percepcion1.consultar(id)
+        return  render_template('Percepciones/editarPercepcion.html', percepciones = percepcion1)
+    else:
+        abort(404)
+        
+@app.route('/agregaPercepcion',methods=['post'])
+@login_required
+def agregaPercepcion():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        percepcion1=Percepciones()
+        percepcion1.nombre= request.form['nombrePercepcion']         
+        percepcion1.descripcion=  request.form['descripcion'] 
+        percepcion1.diasPagar=  request.form['diasPagar'] 
+        estatus = request.values.get('estatus',False)    
+        if estatus=="True":
+            percepcion1.estatus='A'
+        else:
+            percepcion1.estatus='I' 
+        percepcion1.registrar()
+        flash('Percepcion registrada con exito')
+        return  redirect(url_for('registroPercepcion'))
+    else:
+        abort(404)
+
+@app.route('/modificarPercepcion/<int:id>',methods=['post'])
+@login_required
+def modificarPercepcion(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        percepcion1=Percepciones()
+        percepcion1.nombre=request.form['nombrePercepcion']          
+        percepcion1.descripcion=request.form['descripcion'] 
+        percepcion1.diasPagar=request.form['diasPagar'] 
+        estatus=request.values.get('estatus',False) 
+        if estatus=="True":
+            percepcion1.estatus='A'
+        else:
+            percepcion1.estatus='I'  
+        percepcion1.idPercepcion = id
+        percepcion1.actualizar()
+        flash('Percepcion actualizada con exito')
+        return  redirect(url_for('editarPercepcion', id= percepcion1.idPercepcion))
+    else:
+        abort(404)
+
+@app.route('/eliminarPerce/<int:id>')
+@login_required
+def eliminarPerce(id):
+    if current_user.is_authenticated() and current_user.is_admin(): 
+        percepcion1 = Percepciones()
+        percepcion1.eliminar(id)
+        flash('Percepcion eliminada con exito')
+        return  redirect(url_for('percepcion'))
+    else:
+        abort(404)
+
+@app.route('/percepcion/nombre/<string:nombre>',methods=['get'])
+def consultarNombrePercepcion(nombre):
+    item=Percepciones()    
+    return json.dumps(item.consultarNombre(nombre))
 
 
 
