@@ -23,8 +23,7 @@
 
 <div class="tabla">
 <table class="table table-hover">
-    <thead>
-      <th>ID</th>
+    <thead>      
       <th>Nombre</th>
       <th>Descripcion</th>
       <th>Dias Pagados</th>
@@ -39,8 +38,7 @@
     </thead>
     <tbody id="myTable">
       {%for obj in Percepcion%}
-<tr>
-        <td>{{obj.idPercepcion}}</td>
+<tr>        
         <td>{{obj.nombre}}</td>
         <td>{{obj.descripcion}}</td>
         <td>{{obj.diasPagar}}</td>

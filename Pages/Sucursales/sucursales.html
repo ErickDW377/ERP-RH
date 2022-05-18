@@ -23,8 +23,7 @@
 
 <div class="tabla"> 
   <table class="table table-hover">
-    <thead>
-      <th>ID</th>
+    <thead>      
       <th>Nombre</th>
       <th>Telefono</th>
       <th>CIudad</th>
@@ -45,8 +44,7 @@
 
     <tbody id="myTable"> 
     {%for obj in sucursales%} 
-    <tr>
-      <td>{{obj.idSucursal}}</td>
+    <tr>      
       <td>{{obj.nombre}}</td>
       <td>{{obj.telefono}}</td>
       <td>{{obj.getCiudad()}} </td>
