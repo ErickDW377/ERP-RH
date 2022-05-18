@@ -1376,7 +1376,7 @@ def evidencia(id):
 @app.route('/percepcion')
 @login_required
 def  percepcion():
-    if current_user.is_authenticated() and current_user.is_admin():
+    if current_user.is_authenticated():
         PE=Percepciones() 
         page = request.args.get('page', 1, type=int)
         paginacion = PE.consultarPagina(page)         
@@ -1446,7 +1446,7 @@ def modificarPercepcion(id):
 @app.route('/eliminarPerce/<int:id>')
 @login_required
 def eliminarPerce(id):
-    if current_user.is_authenticated() and current_user.is_admin(): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
         percepcion1 = Percepciones()
         percepcion1.eliminar(id)
         flash('Percepcion eliminada con exito')

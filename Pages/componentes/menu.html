@@ -12,7 +12,7 @@
         {% if current_user.is_authenticated %}
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Catálogos<span class="caret"></span> </a>
-          
+
           <ul class="dropdown-menu">
 
             <li><a class="trigger right-caret">Periodos
@@ -183,26 +183,6 @@
           </ul>
         </li>
 
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"
-            >Percepciones <span class="caret"></span
-          ></a>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/registroPercepcion">
-                <span class="glyphicon glyphicon-plus"></span>
-                Registrar
-              </a>
-            </li>
-            <li>
-              <a href="/percepcion">
-                <span class="glyphicon glyphicon-list-alt"></span>
-                Ver catalogo
-              </a>
-            </li>
-          </ul>
-        </li>
-
         {% if current_user.is_staff() or current_user.is_admin() %}
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Empleados
@@ -226,10 +206,25 @@
         </li>
         {% endif %}
 
-
-
-
-
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Percepciones <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            {% if current_user.is_staff() or current_user.is_admin() %}
+            <li>
+              <a href="/registroPercepcion">
+                <span class="glyphicon glyphicon-plus"></span>
+                Registrar
+              </a>
+            </li>
+            {% endif %}
+            <li>
+              <a href="/percepcion">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Ver catalogo
+              </a>
+            </li>
+          </ul>
+        </li>
 
 
         <li class="dropdown">
