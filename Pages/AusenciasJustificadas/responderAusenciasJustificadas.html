@@ -1,0 +1,98 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+{% for m in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible alertas-txt">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{m}}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificar Solicitud de ausencia </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form>
+
+
+    <div class="form-group">
+      <label> Fecha inicio </label>
+      <input type="date" class="form-control" name="fechaInicio" id="fechaInicio" value="{{ausenciasJ.fechaInicio}}"
+        readonly>
+
+    </div>
+    <div class="form-group">
+      <label> Fecha fin </label>
+      <input type="date" class="form-control" name="fechaFin" id="fechaFin" value="{{ausenciasJ.fechaFin}}" readonly>
+
+    </div>
+
+    <div class="form-group">
+      <label> Tipo </label>
+      {% if ausenciasJ.tipo == "P"%}
+      <input type="text" class="form-control" name="tipo" id="tipo" value="Permiso" readonly>
+      {% elif ausenciasJ.tipo == "V"%}
+      <input type="text" class="form-control" name="tipo" id="tipo" value="Vacaciones" readonly>
+      {% else %}
+      <input type="text" class="form-control" name="tipo" id="tipo" value="Incapacidad" readonly>
+      {% endif %}
+
+    </div>
+
+    <div class="form-group">
+      <div class="">
+        <label>Documento:</label>
+      </div>
+      {% if ausenciasJ.evidencia != none%}
+      <a data-toggle="modal" data-target="#verDoc{{ausenciasJ.idAusencia}}" class="text-center">Evidencia.pdf</a>
+      <div id="verDoc{{ausenciasJ.idAusencia}}" class="modal fade" role="dialog" >
+      <div class="modal-dialog modal-lg">        
+        <div class="modal-content" >
+          <div class="modal-header">                    
+            <h4 class="modal-title">Evidencia</h4>                    
+          </div>                   
+            <embed  src="/evidencia/{{ausenciasJ.idAusencia}}" type="application/pdf" width="100%" height="550px"/> 
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+            </div>                                
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <h1 class="text-center"><small>No se adjunto documento</small></h1>
+    {% endif %}
+    
+
+    <div class="form-group">
+      <label>Motivo</label>
+      <textarea class="form-control" name="motivo" readonly>{{ausenciasJ.motivo}} 
+      </textarea>
+    </div>
+
+    <div class="row ">
+      <div class="form-group col-sm-6">
+        <button type="submit" class="btn btn-block btn-primary " id="btnGuardar"
+          onclick="this.form.action='/responderAusenciaJustificada/{{ausenciasJ.idAusencia}}/A', this.form.method='post', this.form.enctype='multipart/form-data'">
+          <span class="glyphicon glyphicon-check"></span>
+          Aceptar
+        </button>
+      </div>
+      <div class="form-group col-sm-6">
+        <button type="submit" class="btn btn-block btn-danger " id="btnGuardar2"
+          onclick="this.form.action='/responderAusenciaJustificada/{{ausenciasJ.idAusencia}}/R', method='post', enctype='multipart/form-data'">
+          <span class="glyphicon glyphicon-remove"></span>
+          Rechazar
+        </button>
+      </div>
+
+
+    </div>
+    <a href="/ausenciasJustificadas" class="btn btn-success btn-block" role="button">Regresar</a>
+  </form>
+</div>
+<script src="{{url_for('static', filename='js/ausencias.js')}}"></script>
+{%endblock%}

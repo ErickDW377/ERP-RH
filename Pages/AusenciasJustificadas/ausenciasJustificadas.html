@@ -1,0 +1,133 @@
+{% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion.html' as macros %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+{% for m in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible alertas-txt">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{m}}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Catálogo solicitudes de ausencia</p>
+</div>
+
+<div class="container input-group">
+  <span class="input-group-addon amarillo"><i class="glyphicon glyphicon-search"></i></span>
+  <input class="form-control" id="myInput" type="text" placeholder="Search...">
+  <br>
+</div>
+
+<div class="tabla">
+  <table class="table table-hover">
+    <thead>
+      <th>Fecha Solicitud</th>
+      <th>Fechas</th>      
+      <th>Tipo</th>
+      <th>Empleado Solicitante</th>
+      <th>Empleado Autorizador</th>             
+      <th>Estatus</th>
+      <th></th>
+      <th></th>
+    </thead>
+
+    <tbody id="myTable">
+      {%for obj in ausenciasJ %}
+      <tr>
+        <td>{{obj.fechaSolicitud}}</td>
+        <td>
+          {{obj.fechaInicio}}
+           - <p></p>
+          {{obj.fechaFin}}</td>        
+        <td>
+          {% if obj.tipo == "P"%}
+              Periodo
+          {% elif obj.tipo == "V"%}
+              Vacaciones
+          {% else  %}
+              Incapacidad
+          {% endif %}
+        </td>
+        <td>{{obj.nombreEmpleadoS()}}</td>
+        {% if obj.idEmpleadoAutoriza == none %}
+        <td><h1 ><small>Pendiente</small></h1></td>
+        {% else %}
+        <td>{{obj.nombreEmpleadoA()}}</td>
+        {% endif %}               
+        <td>
+          {% if obj.estatus == "G"%}
+              Guardada
+          {% elif obj.estatus == "E"%}
+              Enviada
+          {% elif obj.estatus == "A"%}
+              Aceptada
+          {% else  %}
+              Rechazada
+          {% endif %}
+        </td>
+        {% if obj.estatus == "G"%}
+        {% if obj.idEmpleadoSolicita == current_user.idEmpleado%}
+        <td>
+          <a href="/editarAusenciasJustificadas/{{obj.idAusencia}}" class="btn btn-success" role="button">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Editar</a>
+        </td>
+        {% endif %}
+        {% else %}
+        {% if (current_user.is_admin() or current_user.is_staff()) and obj.idEmpleadoSolicita != current_user.idEmpleado
+        %}
+        <td>
+          <a href="/responderAusenciasJustificadas/{{obj.idAusencia}}" class="btn btn-success" role="button">
+            <span class="glyphicon glyphicon-envelope"></span>
+            Responder</a>
+        </td>
+        {% endif %}
+        {% endif %}
+
+        {% if  obj.idEmpleadoSolicita == current_user.idEmpleado and obj.estatus != "E" %}
+        <td>
+          <a href="" class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idAusencia}}">
+            <span class="glyphicon glyphicon-trash"></span>
+            Eliminar </a>
+        </td>
+        <div id="eliminar{{obj.idAusencia}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                  &times;
+                </button>
+                <h4 class="modal-title">Confirmacion de proceso</h4>
+              </div>
+              <div class="modal-body">
+                <p>¿Estas seguro de eliminar la solicitud de ausencia del día: {{obj.fechaSolicitud}} ?</p>
+              </div>
+              <div class="modal-footer">
+                <a href="/eliminarAusenciaJustificada/{{obj.idAusencia}}" class="btn btn-info">Aceptar</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      </tr>
+
+
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="paginacion">
+  {{ macros.pagination_widget(pagination, principal) }}
+</div>
+
+{%endblock%}

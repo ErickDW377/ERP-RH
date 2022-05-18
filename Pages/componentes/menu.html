@@ -10,21 +10,147 @@
           </a>
         </li>
         {% if current_user.is_authenticated %}
-        
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Catálogos<span class="caret"></span> </a>
+          
+          <ul class="dropdown-menu">
+
+            <li><a class="trigger right-caret">Periodos
+              </a>
+              <ul class="dropdown-menu sub-menu">
+                {% if current_user.is_staff() or current_user.is_admin() %}
+                <li><a href="/registrarPeriodos">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registrar
+                  </a></li>
+                {% endif %}
+
+                <li><a href="/periodos">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Ver catalogo
+                  </a></li>
+              </ul>
+            </li>
+
+            <li><a class="trigger right-caret">Sucursales
+              </a>
+              <ul class="dropdown-menu sub-menu">
+                {% if current_user.is_staff() or current_user.is_admin() %}
+                <li><a href="/registrarSucursales">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registrar
+                  </a></li>
+                {% endif %}
+
+                <li><a href="/sucursales">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Ver catalogo
+                  </a></li>
+              </ul>
+            </li>
+
+            <li><a class="trigger right-caret">Ciudades
+              </a>
+              <ul class="dropdown-menu sub-menu">
+                {% if current_user.is_staff() or current_user.is_admin() %}
+                <li><a href="/registrarCiudades">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registrar
+                  </a></li>
+                {% endif %}
+
+                <li><a href="/ciudades">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Ver catalogo
+                  </a></li>
+              </ul>
+            </li>
+
+
+
+
+
+            <li>
+              <a class="trigger right-caret">
+                Formas de pago
+
+              </a>
+              <ul class="dropdown-menu sub-menu">
+                {% if current_user.is_staff() or current_user.is_admin() %}
+                <li>
+                  <a href="/registrarFormasdePago">
+                    <span class="glyphicon glyphicon-plus"> </span>
+                    Registrar
+                  </a>
+                </li>
+                {% endif %}
+
+                <li>
+                  <a href="/formasdePago">
+                    <span class="glyphicon glyphicon-list-alt"> </span>
+                    Ver Catalogo
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <a class="trigger right-caret">Estados </a>
+              <ul class="dropdown-menu sub-menu">
+                {% if current_user.is_staff() or current_user.is_admin() %}
+                <li>
+                  <a href="/registrarEstado">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registrar
+                  </a>
+                </li>
+                {% endif %}
+
+                <li>
+                  <a href="/estado">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Ver catalogo
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <a class="trigger right-caret">Turnos </a>
+              <ul class="dropdown-menu sub-menu">
+                {% if current_user.is_staff() or current_user.is_admin() %}
+                <li>
+                  <a href="/registrarTurnos">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registrar
+                  </a>
+                </li>
+                {% endif %}
+
+                <li>
+                  <a href="/turnos">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Ver catalogo
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Puestos
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
             {% if current_user.is_staff() or current_user.is_admin() %}
-<li>
+            <li>
               <a href="/registrarPuestos">
                 <span class="glyphicon glyphicon-plus"></span>
                 Registrar
               </a>
             </li>
-        {% endif %}
-            
+            {% endif %}
+
             <li>
               <a href="/puestos">
                 <span class="glyphicon glyphicon-list-alt"></span>
@@ -34,39 +160,20 @@
           </ul>
         </li>
 
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Turnos <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            {% if current_user.is_staff() or current_user.is_admin() %}
-<li>
-              <a href="/registrarTurnos">
-                <span class="glyphicon glyphicon-plus"></span>
-                Registrar
-              </a>
-            </li>
-        {% endif %}
-            
-            <li>
-              <a href="/turnos">
-                <span class="glyphicon glyphicon-list-alt"></span>
-                Ver catalogo
-              </a>
-            </li>
-          </ul>
-        </li>
+
 
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Departamentos <span class="caret"></span></a>
           <ul class="dropdown-menu">
             {% if current_user.is_staff() or current_user.is_admin() %}
-<li>
+            <li>
               <a href="/registrarDepartamentos">
                 <span class="glyphicon glyphicon-plus"></span>
                 Registrar
               </a>
             </li>
-        {% endif %}
-            
+            {% endif %}
+
             <li>
               <a href="/departamentos">
                 <span class="glyphicon glyphicon-list-alt"></span>
@@ -76,62 +183,21 @@
           </ul>
         </li>
 
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Estados <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            {% if current_user.is_staff() or current_user.is_admin() %}
-<li>
-              <a href="/registrarEstado">
-                <span class="glyphicon glyphicon-plus"></span>
-                Registrar
-              </a>
-            </li>
-        {% endif %}
-            
-            <li>
-              <a href="/estado">
-                <span class="glyphicon glyphicon-list-alt"></span>
-                Ver catalogo
-              </a>
-            </li>
-          </ul>
-        </li>
 
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            Formas de pago
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            {% if current_user.is_staff() or current_user.is_admin() %}
-<li>
-              <a href="/registrarFormasdePago">
-                <span class="glyphicon glyphicon-plus"> </span>
-                Registrar
-              </a>
-            </li>
-        {% endif %}
-            
-            <li>
-              <a href="/formasdePago">
-                <span class="glyphicon glyphicon-list-alt"> </span>
-                Ver Catalogo
-              </a>
-            </li>
-          </ul>
-        </li>
+
+
         {% if current_user.is_staff() or current_user.is_admin() %}
-<li class="dropdown">
+        <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Empleados
             <span class="caret"></span>
           </a>
-          <ul class="dropdown-menu">            
+          <ul class="dropdown-menu">
             <li>
               <a href="/empleadosR">
                 <span class="glyphicon glyphicon-plus"></span>
                 Registrar
               </a>
-            </li>            
+            </li>
 
             <li>
               <a href="/empleados">
@@ -142,59 +208,70 @@
           </ul>
         </li>
         {% endif %}
-        
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ciudades
+
+
+
+
+
+
+
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Asistencia
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            {% if current_user.is_staff() or current_user.is_admin() %}
-            <li><a href="/registrarCiudades">
-                <span class="glyphicon glyphicon-plus"></span>
-                Registrar
-              </a></li>
-            {% endif %}
+            <li><a class="trigger right-caret">Asistencias
 
-            <li><a href="/ciudades">
-                <span class="glyphicon glyphicon-list-alt"></span>
-                Ver catalogo
-              </a></li>
+              </a>
+              <ul class="dropdown-menu sub-menu">
+                <li><a href="/registrarAsistencias">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registrar
+                  </a></li>
+                <li><a href="/libresAsistencias">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registro libre
+                  </a></li>
+                <li><a href="/misAsistencias">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Mis Asistencias
+                  </a></li>
+                {% if current_user.is_admin() or current_user.is_staff() %}
+                <li><a href="/asistencias">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Ver catalogo
+                  </a></li>
+                {% endif %}
+              </ul>
+            </li>
+            <li><a class="trigger right-caret">Solicitud de ausencia
+
+              </a>
+              <ul class="dropdown-menu sub-menu">
+                <li><a href="/registrarAusenciasJustificadas">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Registrar
+                  </a></li>
+                <li><a href="/misAusenciasJustificadas">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Mis Solicitudes
+                  </a></li>
+                {% if current_user.is_admin() or current_user.is_staff() %}
+                <li><a href="/ausenciasJustificadas">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Solicitudes Enviadas
+                  </a></li>
+                {% endif %}
+              </ul>
+            </li>
           </ul>
         </li>
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Sucursales
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            {% if current_user.is_staff() or current_user.is_admin() %}
-            <li><a href="/registrarSucursales">
-                <span class="glyphicon glyphicon-plus"></span>
-                Registrar
-              </a></li>
-            {% endif %}
 
-            <li><a href="/sucursales">
-                <span class="glyphicon glyphicon-list-alt"></span>
-                Ver catalogo
-              </a></li>
-          </ul>
-        </li>
 
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Periodos
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            {% if current_user.is_staff() or current_user.is_admin() %}
-            <li><a href="/registrarPeriodos">
-                <span class="glyphicon glyphicon-plus"></span>
-                Registrar
-              </a></li>
-            {% endif %}
 
-            <li><a href="/periodos">
-                <span class="glyphicon glyphicon-list-alt"></span>
-                Ver catalogo
-              </a></li>
-          </ul>
-        </li>
+
+
+
 
         {% endif %}
       </ul>
@@ -215,13 +292,13 @@
               </a>
             </li>
             <li><a href="/empleadosVer/{{current_user.idEmpleado}}">
-              <span class=" glyphicon glyphicon-eye-open"></span>
+                <span class=" glyphicon glyphicon-eye-open"></span>
                 Ver perfil
               </a></li>
-              <li><a href="/empleadosE/{{current_user.idEmpleado}}">
+            <li><a href="/empleadosE/{{current_user.idEmpleado}}">
                 <span class=" glyphicon glyphicon-pencil"></span>
-                  Editar perfil
-                </a></li>
+                Editar perfil
+              </a></li>
           </ul>
         </li>
         {% else %}

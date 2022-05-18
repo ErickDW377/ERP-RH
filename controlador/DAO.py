@@ -671,3 +671,122 @@ class Sucursales(db.Model):
         return salida
 
 
+# Asistencias-----------------------------------------------------
+class Asistencias(db.Model):
+    __tablename__= 'RH_Asistencias'
+    idAsistencia = Column(Integer, primary_key=True)
+    fecha = Column(Date)
+    horaEntrada = Column(TIMESTAMP)
+    horaSalida = Column(TIMESTAMP)
+    dia = Column(String(20))
+    idEmpleado = Column(Integer)    
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+    
+    def consultarPagina(self, pagina):
+        obj = None
+        if current_user.is_admin() or current_user.is_staff():
+            obj = self.query.order_by(Asistencias.fecha.desc()).paginate(pagina,per_page= 5, error_out=False)   
+        return obj
+    
+    def misAsistencias(self, pagina):
+        obj = None        
+        obj = self.query.filter(Asistencias.idEmpleado == current_user.idEmpleado).order_by(Asistencias.fecha.desc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+
+    def nombreEmpleado(self):
+        empleado = Empleados()
+        empleado = empleado.consultar(self.idEmpleado)
+        return empleado.nombre + " "+ empleado.apellidoPaterno + " "+empleado.apellidoMaterno
+
+    def consultarfecha(self,fecha):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Asistencias.fecha==fecha,Asistencias.idEmpleado==current_user.idEmpleado).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="Ya tiene un registro de asistencia el dia de hoy"
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="Todo bien"
+        return salida 
+
+
+
+# Ausencias Justificadas-----------------------------------------------------
+class AusenciasJustificadas(db.Model):
+    __tablename__= 'RH_Ausencias_Justificadas'
+    idAusencia = Column(Integer, primary_key=True)
+    fechaSolicitud = Column(Date)
+    fechaInicio = Column(Date)
+    fechaFin = Column(Date)
+    tipo = Column(String(1))
+    idEmpleadoSolicita = Column(Integer)
+    idEmpleadoAutoriza = Column(Integer)
+    evidencia = Column(BLOB)    
+    estatus = Column(String(1))
+    motivo = Column(String(100))
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        db.session.delete(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None
+        if current_user.is_admin() or current_user.is_staff():
+            obj = self.query.filter(AusenciasJustificadas.idEmpleadoSolicita != current_user.idEmpleado,AusenciasJustificadas.estatus =="E").order_by(AusenciasJustificadas.idAusencia.desc()).paginate(pagina,per_page= 5, error_out=False)        
+        return obj
+    
+    def misSolicitudes(self, pagina):
+        obj = None        
+        obj = self.query.filter(AusenciasJustificadas.idEmpleadoSolicita == current_user.idEmpleado).order_by(AusenciasJustificadas.idAusencia.desc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+
+    def nombreEmpleadoA(self):
+        empleado = Empleados()
+        empleado = empleado.consultar(self.idEmpleadoAutoriza)
+        return empleado.nombre + " "+ empleado.apellidoPaterno + " "+empleado.apellidoMaterno
+    
+    def nombreEmpleadoS(self):
+        empleado = Empleados()
+        empleado = empleado.consultar(self.idEmpleadoSolicita)
+        return empleado.nombre + " "+ empleado.apellidoPaterno + " "+empleado.apellidoMaterno
+
+    def puedeSolicitar(self):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(AusenciasJustificadas.estatus=="E",AusenciasJustificadas.idEmpleadoSolicita==current_user.idEmpleado).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="Ya tiene una solicitud en revición"
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="Todo bien"
+        return salida 

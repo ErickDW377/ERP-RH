@@ -1,0 +1,42 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificar Asistencia </p>
+</div>
+
+<div class="contenedor-formulario">   
+  <form action="/libreAsistencia" method="post" enctype="multipart/form-data">
+  <div class="form-group">
+    <label > Fecha </label>
+    <input type="date" class="form-control" name="fecha" id="fecha" onchange="getDia()" required>    
+  </div>
+  <div class="form-group">
+    <label>Hora Entrada</label>
+    <input type="text" class="form-control" name="horaEntrada" value="{{fecha.strftime("%H:%M")}}" readonly>
+  </div>
+  <div class="form-group">
+      <label>Dia</label>      
+      <input type="text" class="form-control" name="dia" id="dia" readonly>      
+    </div>
+
+    
+
+  <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+    Resgistrar
+  </button>
+  <a href="/misAsistencias" class="btn btn-danger btn-block" role="button">Cancelar</a>
+</form>
+</div>
+<script src="{{url_for('static', filename='js/asistencias.js')}}"></script>
+{%endblock%}

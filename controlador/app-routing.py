@@ -4,7 +4,7 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 
@@ -1111,6 +1111,267 @@ def eliminarPeriodo(id):
 def consultarNombrePeriodos(nombre):
     item=Periodos()    
     return json.dumps(item.consultarNombre(nombre))
+
+#Asistencias-----------------------------------------------------
+@app.route('/asistencias')
+@login_required
+def asistencias():
+    if current_user.is_authenticated() and  (current_user.is_admin() or current_user.is_staff()):
+        asistencias=Asistencias() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = asistencias.consultarPagina(page)         
+        return  render_template('Asistencias/asistencias.html', asistencias = paginacion.items, pagination = paginacion, principal = ".asistencias")
+    else:
+        abort(404)
+
+@app.route('/misAsistencias')
+@login_required
+def misAsistencias():
+    if current_user.is_authenticated():
+        asistencias= Asistencias() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = asistencias.misAsistencias(page)         
+        return  render_template('Asistencias/asistencias.html', asistencias = paginacion.items, pagination = paginacion,principal = ".misAsistencias")
+    else:
+        abort(404)
+
+@app.route('/registrarAsistencias')
+@login_required
+def registrarAsistencias():
+    if current_user.is_authenticated():
+        fecha =datetime.today()
+        asistencia = Asistencias()
+        respuesta = asistencia.consultarfecha(fecha.date())        
+        if respuesta["estatus"] == "Error":
+            flash(respuesta["mensaje"])
+            return  redirect(url_for('misAsistencias'))
+        else:
+            turno = Turnos()
+            turno = turno.consultar(current_user.idTurno)
+            dia = fecha.weekday()
+            dias={"L":False,"M":False,"X":False,"J":False,"V":False,"S":False,"D":False}                 
+            for d in turno.dias.split(sep=','):
+                 dias[d]=True
+            valores = list(dias.values())           
+            if valores[dia]:
+                return  render_template('Asistencias/registrarAsistencias.html', fecha = fecha)
+            else:
+                flash("El día de hoy no es laboral para usted")
+                return  redirect(url_for('misAsistencias')) 
+    else:
+        abort(404)
+
+@app.route('/libresAsistencias')
+@login_required
+def libresAsistencias():
+    if current_user.is_authenticated() :
+        fecha =datetime.today()  
+        return  render_template('Asistencias/libresAsistencias.html', fecha = fecha)
+    else:
+        abort(404)
+
+@app.route('/registrarAsistencia',methods=['post'])
+@login_required
+def registrarAsistencia():
+    if current_user.is_authenticated() :
+        asistencia=Asistencias()
+        asistencia.fecha= request.form['fecha']
+        asistencia.horaEntrada= "2000-01-01 " + request.form['horaEntrada']     
+        asistencia.dia= request.form['dia']
+        asistencia.idEmpleado = current_user.idEmpleado        
+        asistencia.registrar()
+        flash('Asistencia registrada con exito')
+        return  redirect(url_for('misAsistencias'))
+    else:
+        abort(404)
+
+@app.route('/libreAsistencia',methods=['post'])
+@login_required
+def libreAsistencia():
+    if current_user.is_authenticated() :  
+        asistencia=Asistencias()
+        asistencia.fecha= request.form['fecha']
+        asistencia.horaEntrada= "2000-01-01 " + request.form['horaEntrada']                  
+        asistencia.horaSalida= "2000-01-01 " +  request.form['horaEntrada']
+        asistencia.dia= request.form['dia']  
+        asistencia.idEmpleado = current_user.idEmpleado       
+        asistencia.registrar()
+        flash('Asitencia registrada con exito')
+        return  redirect(url_for('libresAsistencias'))
+    else:
+        abort(404)
+
+@app.route('/checarSalidaAsistencia/<int:id>')
+@login_required
+def checarSalidaAsistencia(id):
+    asistencia = Asistencias()
+    idE = asistencia.consultar(id).idEmpleado
+    if current_user.is_authenticated() and current_user.idEmpleado == idE:                              
+        asistencia.horaSalida= "2000-01-01 " +  datetime.today().strftime("%H:%M") + ":00"
+        asistencia.idAsistencia= id
+        asistencia.actualizar()
+        flash('Asitencia actualizada con exito')        
+        return  redirect(url_for('misAsistencias'))
+    else:
+        abort(404)
+
+
+
+
+
+#Ausencias Justificadas-----------------------------------------------------
+@app.route('/ausenciasJustificadas')
+@login_required
+def ausenciasJustificadas():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        ausenciasJ= AusenciasJustificadas() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = ausenciasJ.consultarPagina(page)         
+        return  render_template('AusenciasJustificadas/ausenciasJustificadas.html', ausenciasJ = paginacion.items, pagination = paginacion,principal = ".ausenciasJustificadas")
+    else:
+        abort(404)
+
+@app.route('/misAusenciasJustificadas')
+@login_required
+def misAusenciasJustificadas():
+    if current_user.is_authenticated():
+        ausenciasJ= AusenciasJustificadas() 
+        page = request.args.get('page', 1, type=int)
+        paginacion = ausenciasJ.misSolicitudes(page)         
+        return  render_template('AusenciasJustificadas/ausenciasJustificadas.html', ausenciasJ = paginacion.items, pagination = paginacion,principal = ".misAusenciasJustificadas")
+    else:
+        abort(404)
+
+@app.route('/registrarAusenciasJustificadas')
+@login_required
+def registrarAusenciasJustificadas():
+    if current_user.is_authenticated():
+        solicitudes = AusenciasJustificadas()
+        respuesta = solicitudes.puedeSolicitar()
+        if respuesta["estatus"] == "Error":
+            flash(respuesta["mensaje"])
+            return  redirect(url_for('misAusenciasJustificadas'))
+        
+        return  render_template('AusenciasJustificadas/registrarAusenciasJustificadas.html')           
+    else:
+        abort(404)
+
+@app.route('/editarAusenciasJustificadas/<int:id>')
+@login_required
+def editarAusenciasJustificadas(id):
+    if current_user.is_authenticated():
+        ausenciasJ =  AusenciasJustificadas()        
+        ausenciasJ = ausenciasJ.consultar(id)
+        
+        return  render_template('AusenciasJustificadas/editarAusenciasJustificadas.html', ausenciasJ = ausenciasJ)
+    else:
+        abort(404)
+
+@app.route('/responderAusenciasJustificadas/<int:id>')
+@login_required
+def responderAusenciasJustificadas(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        ausenciasJ =  AusenciasJustificadas()        
+        ausenciasJ = ausenciasJ.consultar(id)
+        
+        return  render_template('AusenciasJustificadas/responderAusenciasJustificadas.html', ausenciasJ = ausenciasJ)
+    else:
+        abort(404)
+
+@app.route('/registrarAusenciaJustificada/<string:btn>',methods=['post'])
+@login_required
+def registrarAusenciaJustificada(btn):
+    if current_user.is_authenticated() :
+        ausenciasJ=AusenciasJustificadas()
+        ausenciasJ.fechaSolicitud= datetime.now()
+        ausenciasJ.fechaInicio= request.form['fechaInicio'] 
+        ausenciasJ.fechaFin= request.form['fechaFin']   
+        ausenciasJ.tipo= request.form['tipo'] 
+        ausenciasJ.idEmpleadoSolicita= current_user.idEmpleado        
+        doc = request.files['documento'].read()        
+        if doc:
+            ausenciasJ.evidencia = doc
+        ausenciasJ.estatus = btn
+        ausenciasJ.motivo= request.form['motivo']
+        
+        ausenciasJ.registrar()
+        flash('Ausencia Justificada registrada con exito')
+        return  redirect(url_for('misAusenciasJustificadas'))
+    else:
+        abort(404)
+
+@app.route('/editarAusenciaJustificada/<int:id>/<string:btn>',methods=['post'])
+@login_required
+def editarAusenciaJustificada(id,btn):
+    if current_user.is_authenticated():  
+        ausenciasJ=AusenciasJustificadas()
+        ausenciasJ.fechaSolicitud= datetime.now()
+        ausenciasJ.fechaInicio= request.form['fechaInicio'] 
+        ausenciasJ.fechaFin= request.form['fechaFin']   
+        ausenciasJ.tipo= request.form['tipo']              
+        doc = request.files['documento'].read()        
+        if doc:
+            ausenciasJ.evidencia = doc
+        ausenciasJ.estatus = btn
+        ausenciasJ.motivo= request.form['motivo']
+        ausenciasJ.idAusencia = id
+
+        ausenciasJ.actualizar()
+        if btn == "G":
+            flash('Ausencia Justificada GUARDADA con exito')
+            return  redirect(url_for('editarAusenciasJustificadas', id= ausenciasJ.idAusencia))
+        elif btn == "E":
+            flash('Ausencia Justificada ENVIADA con exito')
+            return  redirect(url_for('misAusenciasJustificadas'))
+    else:
+        abort(404)
+
+@app.route('/responderAusenciaJustificada/<int:id>/<string:btn>',methods=['post'])
+@login_required
+def responderAusenciaJustificada(id,btn):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        ausenciasJ=AusenciasJustificadas() 
+        ausenciasJ.idEmpleadoAutoriza = current_user.idEmpleado       
+        ausenciasJ.estatus = btn        
+        ausenciasJ.idAusencia = id
+
+        ausenciasJ.actualizar()
+        if btn == "A":
+            flash('Ausencia Justificada ACEPTADA con exito')           
+        elif btn == "R":
+            flash('Ausencia Justificada RECHAZADA con exito')
+        return  redirect(url_for('ausenciasJustificadas'))
+    else:
+        abort(404)
+
+@app.route('/eliminarAusenciaJustificada/<int:id>')
+@login_required
+def eliminarAusenciaJustificada(id):
+    ausencias = AusenciasJustificadas()
+    idE = ausencias.consultar(id).idEmpleadoSolicita
+    if current_user.is_authenticated() and  current_user.idEmpleado == idE: 
+        ausencias = AusenciasJustificadas()
+        ausencias.eliminar(id)
+        flash('Ausencia Justificada eliminada con exito')
+        return  redirect(url_for('misAusenciasJustificadas'))
+    else:
+        abort(404)
+
+@app.route('/puedeAusentarce',methods=['get'])
+def puedeAusentarce():
+    if current_user.is_authenticated():
+        salida={"diasP":current_user.diasPermiso,"diasV":current_user.diasVacaciones}       
+        return json.dumps(salida)
+    else:
+        abort(404)
+    
+@app.route('/evidencia/<int:id>')
+def evidencia(id):
+    doc=AusenciasJustificadas()
+    doc = doc.consultar(id).evidencia  
+    return doc
+
+
 
 
 #Error--------------------------------------------------------------------------------------

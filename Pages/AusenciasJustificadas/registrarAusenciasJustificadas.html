@@ -1,0 +1,72 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+{% if get_flashed_messages()%}
+{% for m in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible alertas-txt">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{m}}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro de Solicitud de ausencia </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form >
+    <div id="mensajeFechas1" style="background-color:brown;color:white"></div>
+
+    <div class="form-group">
+      <label> Fecha inicio </label>
+      <input type="date" class="form-control" name="fechaInicio" id="fechaInicio" onchange="validaciones()" required>
+
+    </div>
+    <div class="form-group">
+      <label> Fecha fin </label>
+      <input type="date" class="form-control" name="fechaFin" id="fechaFin" onchange="validaciones()" required>
+
+    </div>
+    <label>Tipo</label>
+    <select name="tipo" id="tipo" class="form-control " onchange="validaciones()">
+      <option value="P">Permiso</option>
+      <option value="V">Vacaciones</option>
+      <option value="I">Incapacidad</option>
+    </select>
+
+
+    <div class="form-group">
+      <div class="">
+        <label>Documento:</label>
+      </div>
+      <div class="">
+        <input class="form-control" type="file" name="documento" accept=".pdf">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Motivo</label>
+      <textarea class="form-control" name="motivo" required></textarea>
+    </div>
+
+    <div class="row ">
+      <div class="form-group col-sm-6">
+        <button type="submit" class="btn btn-block btn-primary " id="btnGuardar" onclick="this.form.action='/registrarAusenciaJustificada/G', this.form.method='post', this.form.enctype='multipart/form-data'">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+          Guardar
+        </button>
+      </div>
+      <div class="form-group col-sm-6">
+        <button type="submit" class="btn btn-block btn-success " id="btnGuardar2" onclick="this.form.action='/registrarAusenciaJustificada/E', method='post', enctype='multipart/form-data'">
+          <span class="glyphicon glyphicon-envelope"></span>
+          Enviar
+        </button>
+      </div>
+
+
+    </div>
+    <a href="/misAusenciasJustificadas" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+<script src="{{url_for('static', filename='js/ausencias.js')}}"></script>
+{%endblock%}

@@ -228,10 +228,26 @@ INSERT INTO `rh_erp`.`RH_Estados` (`nombre`, `siglas`, `estatus`) VALUES ('Micho
 INSERT INTO `rh_erp`.`RH_Ciudades` (`nombre`, `idEstado`, `estatus`) VALUES ('Zamora', '1', 'A');
 INSERT INTO `rh_erp`.`RH_Sucursales` (`nombre`, `telefono`, `direccion`, `colonia`, `codigoPostal`, `presupuesto`, `estatus`, `idCiudad`) VALUES ('Sucursal Zamora', '3511695859', 'Juarez poniente 2257', 'Juarez', '59632', '100000', 'A', '1');
 INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`,`estatus`) VALUES ('Vespertino', '2000-01-01 08:00:01', '2000-01-01 16:00:01', 'L,M','A');
-INSERT INTO `rh_erp`.`RH_Empleados` (`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`) VALUES ('Yuvia', 'Francisco', 'Diaz', 'F', '2000-12-1', 'WEWSDD', 'Soltero', '2021-01-01', '300', '23232123', '10', '10', 'DOMICILIO X', 'X', '58946', 'Ingeniero', 'ydiaz@gmail.com', 'Hola.123', 'Admin', 'A', '1', '1', '1', '1', '1');
+INSERT INTO `rh_erp`.`RH_Empleados` (`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`) VALUES ('Yuvia', 'Francisco', 'Diaz', 'F', '2000-12-1', 'WEWSDD', 'Soltero', '2021-01-01', '300', '23232123', '10', '10', 'DOMICILIO X', 'X', '12345698752', 'Ingeniero', 'ydiaz@gmail.com', 'Hola.123', 'Admin', 'A', '1', '1', '1', '1', '1');
 
 
-
+delimiter //
+create trigger actualizarDiasAusencias after update on RH_Ausencias_Justificadas 
+for each row
+BEGIN
+  if new.estatus = 'A' then
+	 
+    set @numDias = datediff(new.fechaFin,new.fechaInicio)+1;
+    if new.tipo = 'P' then
+		update RH_Empleados set RH_Empleados.diasPermiso = RH_Empleados.diasPermiso-@numDias  where idEmpleado = new.idEmpleadoSolicita;
+	else
+		if new.tipo = 'V' then
+			update RH_Empleados set RH_Empleados.diasVacaciones = RH_Empleados.diasVacaciones-@numDias where idEmpleado = new.idEmpleadoSolicita;
+		end if ;
+	end if ;
+  end if ;
+  end
+//
 
 
 
