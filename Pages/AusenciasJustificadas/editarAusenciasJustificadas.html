@@ -20,7 +20,7 @@
 
     <div class="form-group">
       <label> Fecha inicio </label>
-      <input type="date" class="form-control" name="fechaInicio" id="fechaInicio" value="{{ausenciasJ.fechaInicio}}" onchange="validaciones()" required>
+      <input type="date" class="form-control" name="fechaInicio" id="fechaInicio" value="{{ausenciasJ.fechaInicio}}" onchange="validaciones()"   required>
 
     </div>
     <div class="form-group">
@@ -98,5 +98,5 @@
     <a href="/misAusenciasJustificadas" class="btn btn-danger btn-block" role="button">Cancelar</a>
   </form>
 </div>
-<script src="{{url_for('static', filename='js/ausencias.js')}}"></script>
+<script src="{{url_for('static', filename='js/ausencias.js')}}"  onload="validaciones()"></script>
 {%endblock%}
