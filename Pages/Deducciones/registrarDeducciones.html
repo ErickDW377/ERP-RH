@@ -1,0 +1,58 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro Deducciones </p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/registrarDeduccion" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input type="text" class="form-control " name="nombreDeduccion" id="nombre"  onblur='consultarNombre("deducciones")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+   
+
+<div class="form-group">
+      
+    <div class="form-group">
+        <label>Descripcion:</label>
+        <input type="text" class="form-control " name="descripcion" id="nombre"  class="form-control">
+        <div id="mensajeNombre" style="background-color:brown;color:white">
+        </div>
+      </div>
+        
+    </div>
+
+    
+    <div class="form-group">
+            <label>Porcentaje:</label>
+            <input type="number" min="1" max="100" class="form-control " name="porcentaje" id="nombre" class="form-control">
+            <div id="mensajeNombre" style="background-color:brown;color:white">
+            </div>
+     </div>   
+       
+    <div class="form-group">
+      <label>Estatus:</label>
+      <input type="checkbox" class="form-control " name="estatus" value="True" >     
+    </div>  
+    <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+      Registrar
+    </button>
+    <a href="/deducciones" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+
+{%endblock%}
