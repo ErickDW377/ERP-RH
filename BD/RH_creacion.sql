@@ -165,7 +165,7 @@ foreign key (idEmpleadoAutoriza) references RH_Empleados(idEmpleado),
 foreign key (idEmpleadoSolicita) references RH_Empleados(idEmpleado)
 );
 create table RH_HistorialPuesto(
-idEmpleado int auto_increment,
+idEmpleado int,
 idPuesto int,
 idDepartamento int,
 fechaInicio date,
@@ -228,7 +228,7 @@ INSERT INTO `rh_erp`.`RH_Estados` (`nombre`, `siglas`, `estatus`) VALUES ('Micho
 INSERT INTO `rh_erp`.`RH_Ciudades` (`nombre`, `idEstado`, `estatus`) VALUES ('Zamora', '1', 'A');
 INSERT INTO `rh_erp`.`RH_Sucursales` (`nombre`, `telefono`, `direccion`, `colonia`, `codigoPostal`, `presupuesto`, `estatus`, `idCiudad`) VALUES ('Sucursal Zamora', '3511695859', 'Juarez poniente 2257', 'Juarez', '59632', '100000', 'A', '1');
 INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`,`estatus`) VALUES ('Vespertino', '2000-01-01 08:00:01', '2000-01-01 16:00:01', 'L,M','A');
-INSERT INTO `rh_erp`.`RH_Empleados` (`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`) VALUES ('Yuvia', 'Francisco', 'Diaz', 'F', '2000-12-1', 'WEWSDD', 'Soltero', '2021-01-01', '300', '23232123', '10', '10', 'DOMICILIO X', 'X', '12345698752', 'Ingeniero', 'ydiaz@gmail.com', 'Hola.123', 'Admin', 'A', '1', '1', '1', '1', '1');
+INSERT INTO `rh_erp`.`RH_Empleados` (`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`) VALUES ('Yuvia', 'Francisco', 'Diaz', 'F', '2000-12-1', 'WEWSDD', 'Soltero', '2021-01-01', '300', '23232123', '10', '10', 'DOMICILIO X', 'X', '12356', 'Ingeniero', 'ydiaz@gmail.com', 'Hola.123', 'Admin', 'A', '1', '1', '1', '1', '1');
 
 
 delimiter //
@@ -246,6 +246,25 @@ BEGIN
 		end if ;
 	end if ;
   end if ;
+  end
+//
+
+delimiter //
+create trigger actualizarHistorialPuestos after update on RH_Empleados 
+for each row
+BEGIN
+  if new.idDepartamento != old.idDepartamento or new.idPuesto != old.idPuesto  then
+	 update RH_HistorialPuesto set fechaFin = curdate() where idEmpleado = old.idEmpleado and idPuesto = old.idPuesto and idDepartamento = old.idDepartamento;
+     insert into RH_HistorialPuesto (idEmpleado, idPuesto, idDepartamento, fechaInicio) values (new.idEmpleado, new.idPuesto, new.idDepartamento, curdate());
+  end if ;
+  end
+//
+
+delimiter //
+create trigger registrarHistorialPuestos after insert on RH_Empleados 
+for each row
+BEGIN  
+	insert into RH_HistorialPuesto (idEmpleado, idPuesto, idDepartamento, fechaInicio) values (new.idEmpleado, new.idPuesto, new.idDepartamento, curdate());  
   end
 //
 
