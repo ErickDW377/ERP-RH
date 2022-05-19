@@ -40,19 +40,24 @@
         <td>{{obj.descripcion}}</td>
         <td>{{obj.porcentaje}}</td>
         <td>{{obj.estatus}}</td>
+        {% if current_user.is_admin() or current_user.is_staff()  %}
         <td>
+
           <a href="/editarDeducciones/{{obj.idDeduccion}}" class="btn btn-success" role="button">
             <span class="glyphicon glyphicon-pencil"></span>
             Editar
           </a>
         </td>   
+
         <td>
           <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idDeduccion}}">
             <span class="glyphicon glyphicon-trash"></span>
             Eliminar
           </a>
-        </td>               
-      </tr>    
+        </td> 
+        {% endif %}               
+      </tr>
+      {% if current_user.is_admin() or current_user.is_staff()  %}    
         <div id="eliminar{{obj.idDeduccion}}" class="modal fade" role="dialog">
           <div class="modal-dialog">   
 
@@ -77,6 +82,7 @@
             </div>
           </div>
         </div>
+        {% endif %} 
         {% endfor %}
     </tbody>
     </table>

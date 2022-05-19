@@ -914,20 +914,36 @@ class HistorialPuesto(db.Model):
 
     def consultarPagina(self, pagina):
         obj = None
-        if current_user.is_admin():
+        if current_user.is_admin() and current_user.is_staff():
             obj = self.query.order_by(HistorialPuesto.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
         else:
             obj = self.query.filter(HistorialPuesto.idEmpleado==current_user.idEmpleado).order_by(HistorialPuesto.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
         return obj
     
-    def consultarNombre(self,nombre):
-        salida={"estatus":"","mensaje":""}
+    def consultarHistoriales(self,id,fechaIncio,p,d):     
+        salida=[]        
         item=None
-        item=self.query.filter(Estado.nombre==nombre).first()
+        item=self.query.filter(HistorialPuesto.idEmpleado ==id,HistorialPuesto.fechaInicio==fechaIncio,HistorialPuesto.idPuesto==p,HistorialPuesto.idDepartamento==d)
+        
         if item!=None:
-            salida["estatus"]="Error"
-            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+            for i in item:     
+                obj = {"fechaInicio":"","fechaFin":""}            
+                obj["fechaInicio"]=i.fechaInicio
+                obj["fechaFin"]=i.fechaFin
+                salida.append(obj)
         else:
-            salida["estatus"]="Ok"
-            salida["mensaje"]="El nombre "+nombre+" esta libre."
-        return salida 
+           salida = []
+        return salida
+    
+    def getDepartamento(self):
+        dep = Departamentos()
+        return dep.consultar(self.idDepartamento).nombre
+    
+    def getPuesto(self):
+        puesto = Puestos()
+        return puesto.consultar(self.idPuesto).nombre
+    
+    def nombreEmpleado(self):
+        empleado = Empleados()
+        empleado = empleado.consultar(self.idEmpleado)
+        return empleado.nombre + " "+ empleado.apellidoPaterno + " "+empleado.apellidoMaterno

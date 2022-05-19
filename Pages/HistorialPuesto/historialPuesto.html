@@ -36,19 +36,22 @@
     <tbody id="myTable">  
       {%for obj in historialP%}      
       <tr>
-        <td>{{obj.idEmpleado}}</td>
-        <td>{{obj.idPuesto}}</td>
-        <td>{{obj.idDepartamento}}</td>
+        <td>{{obj.nombreEmpleado()}}</td>
+        <td>{{obj.getPuesto()}}</td>
+        <td>{{obj.getDepartamento()}}</td>
         <td>{{obj.fechaInicio}} </td>
         <td>{{obj.fechaFin}} </td> 
-
+        {% if current_user.is_admin() or current_user.is_staff()  %}
         <td>
+
           <a href="/editarhistorialP/{{obj.idEmpleado}}/{{obj.idPuesto}}/{{obj.idDepartamento}}/{{obj.fechaInicio}}" class="btn btn-success" role="button">
             <span class="glyphicon glyphicon-pencil"></span>
             Editar
           </a>
-        </td>                  
-      </tr>    
+        </td>  
+        {% endif %}                 
+      </tr> 
+
         {% endfor %}
     </tbody>
     </table>

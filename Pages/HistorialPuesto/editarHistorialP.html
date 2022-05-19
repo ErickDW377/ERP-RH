@@ -15,29 +15,55 @@
 </div>
 
 <div class="contenedor-formulario">
-  <form action="/editarHistorialP/{{hp.idEmpleado}}" method="post" enctype="multipart/form-data">   
+  <form action="/editarHistorialPu/{{hp.idEmpleado}}" method="post" enctype="multipart/form-data">   
     <div class="form-group">
-      <label>ID EMPLEADO:</label>
-      <input type="text" class="form-control" name="idEmpleado" value="{{hp.idEmpleado}}" id="nombre"  onblur='consultarNombreC("historialPuesto")' required>
-      <div id="mensajeNombre" style="background-color:brown;color:white">
-      </div>
+      <label>EMPLEADO:</label>
+      <input type="text" class="form-control" name="idEmpleado" value="{{hp.nombreEmpleado()}}" id="nombre" readonly>
+      
     </div>
  
-<div class="form-group">
-        <label>ID PUESTO:</label>
-        <input type="text" class="form-control" name="idPuesto" value="{{hp.idPuesto}}" required>
+    <div class="form-group ">
+      <label>Puesto </label>
+      <select class="form-control"  name="idPuesto" id="puesto" onblur="validarSalario()">
+        {% for p in puestos.consultarAll()  %}        
+        {% if hp.idPuesto == p.idPuesto %}  
+        <option value="{{p.idPuesto}}" selected>
+          {{p.nombre}}                            
+          </option>
+        {% else %}
+        <option value="{{p.idPuesto}}">
+          {{p.nombre}}                            
+          </option>
+        {% endif %}
+        {% endfor %}                                
+      </select>
+    </div>
+
+    <div class="form-group ">
+      <label>Departamento </label>
+      <select class="form-control"  name="idDepartamento" >
+        {% for d in departamentos.consultarAll()  %}        
+        {% if hp.idDepartamento == d.idDepartamento %}  
+        <option value="{{d.idDepartamento}}" selected>
+          {{d.nombre}}                            
+          </option>
+        {% else %}
+        <option value="{{d.idDepartamento}}">
+          {{d.nombre}}                            
+          </option>
+        {% endif %}
+        {% endfor %}                                
+      </select>
     </div>
 
 <div class="form-group">
-      <label>ID DEPARTAMENTO:</label>
-      <input type="text" class="form-control" name="idDepartamento" value="{{hp.idDepartamento}}" required>
-<div class="form-group">
         <label>FECHA INICIO:</label>
-        <input type="date" class="form-control" name="fechaInicio" value="{{hp.fechaInicio}}" required>
+        <input type="date" class="form-control" id="fechaInicio"name="fechaInicio" value="{{hp.fechaInicio}}"  onchange="validacion2()"  required>
 <div class="form-group">
           <label>FECHA FIN:</label>
-          <input type="date" class="form-control" name="fechaFin" value="{{hp.fechaFin}}" required>
-
+          <input type="date" class="form-control" id="fechaFin" name="fechaFin" value="{{hp.fechaFin}}" onchange="validacion2()" required>
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
 
       <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
         <span class="glyphicon glyphicon-floppy-disk"></span>
@@ -47,4 +73,5 @@
     <a href="/historialPuesto" class="btn btn-danger btn-block" role="button">Cancelar</a>
   </form>
 </div>
+<script src="{{url_for('static', filename='js/historialDPuesto.js')}}"  ></script>
 {%endblock%}

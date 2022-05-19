@@ -1544,14 +1544,7 @@ def consultarNombrePer(nombre):
     item=Deducciones()    
     return json.dumps(item.consultarNombre(nombre))
 
-#Error--------------------------------------------------------------------------------------
-@app.errorhandler(404)
-def error_404(e):
-    return redirect(url_for('inicio'))
 
-if __name__=='__main__':
-    db.init_app(app)
-    app.run(debug=True)
     
 #Enrutamiento Historial de Puesto----------------------------------------------
 
@@ -1573,17 +1566,19 @@ def historialPuesto():
 def editarHistorialP(idE,idP,idD,fecha):
     if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         hp = HistorialPuesto()
+        p=Puestos()
+        d= Departamentos()
         hp = hp.consultar(idE,idP,idD,fecha)
-        return  render_template('HistorialPuesto/editarHistorialP.html', hp=hp)
+        return  render_template('HistorialPuesto/editarHistorialP.html', hp=hp, puestos=p, departamentos=d)
     else:
         abort(404)
 
-@app.route('/editarHistorialPuesto/',methods=['post'])
+@app.route('/editarHistorialPu/<int:idE>',methods=['post'])
 @login_required
-def editarHistorialPuesto(): 
+def editarHistorialPu(idE): 
     if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         hp = HistorialPuesto()
-        hp.idEmpleado= request.form['idEmpleado']
+        hp.idEmpleado= idE
         hp.idPuesto = request.form['idPuesto']
         hp.idDepartamento = request.form['idDepartamento'] 
         hp.fechaInicio= request.form['fechaInicio'] 
@@ -1594,7 +1589,19 @@ def editarHistorialPuesto():
     else:
         abort(404)
         
-@app.route('/historialP/nombre/<string:nombre>',methods=['get'])
-def validarFechas(nombre):
-    item=Deducciones()    
-    return json.dumps(item.consultarNombre(nombre))
+@app.route('/validarFechasHP/<int:id>/<int:idP>/<int:idD>/<string:fecha>',methods=['get'])
+def validarFechasHP(id,idP,idD,fecha):
+    if current_user.is_authenticated():
+        item= HistorialPuesto()        
+        return json.dumps(item.consultarHistoriales(id,fecha,idP,idD))
+    else:
+        abort(404)
+
+#Error--------------------------------------------------------------------------------------
+@app.errorhandler(404)
+def error_404(e):
+    return redirect(url_for('inicio'))
+
+if __name__=='__main__':
+    db.init_app(app)
+    app.run(debug=True)
