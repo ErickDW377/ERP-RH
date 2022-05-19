@@ -1,0 +1,50 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificar Historial de Puesto</p>
+</div>
+
+<div class="contenedor-formulario">
+  <form action="/editarHistorialP/{{hp.idEmpleado}}" method="post" enctype="multipart/form-data">   
+    <div class="form-group">
+      <label>ID EMPLEADO:</label>
+      <input type="text" class="form-control" name="idEmpleado" value="{{hp.idEmpleado}}" id="nombre"  onblur='consultarNombreC("historialPuesto")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+ 
+<div class="form-group">
+        <label>ID PUESTO:</label>
+        <input type="text" class="form-control" name="idPuesto" value="{{hp.idPuesto}}" required>
+    </div>
+
+<div class="form-group">
+      <label>ID DEPARTAMENTO:</label>
+      <input type="text" class="form-control" name="idDepartamento" value="{{hp.idDepartamento}}" required>
+<div class="form-group">
+        <label>FECHA INICIO:</label>
+        <input type="date" class="form-control" name="fechaInicio" value="{{hp.fechaInicio}}" required>
+<div class="form-group">
+          <label>FECHA FIN:</label>
+          <input type="date" class="form-control" name="fechaFin" value="{{hp.fechaFin}}" required>
+
+
+      <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+
+    Modificar
+    </button>
+    <a href="/historialPuesto" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+{%endblock%}

@@ -839,3 +839,95 @@ class Percepciones(db.Model):
             salida["estatus"]="Ok"
             salida["mensaje"]="Correcto"
         return salida
+    
+#Deducciones---------------------------------------
+class Deducciones(db.Model):
+    __tablename__= 'RH_Deducciones'
+    idDeduccion = Column(Integer, primary_key=True)
+    nombre = Column(String(30))
+    descripcion = Column(String(80))
+    porcentaje = Column(Float)
+    estatus = Column(String(1))
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None
+        if current_user.is_admin() or current_user.is_staff():
+            obj = self.query.order_by(Deducciones.idDeduccion.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Deducciones.estatus=='A').order_by(Deducciones.idDeduccion.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Deducciones.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 
+    
+#Historial de Puesto-----------------------------------------------------------
+class HistorialPuesto(db.Model):
+    __tablename__= 'RH_HistorialPuesto'
+    idEmpleado =Column(Integer, primary_key=True)
+    idPuesto=Column(Integer, primary_key=True)
+    idDepartamento=Column(Integer, primary_key=True)
+    fechaInicio= Column(Date, primary_key=True)
+    fechaFin = Column(Date)
+    
+    
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,idE,idP,idD,fecha):
+        return self.query.get((idE,idP,idD,fecha))
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None
+        if current_user.is_admin():
+            obj = self.query.order_by(HistorialPuesto.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(HistorialPuesto.idEmpleado==current_user.idEmpleado).order_by(HistorialPuesto.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+    
+    def consultarNombre(self,nombre):
+        salida={"estatus":"","mensaje":""}
+        item=None
+        item=self.query.filter(Estado.nombre==nombre).first()
+        if item!=None:
+            salida["estatus"]="Error"
+            salida["mensaje"]="El nombre "+nombre+" ya se encuentra registrado."
+        else:
+            salida["estatus"]="Ok"
+            salida["mensaje"]="El nombre "+nombre+" esta libre."
+        return salida 

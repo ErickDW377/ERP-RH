@@ -1,0 +1,62 @@
+{% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion.html' as macros %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Catálogo Historial Puesto</p>
+</div>
+
+<div class="container input-group">
+  <span class="input-group-addon amarillo"><i class="glyphicon glyphicon-search"></i></span>
+  <input class="form-control" id="myInput" type="text" placeholder="Search...">
+  <br>
+</div>
+
+<div class="tabla">
+<table class="table table-hover">
+    <thead>
+      
+      <th>Empleado</th>
+      <th>Puesto</th>
+      <th>Departamento</th>
+      <th>Fecha Inicio</th>  
+      <th>Fecha Fin</th>  
+      <th></th>  
+      <th></th>       
+    </thead>
+    <tbody id="myTable">  
+      {%for obj in historialP%}      
+      <tr>
+        <td>{{obj.idEmpleado}}</td>
+        <td>{{obj.idPuesto}}</td>
+        <td>{{obj.idDepartamento}}</td>
+        <td>{{obj.fechaInicio}} </td>
+        <td>{{obj.fechaFin}} </td> 
+
+        <td>
+          <a href="/editarhistorialP/{{obj.idEmpleado}}/{{obj.idPuesto}}/{{obj.idDepartamento}}/{{obj.fechaInicio}}" class="btn btn-success" role="button">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Editar
+          </a>
+        </td>                  
+      </tr>    
+        {% endfor %}
+    </tbody>
+    </table>
+  </div>
+  
+  <div class="paginacion">
+    {{ macros.pagination_widget(pagination, '.historialPuesto') }}
+  </div>
+  
+{%endblock%}
+

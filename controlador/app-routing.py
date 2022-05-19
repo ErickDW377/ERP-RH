@@ -4,7 +4,7 @@ from sqlalchemy import true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 
@@ -1459,7 +1459,90 @@ def consultarNombrePercepcion(nombre):
     item=Percepciones()    
     return json.dumps(item.consultarNombre(nombre))
 
+#Enrutamiento Deducciones--------------------------------------------------------------------------------------
+@app.route('/deducciones')
+@login_required
+def deducciones():
+    if current_user.is_authenticated(): 
+        d=Deducciones()
+        page = request.args.get('page', 1, type=int)
+        paginacion = d.consultarPagina(page)         
+        return  render_template('Deducciones/deducciones.html', deduccion =paginacion.items, pagination = paginacion  )
+    else:
+        abort(404)
+        
+@app.route('/registrarDeducciones')
+@login_required
+def deduccionesRegistrar():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):        
+        return  render_template('Deducciones/registrarDeducciones.html')
+    else:
+        abort(404)
 
+@app.route('/editarDeducciones/<int:id>')
+@login_required
+def deduccionesEditar(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        deduccion = Deducciones()
+        deduccion = deduccion.consultar(id)
+        return  render_template('Deducciones/editarDeducciones.html', deducciones= deduccion)
+    else:
+        abort(404)
+
+@app.route('/registrarDeduccion',methods=['post'])
+@login_required
+def registrarDeduccion(): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        deduccion = Deducciones()
+        deduccion.nombre = request.form['nombreDeduccion']
+        deduccion.descripcion = request.form['descripcion']
+        deduccion.porcentaje = request.form['porcentaje'] 
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            deduccion.estatus='A'
+        else:
+            deduccion.estatus='I' 
+        deduccion.registrar()
+        flash('Deduccion registrada con exito')
+        return  redirect(url_for('deduccionesRegistrar'))
+    else:
+        abort(404)
+
+@app.route('/editarDeduccion/<int:id>',methods=['post'])
+@login_required
+def editarDeduccion(id): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        deduccion = Deducciones()
+        deduccion.nombre = request.form['nombreDeduccion']
+        deduccion.descripcion = request.form['descripcion']
+        deduccion.porcentaje = request.form['porcentaje'] 
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+                deduccion.estatus='A'
+        else:
+            deduccion.estatus='I'  
+        deduccion.idDeduccion = id
+        deduccion.actualizar()
+        flash('La Deduccion fue actualizada con exito')
+        return  redirect(url_for('deduccionesEditar', id= deduccion.idDeduccion))
+    else:
+        abort(404)
+
+@app.route('/eliminarDeducciones/<int:id>')
+@login_required
+def eliminarDeducciones(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
+        deduccion = Deducciones()
+        deduccion.eliminar(id)
+        flash('Deduccion eliminada con exito')
+        return  redirect(url_for('deducciones'))
+    else:
+        abort(404)
+
+@app.route('/deducciones/nombre/<string:nombre>',methods=['get'])
+def consultarNombrePer(nombre):
+    item=Deducciones()    
+    return json.dumps(item.consultarNombre(nombre))
 
 #Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)
@@ -1469,3 +1552,49 @@ def error_404(e):
 if __name__=='__main__':
     db.init_app(app)
     app.run(debug=True)
+    
+#Enrutamiento Historial de Puesto----------------------------------------------
+
+
+@app.route('/historialPuesto')
+@login_required
+def historialPuesto():
+    if current_user.is_authenticated(): 
+        hp=HistorialPuesto()
+        page = request.args.get('page', 1, type=int)
+        paginacion = hp.consultarPagina(page)         
+        return  render_template('HistorialPuesto/historialPuesto.html', historialP =paginacion.items, pagination = paginacion  )
+    else:
+        abort(404)
+        
+
+@app.route('/editarhistorialP/<int:idE>/<int:idP>/<int:idD>/<string:fecha>')
+@login_required
+def editarHistorialP(idE,idP,idD,fecha):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        hp = HistorialPuesto()
+        hp = hp.consultar(idE,idP,idD,fecha)
+        return  render_template('HistorialPuesto/editarHistorialP.html', hp=hp)
+    else:
+        abort(404)
+
+@app.route('/editarHistorialPuesto/',methods=['post'])
+@login_required
+def editarHistorialPuesto(): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        hp = HistorialPuesto()
+        hp.idEmpleado= request.form['idEmpleado']
+        hp.idPuesto = request.form['idPuesto']
+        hp.idDepartamento = request.form['idDepartamento'] 
+        hp.fechaInicio= request.form['fechaInicio'] 
+        hp.fechaFin= request.form['fechaFin']   
+        hp.actualizar()
+        flash('El historial de puesto fue actualizada con exito')
+        return  redirect(url_for('editarHistorialP', idE= hp.idEmpleado,idP= hp.idPuesto,idD=hp.idDepartamento, fecha=hp.fechaInicio))
+    else:
+        abort(404)
+        
+@app.route('/historialP/nombre/<string:nombre>',methods=['get'])
+def validarFechas(nombre):
+    item=Deducciones()    
+    return json.dumps(item.consultarNombre(nombre))
