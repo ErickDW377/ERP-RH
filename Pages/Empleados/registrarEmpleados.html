@@ -83,7 +83,7 @@
             <label>Estado </label>
             <select class="form-control"  name="idEstado" id="estado"  onblur="llenarCiudades()">
               {% for e in estados.consultarAll() %}        
-                <option value="{{e.idEstado}}">
+                <option value="{{e.idEstado}}" >
                 {{e.nombre}}                            
                 </option>        
               {% endfor %}                                
@@ -92,7 +92,7 @@
 
           <div class="form-group col-sm-3">
             <label>Ciudad </label>
-            <select class="form-control"  name="idCiudad" id="ciudad" disabled="true" onblur="llenarSucursales()">
+            <select class="form-control"  name="idCiudad" id="ciudad"  onblur="llenarSucursales()">
                                             
             </select>
           </div>
@@ -140,7 +140,7 @@
 
           <div class="form-group col-sm-4">
             <label>Sucursal </label>
-            <select class="form-control" id="sucursales" name="idSucursal"  disabled="true">
+            <select class="form-control" id="sucursales" name="idSucursal"  >
                                           
             </select>
           </div>
@@ -248,5 +248,5 @@
   </form>
 </div>
 
-<script src="{{url_for('static', filename='js/empleados.js')}}"></script>
+<script src="{{url_for('static', filename='js/empleados.js')}}" onload="llenarCiudades()"></script>
 {%endblock%}

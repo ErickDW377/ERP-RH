@@ -12,7 +12,7 @@
 <div class="titulo">
   <p>Modificar empleado </p>
 </div>
-
+<script src="{{url_for('static', filename='js/empleados.js')}}" ></script>
 
 
 
@@ -126,7 +126,7 @@
 
           <div class="form-group col-sm-3">
             <label>Ciudad </label>
-            <select class="form-control"  name="idCiudad"  id="ciudad"  onblur="llenarSucursales()" disabled="true">
+            <select class="form-control"  name="idCiudad"  id="ciudad"  onchange="llenarSucursales()" >
                
               <option value="{{empleado.idCiudad}}" selected>
                 {{empleado.getCiudad()}}                            
@@ -194,7 +194,7 @@
 
           <div class="form-group col-sm-4">
             <label>Sucursal </label>
-            <select class="form-control"  name="idSucursal" id="sucursales" disabled="true">
+            <select class="form-control"  name="idSucursal" id="sucursales" onload="llenarSucursales()">
                
               <option value="{{empleado.idSucursal}}" selected>
                 {{empleado.getSucursal()}}                            
@@ -207,7 +207,7 @@
             <label>Departamento </label>
             <select class="form-control"  name="idDepartamento" >
               {% for d in departamentos.consultarAll()  %}        
-              {% if empleado.Departamento == d.Departamento %}  
+              {% if empleado.idDepartamento == d.idDepartamento %}  
               <option value="{{d.idDepartamento}}" selected>
                 {{d.nombre}}                            
                 </option>
@@ -346,5 +346,5 @@
   </form>
 </div>
 
-<script src="{{url_for('static', filename='js/empleados.js')}}"></script>
+
 {%endblock%}

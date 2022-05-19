@@ -167,9 +167,10 @@ function llenarSucursales(){
   var ajax = new XMLHttpRequest();
   ciudad = document.getElementById("ciudad");
   select = document.getElementById("sucursales");
-  for(i = 0; i<=select.options.length;i++){
+  for(i = 0; i<select.options.length;i++){
     select.remove(0);
   }
+  console.log(select.options);
   var url = "/sucursalesCiudad/" + ciudad.value; 
   ajax.open("get", url, true);
   ajax.onreadystatechange = function () {
@@ -181,7 +182,7 @@ function llenarSucursales(){
         option.text = respuesta[i].nombre;
         select.appendChild(option);        
       }
-      select.disabled = false
+      
     }
   };
   ajax.send();
@@ -193,7 +194,7 @@ function llenarCiudades(){
   var ajax = new XMLHttpRequest();
   estado = document.getElementById("estado");
   select = document.getElementById("ciudad");
-  for(i = 0; i<=select.options.length;i++){
+  for(i = 0; i<select.options.length;i++){
     select.remove(0);
   }
   var url = "/ciudadesEstado/" + estado.value; 
@@ -207,7 +208,7 @@ function llenarCiudades(){
         option.text = respuesta[i].nombre;
         select.appendChild(option);        
       }
-      select.disabled = false
+      
       llenarSucursales()
     }
   };
