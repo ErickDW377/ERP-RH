@@ -914,7 +914,7 @@ class HistorialPuesto(db.Model):
 
     def consultarPagina(self, pagina):
         obj = None
-        if current_user.is_admin() and current_user.is_staff():
+        if current_user.is_admin() or current_user.is_staff():
             obj = self.query.order_by(HistorialPuesto.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
         else:
             obj = self.query.filter(HistorialPuesto.idEmpleado==current_user.idEmpleado).order_by(HistorialPuesto.idEmpleado.asc()).paginate(pagina,per_page= 5, error_out=False)
