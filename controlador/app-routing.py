@@ -7,6 +7,7 @@ from sqlalchemy.sql.sqltypes import String
 from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
+import pdfkit
 
 import json
 
@@ -1219,7 +1220,7 @@ def checarSalidaAsistencia(id):
 
 
 
-#Ausencias Justificadas-----------------------------------------------------
+#Ausencias Justificadas-----------------------------------------------------------------------------------
 @app.route('/ausenciasJustificadas')
 @login_required
 def ausenciasJustificadas():
@@ -1287,14 +1288,16 @@ def registrarAusenciaJustificada(btn):
         ausenciasJ.fechaInicio= request.form['fechaInicio'] 
         ausenciasJ.fechaFin= request.form['fechaFin']   
         ausenciasJ.tipo= request.form['tipo'] 
-        ausenciasJ.idEmpleadoSolicita= current_user.idEmpleado        
+        ausenciasJ.idEmpleadoSolicita= current_user.idEmpleado   
+        
+
         doc = request.files['documento'].read()        
         if doc:
             ausenciasJ.evidencia = doc
         ausenciasJ.estatus = btn
-        ausenciasJ.motivo= request.form['motivo']
-        
+        ausenciasJ.motivo= request.form['motivo']        
         ausenciasJ.registrar()
+        
         flash('Ausencia Justificada registrada con exito')
         return  redirect(url_for('misAusenciasJustificadas'))
     else:
@@ -1596,6 +1599,19 @@ def validarFechasHP(id,idP,idD,fecha):
         return json.dumps(item.consultarHistoriales(id,fecha,idP,idD))
     else:
         abort(404)
+
+
+
+
+#DOCUEMNTO ------------------------------
+@app.route('/doc')
+def doc():
+    #pdf = pdfkit.from_file(render_template('docs/solicitudVacaciones.html'))
+    #pdfkit.from_file(pdf, url_for('static', filename='docs/solicitudVacaciones.pdf'))
+    return  render_template('docs/solicitudVacaciones.html')
+    
+
+
 
 #Error--------------------------------------------------------------------------------------
 @app.errorhandler(404)

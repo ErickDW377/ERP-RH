@@ -257,8 +257,12 @@ BEGIN
 	 update RH_HistorialPuesto set fechaFin = curdate() where idEmpleado = old.idEmpleado and idPuesto = old.idPuesto and idDepartamento = old.idDepartamento;
      insert into RH_HistorialPuesto (idEmpleado, idPuesto, idDepartamento, fechaInicio) values (new.idEmpleado, new.idPuesto, new.idDepartamento, curdate());
   end if ;
+  if new.estatus = 'I' then
+	 update RH_HistorialPuesto set fechaFin = curdate() where idEmpleado = old.idEmpleado and idPuesto = old.idPuesto and idDepartamento = old.idDepartamento;
+  end if;
   end
 //
+
 
 delimiter //
 create trigger registrarHistorialPuestos after insert on RH_Empleados 

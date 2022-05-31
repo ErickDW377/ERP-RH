@@ -151,3 +151,25 @@ nav a {
 .left-caret:after
 {   border-right: 5px solid #ffaf46;
 }
+
+.contenedorDocs{
+    width: 60%;
+    margin: auto;
+    margin-bottom: 50px;  
+    border-radius: 60px;
+    border-color: blue; 
+    border-style: solid;
+    border-width: 5px;
+    padding: 40px; 
+    font-size: x-large; 
+}
+.contenedorFirmas{
+    width: 60%;
+    margin: auto;    
+    padding: 40px; 
+    font-size: x-large;
+    text-align: center;
+}
+.lineaArriba{
+    border-top-style: solid;
+}
