@@ -2,37 +2,58 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="ISO 8859-1">
     <title>ERP </title>      
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     
-    <link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet"> 
-    <link href="{{url_for('static',filename='css/estilo.css')}}" rel="stylesheet">  
+     
 
 </head>
 
-<body>    
-    <div class="encabezado color-Agroquimica"> 
-        <div>
-            <img src="{{url_for('static',filename='images/logo3.png')}}" height="5%", width="5%"        
-            />  
-            <img src="{{url_for('static',filename='images/logo2.png')}}" height="5%", width="5%"
-            />           
-            <img src="{{url_for('static',filename='images/logo.png')}}" height="5%", width="5%"
-            />  
-            <img src="{{url_for('static',filename='images/logo4.png')}}" height="5%", width="5%"
-            />   
-            <img src="{{url_for('static',filename='images/logo5.png')}}" height="5%", width="5%"
-            /> 
-        </div>      
+<body>   
+    <div style="   
+    text-align: center;  
+    ">
+         
+        <img src="https://blogs.iteso.mx/materioteca/wp-content/uploads/sites/62/2020/10/Ecomat-17.png" alt="" height="7%", width="7%"
+        />           
+        <img src="https://altiara.mx/wp-content/uploads/2020/09/LOGO-UMFFAAC-400.png" height="5%", width="5%"
+        />
+        <img src="https://agroquimicos.mx/wp-content/uploads/2019/11/Agroquimicos-Uruapan-Logo.png" height="7%", width="7%"        
+        />   
+        <img src="https://www.anasac.com/international/wp-content/themes/anasac-maqueta/assets/img/logo-foot.png" height="7%", width="7%"
+        />   
+        <img src="https://media-exp1.licdn.com/dms/image/C4D0BAQGChMm8ctKWfw/company-logo_200_200/0/1588324689000?e=2147483647&v=beta&t=aV5KebD52a_Q1KK8QPVJhVLTVaSQyZzGJZZsOizrU28" height="7%", width="7%"
+        /> 
+    </div>   
+    <div style="
+    width: 40%;
+    margin: auto;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 30px;
+    text-align: center;  
+    font-weight: bolder;
+    color: rgb(0, 128, 0) !important;"> 
+            
         <div>AGROQIMICA EEYV</div>
     </div>     
     
-    <div class="titulo">
-        <h1>Solicitud de Vacaciones </h1>
+    <div style="   
+    text-align: center;  
+    ">
+        <h1> <label>Solicitud de Vacaciones</label> </h1>
     </div>
      
-    <div class="contenedorDocs">
+    <div style="
+    width: 100%;
+    margin: auto;
+    margin-bottom: 50px;  
+    border-radius: 60px;
+    border-color: blue; 
+    border-style: solid;
+    border-width: 5px;
+    padding: 40px; 
+    font-size: x-large; ">
         <div class="row">
             <div class="form-group col-sm-12">
                 Fecha: 
@@ -61,7 +82,16 @@
         
 
     </div>
-    <div class="contenedorDocs">
+    <div style="
+    width: 100%;
+    margin: auto;
+    margin-bottom: 50px;  
+    border-radius: 60px;
+    border-color: blue; 
+    border-style: solid;
+    border-width: 5px;
+    padding: 40px; 
+    font-size: x-large; ">
         <div class="row">
             <div class="col-sm-12">
                 <h2>Para uso exclusivo de la Empresa</h2>
@@ -73,17 +103,23 @@
             <div class="form-group col-sm-12">
                 Revisado por:
             </div>
-            <div class="form-group col-sm-6">
+            <div class="form-group col-sm-4">
                 <label>Autorizado:</label>
-                <input type="checkbox" class="form-control " value="True" >   
+                <input type="checkbox" value="True" checked>   
             </div>
-            <div class="form-group col-sm-6">
+            <div class="col-sm-4" ></div>
+            <div class="form-group col-sm-4">
                 <label>Rechazado:</label>
-                <input type="checkbox" class="form-control " value="True" >   
+                <input type="checkbox"  value="True" >   
             </div>
         </div>
     </div>
-    <table class="contenedorFirmas">
+    <table style="
+    width: 60%;
+    margin: auto;    
+    padding: 40px; 
+    font-size: x-large;
+    text-align: center;">
         
         <tbody>
             <tr>
@@ -91,17 +127,16 @@
                 <td> </td>
             </tr>
             <tr>
-                <td class="lineaArriba">Firma empleado solicitante</td>
-                <td class="lineaArriba">Firma de quien reviso</td>
+                <td class="col-sm-4" style="border-top-style: solid;">Firma empleado solicitante</td>
+                <td class="col-sm-4" ></td>
+                <td class="col-sm-4" style="border-top-style: solid;">Firma de quien reviso</td>
             </tr>
         </tbody>
 
 
     </table>
     
-    <script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
-    <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
-    <script src="{{url_for('static', filename='js/global.js')}}"></script>
+    
 
 </body>
 

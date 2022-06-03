@@ -72,6 +72,7 @@ function validaciones() {
                             } else if (tipo == "Vacaciones") {
                                 diasRestantes = respuesta.diasV
                             }
+                           
                             var dias = diasRestantes - getDias();
 
                             if (dias >= 0) {

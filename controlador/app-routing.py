@@ -1,15 +1,19 @@
-from flask import Flask,render_template,request,flash, redirect, url_for, abort
+from cgitb import text
+from distutils import text_file
+from re import template
+from flask import Flask,render_template,request,flash, redirect, template_rendered, url_for, abort
 from flask_bootstrap import Bootstrap
-from sqlalchemy import true
+from sqlalchemy import false, true
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.expression import select
 from sqlalchemy.sql.sqltypes import String
 from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
-import pdfkit
+from jinja2 import Environment, FileSystemLoader
+import pandas as pd
+import pdfkit,os,json, openpyxl
 
-import json
 
 app=Flask(__name__,template_folder='../Pages',static_folder='../Static')
 Bootstrap(app)
@@ -22,6 +26,8 @@ login_manager=LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 login_manager.login_message = u"! Debes iniciar sesión !"
+
+ruta= os.path.join(os.getcwd())
 
 @app.route('/')
 def iniciar():    
@@ -1606,11 +1612,33 @@ def validarFechasHP(id,idP,idD,fecha):
 #DOCUEMNTO ------------------------------
 @app.route('/doc')
 def doc():
-    #pdf = pdfkit.from_file(render_template('docs/solicitudVacaciones.html'))
-    #pdfkit.from_file(pdf, url_for('static', filename='docs/solicitudVacaciones.pdf'))
+    env = Environment(loader=FileSystemLoader("Pages"))
+    template = env.get_template("docs/solicitudVacaciones.html")
+    datos={
+        'ruta': ruta,
+        'nombre': 'Erick Sebastian diaz wences'
+    }
+    html = template.render(datos)    
+    file = open(ruta + '\Pages\docs\solicitudVacacionesTMP.html',"w")
+    file.write(html) 
+    file.close()    
+    pdfkit.from_file(ruta + '\Pages\docs\solicitudVacacionesTMP.html',ruta+'\Static\docs\solicitudVacaciones.pdf') 
+    pdf = open(ruta+'\Static\docs\solicitudVacaciones.pdf',"rb")
+    au = AusenciasJustificadas();
+    au.evidencia = pdf.read()
+    au.idAusencia = 5
+    au.actualizar()
+    pdf.close()
     return  render_template('docs/solicitudVacaciones.html')
-    
 
+@app.route('/excel')
+def excel():
+    archivo = pd.DataFrame([[11,21,31],[12,22,32],[31,32,33]],columns=['Nombre','Puesto','Total'])
+    archivo.to_excel(ruta+'\Static\docs\excel.xlsx')
+    excel = open(ruta+'\Static\docs\excel.xlsx', 'rb')
+    exc =excel.read()
+    excel.close()
+    return exc
 
 
 #Error--------------------------------------------------------------------------------------
