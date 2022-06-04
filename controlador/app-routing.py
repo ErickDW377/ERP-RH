@@ -1,12 +1,5 @@
-from cgitb import text
-from distutils import text_file
-from re import template
 from flask import Flask,render_template,request,flash, redirect, template_rendered, url_for, abort
 from flask_bootstrap import Bootstrap
-from sqlalchemy import false, true
-from sqlalchemy.sql.elements import Null
-from sqlalchemy.sql.expression import select
-from sqlalchemy.sql.sqltypes import String
 from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
