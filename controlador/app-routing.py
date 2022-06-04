@@ -1651,4 +1651,9 @@ def error_404(e):
 
 if __name__=='__main__':
     db.init_app(app)
-    app.run(debug=True)
+    HOST = os.environ.get('SERVER_HOST', 'localhost')
+    try:
+        PORT = int(os.environ.get('SERVER_PORT', '80'))
+    except ValueError:
+        PORT = 80
+    app.run(HOST, PORT)
