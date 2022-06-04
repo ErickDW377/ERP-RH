@@ -1622,15 +1622,25 @@ def doc():
     au.idAusencia = 5
     au.actualizar()
     pdf.close()
+    os.remove(ruta + '\Pages\docs\solicitudVacacionesTMP.html')
+    os.remove(ruta+'\Static\docs\solicitudVacaciones.pdf')
     return  render_template('docs/solicitudVacaciones.html')
 
 @app.route('/excel')
 def excel():
-    archivo = pd.DataFrame([[11,21,31],[12,22,32],[31,32,33]],columns=['Nombre','Puesto','Total'])
-    archivo.to_excel(ruta+'\Static\docs\excel.xlsx')
+    empleados = Empleados()
+    empleados = empleados.consultarAll()
+    datos = []
+    for emp in empleados:
+        e = [emp.nombre,emp.sexo,emp.tipo,emp.email]
+        datos.append(e)
+
+    archivo = pd.DataFrame(datos,columns=['Nombre','Sexo','Tipo','email'])
+    archivo.to_excel(ruta+'\Static\docs\excel.xlsx',index=False)
     excel = open(ruta+'\Static\docs\excel.xlsx', 'rb')
     exc =excel.read()
     excel.close()
+    os.remove(ruta+'\Static\docs\excel.xlsx')
     return exc
 
 
