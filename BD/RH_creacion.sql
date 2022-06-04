@@ -197,6 +197,7 @@ estatus char,
 idEmpleado int,
 idFormaPago int,
 idPeriodo int,
+documento mediumblob,
 primary key (idNomina),
 foreign key (idFormaPago) references RH_FormasPago(idFormaPago),
 foreign key (idPeriodo) references RH_Periodos(idPeriodo),
@@ -222,14 +223,34 @@ foreign key (idNomina) references RH_Nominas(idNomina),
 foreign key (idPercepcion) references RH_Percepciones (idPercepcion)
 );
 
-INSERT INTO `rh_erp`.`RH_Puestos` (`nombre`, `salarioMinimo`, `salarioMaximo`, `estatus`) VALUES ('Administrador de BD', '20000', '30000', 'A');
-INSERT INTO `rh_erp`.`RH_Departamentos` (`nombre`, `estatus`) VALUES ('Base de Datos', 'A');
-INSERT INTO `rh_erp`.`RH_Estados` (`nombre`, `siglas`, `estatus`) VALUES ('Michoacan', 'MICH', 'A');
-INSERT INTO `rh_erp`.`RH_Ciudades` (`nombre`, `idEstado`, `estatus`) VALUES ('Zamora', '1', 'A');
-INSERT INTO `rh_erp`.`RH_Sucursales` (`nombre`, `telefono`, `direccion`, `colonia`, `codigoPostal`, `presupuesto`, `estatus`, `idCiudad`) VALUES ('Sucursal Zamora', '3511695859', 'Juarez poniente 2257', 'Juarez', '59632', '100000', 'A', '1');
-INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`,`estatus`) VALUES ('Vespertino', '2000-01-01 08:00:01', '2000-01-01 16:00:01', 'L,M','A');
-INSERT INTO `rh_erp`.`RH_Empleados` (`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`) VALUES ('Yuvia', 'Francisco', 'Diaz', 'F', '2000-12-1', 'WEWSDD', 'Soltero', '2021-01-01', '300', '23232123', '10', '10', 'DOMICILIO X', 'X', '12356', 'Ingeniero', 'ydiaz@gmail.com', 'Hola.123', 'Admin', 'A', '1', '1', '1', '1', '1');
+INSERT INTO `rh_erp`.`RH_Puestos` (`nombre`, `salarioMinimo`, `salarioMaximo`, `estatus`) VALUES ('Administrador', '20000', '30000', 'A');
+INSERT INTO `rh_erp`.`RH_Puestos` (`nombre`, `salarioMinimo`, `salarioMaximo`, `estatus`) VALUES ('Gerente RH', '20000', '30000', 'A');
+INSERT INTO `rh_erp`.`RH_Puestos` (`nombre`, `salarioMinimo`, `salarioMaximo`, `estatus`) VALUES ('Programador', '10000', '15000', 'A');
 
+INSERT INTO `rh_erp`.`RH_Departamentos` (`nombre`, `estatus`) VALUES ('Sistemas', 'A');
+INSERT INTO `rh_erp`.`RH_Departamentos` (`nombre`, `estatus`) VALUES ('Recursos Humanos', 'A');
+INSERT INTO `rh_erp`.`RH_Departamentos` (`nombre`, `estatus`) VALUES ('Desarrollo', 'A');
+
+INSERT INTO `rh_erp`.`RH_Estados` (`nombre`, `siglas`, `estatus`) VALUES ('Michoacan', 'MICH', 'A');
+
+INSERT INTO `rh_erp`.`RH_Ciudades` (`nombre`, `idEstado`, `estatus`) VALUES ('Zamora', '1', 'A');
+
+INSERT INTO `rh_erp`.`RH_Sucursales` (`nombre`, `telefono`, `direccion`, `colonia`, `codigoPostal`, `presupuesto`, `estatus`, `idCiudad`) VALUES ('Sucursal Zamora', '3511695859', 'Juarez poniente 2257', 'Juarez', '59632', '100000', 'A', '1');
+
+INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`,`estatus`) VALUES ('Matutino', '2000-01-01 08:00:01', '2000-01-01 16:00:01', 'L,M,X,J,V','A');
+INSERT INTO `rh_erp`.`RH_Turnos` (`nombre`, `horaInicio`, `horaFin`, `dias`,`estatus`) VALUES ('Vespertino', '2000-01-01 14:00:01', '2000-01-01 22:00:01', 'L,M,X,J,V','A');
+
+INSERT INTO `rh_erp`.`RH_Empleados` 
+(`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`)
+VALUES ('Yuvia', 'Francisco', 'Diaz', 'F', '2000-12-1', 'FADI000521MMNZNRA5', 'Soltero', '2021-01-01', '20000', '1234567897', '10', '10', 'DOMICILIO X', 'X', '56987', 'Ingeniero', 'ydiaz@gmail.com', 'Hola.123*', 'Admin', 'A', '1', '1', '1', '1', '1');
+
+INSERT INTO `rh_erp`.`RH_Empleados` 
+(`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`)
+VALUES ('Erandi', 'Baez', 'Medina', 'F', '2000-12-1', 'BAME000521MMNZNRA5', 'Soltero', '2021-01-01', '20000', '5647895632', '10', '10', 'DOMICILIO X', 'X', '58947', 'Ingeniero', 'ebaez@gmail.com', 'Hola.123*', 'Staff', 'A', '2', '2', '1', '1', '1');
+
+INSERT INTO `rh_erp`.`RH_Empleados` 
+(`nombre`, `apellidoPaterno`, `apellidoMaterno`, `sexo`, `fechaNacimiento`, `curp`, `estadoCivil`, `fechaContratacion`, `salarioDiario`, `nss`, `diasVacaciones`, `diasPermiso`, `direccion`, `colonia`, `codigoPostal`, `escolaridad`, `email`, `paassword`, `tipo`, `estatus`, `idDepartamento`, `idPuesto`, `idCiudad`, `idSucursal`, `idTurno`)
+VALUES ('Erick', 'Diaz', 'Wences', 'M', '2000-12-1', 'DIWE000521HMNZNRA5', 'Soltero', '2021-01-01', '15000', '6354789562', '10', '10', 'DOMICILIO X', 'X', '63456', 'Ingeniero', 'ediaz@gmail.com', 'Hola.123*', 'Empleado', 'A', '3', '3', '1', '1', '1');
 
 delimiter //
 create trigger actualizarDiasAusencias after update on RH_Ausencias_Justificadas 
