@@ -5,7 +5,7 @@ from flask_login import LoginManager,current_user,login_required,login_user,logo
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 import pandas as pd
-import pdfkit,os,json, openpyxl
+import pdfkit,os,json
 
 
 app=Flask(__name__,template_folder='../Pages',static_folder='../Static')
