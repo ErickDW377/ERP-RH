@@ -1,0 +1,203 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+{% for m in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible alertas-txt">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{m}}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro Noniminas </p>
+</div>
+<form action="/registrarNomina" method="post" enctype="multipart/form-data"></form>
+<div class="contenedor3">
+  <div class="row">
+
+    <div class=" col-sm-4">
+      <div class="form-group">
+        <label>FECHA PAGO:</label>
+        <input type="date" min="1" max="100" class="form-control " name="fechaPago" class="form-control">
+        <div id="mensajeNombre" style="background-color:brown;color:white">
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-sm-4">
+      <label for="idestado">EMPLEADO:</label>
+      <select  name="empleado"  id="idEstado" class="form-control ">
+        {%for obj in estados %}   
+        <option value="{{obj.idEmpleado}}">{{obj.nombre}}</option>
+        {% endfor %} 
+      </select>
+      
+    </div>
+    <div class="form-group col-sm-4">
+      <label for="idestado">FORMA DE PAGO:</label>
+      <select  name="empleado"  id="idEstado" class="form-control ">
+        {%for obj in estados %}   
+        <option value="{{obj.idEmpleado}}">{{obj.nombre}}</option>
+        {% endfor %} 
+      </select>
+    </div>
+
+    <div class="form-group col-sm-4">
+      <label for="idestado">PERIODO:</label>
+      <select  name="empleado"  id="idEstado" class="form-control ">
+        {%for obj in estados %}   
+        <option value="{{obj.idEmpleado}}">{{obj.nombre}}</option>
+        {% endfor %} 
+      </select>
+    </div>
+    <div class="form-group col-sm-4">
+      <label>DIAS TRABAJADOS:</label>
+      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+
+    <div class=" col-sm-4">
+      <div class="form-group">
+        <label>FECHA ELABORACION:</label>
+        <input type="date" class="form-control " name="fechaElaboracion" id="nombre" class="form-control">
+        <div id="mensajeNombre" style="background-color:brown;color:white">
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="form-group col-sm-4">
+      <label>SUBTOTAL:</label>
+      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+
+
+    <div class="form-group col-sm-4">
+      <label>RETENCIONES:</label>
+      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+    <div class="form-group col-sm-4">
+      <label>TOTAL:</label>
+      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+  </div>
+
+  <div class="row ">
+    <div class="form-group col-sm-6">
+      <button type="submit" class="btn btn-block btn-primary " id="btnGuardar"
+        onclick="this.form.action='/registrarNomina/G', this.form.method='post', this.form.enctype='multipart/form-data'">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        Guardar
+      </button>
+    </div>
+    <div class="form-group col-sm-6">
+      <button type="submit" class="btn btn-block btn-success " id="btnGuardar2"
+        onclick="this.form.action='/registrarNomina/E', method='post', enctype='multipart/form-data'">
+        <span class="glyphicon glyphicon-envelope"></span>
+        Enviar
+      </button>
+    </div>
+
+
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="contenedor4">
+      <h2 style="font-size: 25px;">DEDUCCION</h2>
+      <div class="row">
+        <div class="form-group col-sm-4">
+
+
+          <label>NOMINA</label>
+          <input type="text" class="form-control " name="idNomina" id="nombre" onblur='consultarNombre("nomina")'
+            required>
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+        </div>
+
+        <div class="form-group col-sm-4">
+          <label>DEDUCCION</label>
+          <input type="text" class="form-control " name="idEmpleado" id="nombre" onblur='consultarNombre("nomina")'
+            required>
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+        </div>
+
+        <div class="form-group col-sm-4">
+          <label>IMPORTE</label>
+          <input type="text" class="form-control " name="importe" id="nombre" onblur='consultarNombre("nomina")'
+            required>
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div class="col-sm-6">
+    <div class="contenedor4">
+      <h1 style="font-size: 24px;">PERCEPCION</h1>
+      <div class="row">
+        <div class="form-group col-sm-4">
+
+          <label>NOMINA</label>
+          <input type="text" class="form-control " name="idNomina" id="nombre" onblur='consultarNombre("nomina")'
+            required>
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+        </div>
+
+        <div class="form-group col-sm-4">
+          <label>PERCEPCION</label>
+          <input type="text" class="form-control " name="idEmpleado" id="nombre" onblur='consultarNombre("nomina")'
+            required>
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+        </div>
+
+        <div class="form-group col-sm-4">
+          <label>IMPORTE</label>
+          <input type="text" class="form-control " name="importe" id="nombre" onblur='consultarNombre("nomina")'
+            required>
+          <div id="mensajeNombre" style="background-color:brown;color:white">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<div class="contenedor">
+  <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+    <span class="glyphicon glyphicon-floppy-disk"></span>
+    Registrar
+  </button>
+  <a href="/nomina" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+
+
+
+
+
+{%endblock%}

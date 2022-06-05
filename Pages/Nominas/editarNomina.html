@@ -1,0 +1,89 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Modificar Nomina</p>
+</div>
+
+<ul class="nav nav-tabs container ">
+  <li class="active"><a data-toggle="tab" href="#PestañaNomina">Datos Nomina</a></li>
+  <li><a data-toggle="tab" href="#PestañaNominaDeduccion">Deduccion</a></li>
+  <li><a data-toggle="tab" href="#PestañaPercepcion">Percepcion</a></li>
+</ul>
+
+<div class="contenedor2">
+  <form action="/editarNomina/{{n.idNomina}}" method="post" enctype="multipart/form-data"> 
+  <div id="PestañaNomina" class="tab-pane fade in active">
+    <div class="row">  
+    <div class="form-group col-sm-4">
+      <label>ID NOMINA:</label>
+      <input type="text" class="form-control" name="idNomina" value="{{n.idNomina}}" id="nombre"  onblur='consultarNombreC("nomina")' required>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+    <div class="form-group col-sm-4">
+        <label>ID EMPLEADO:</label>
+        <input type="text" class="form-control" name="idEmpleado" value="{{n.idNomina}}" id="nombre"  onblur='consultarNombreC("nomina")' required>
+        <div id="mensajeNombre" style="background-color:brown;color:white">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>ID FORMA DE PAGO:</label>
+        <input type="text" class="form-control" name="idDepartamento" value="{{n.nomina}}" required>
+      </div>
+ 
+<div class="form-group">
+        <label>ID PERIODO:</label>
+        <input type="text" class="form-control" name="idPuesto" value="{{n.idPeriodo}}" required>
+    </div>
+
+
+<div class="form-group">
+        <label>FECHA DE ELABORACION:</label>
+        <input type="date" class="form-control" name="fechaInicio" value="{{n.fechaElaboracion}}" required>
+    </div>
+<div class="form-group">
+          <label>FECHA PAGO:</label>
+          <input type="date" class="form-control" name="fechaFin" value="{{n.fechaPago}}" required>
+        </div>
+
+        <div class="form-group">
+          <label>SUBTOTAL:</label>
+          <input type="date" class="form-control" name="fechaFin" value="{{n.subtotal}}" required>
+        </div>
+
+        <div class="form-group">
+          <label>RETENCIONES :</label>
+          <input type="date" class="form-control" name="fechaFin" value="{{n.retenciones}}" required>
+        </div>
+
+        <div class="form-group">
+          <label>TOTAL:</label>
+          <input type="date" class="form-control" name="fechaFin" value="{{n.total}}" required>
+        </div>
+
+        <div class="form-group">
+          <label>DIAS TRABAJADOS:</label>
+          <input type="date" class="form-control" name="fechaFin" value="{{n.diasTrabajados}}" required>
+        </div>
+                </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+
+    Modificar
+    </button>
+    <a href="/nomina" class="btn btn-danger btn-block" role="button">Cancelar</a>
+  </form>
+</div>
+{%endblock%}

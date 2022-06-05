@@ -947,3 +947,47 @@ class HistorialPuesto(db.Model):
         empleado = Empleados()
         empleado = empleado.consultar(self.idEmpleado)
         return empleado.nombre + " "+ empleado.apellidoPaterno + " "+empleado.apellidoMaterno
+    
+    #Nomina---------------------------------------
+class Nomina(db.Model):
+    __tablename__= 'RH_Nominas'
+    idNomina = Column(Integer, primary_key=True)
+    idEmpleado=Column(Integer, primary_key=True)
+    idFormaPago=Column(Integer, primary_key=True)
+    idPeriodo=Column(Integer, primary_key=True)
+    fechaElaboracion = Column(Date)
+    fechaPago = Column(Date)
+    subtotal = Column(Float)
+    retenciones= Column(Float)
+    total=Column(Float)
+    diasTrabajados=Column(Integer)
+    estatus = Column(String(1))
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,id):
+        return self.query.get(id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id):
+        objeto=self.consultar(id)
+        objeto.estatus = "I"
+        db.session.merge(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina):
+        obj = None
+        if current_user.is_admin() or current_user.is_staff():
+            obj = self.query.order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)
+        else:
+            obj = self.query.filter(Nomina.estatus=='A').order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)
+        return obj
+    
+   

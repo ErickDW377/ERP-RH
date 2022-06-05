@@ -1,0 +1,110 @@
+{% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion2.html' as macros %}
+{%block cuerpo%}
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+</div>
+
+
+<ul class="nav nav-tabs container ">
+  <li class="active"><a data-toggle="tab" href="#PestañaNomina">NOMINA</a></li>
+  <li><a data-toggle="tab" href="#PestañaDeducciones">DEDUCCIONES</a></li>
+  <li><a data-toggle="tab" href="#PestañaPercepciones">PERCEPCIONES</a></li>  
+</ul>
+
+<div class="contenedor2">   
+    <div class="tab-content row">
+      <div id="PestañaNomina" class="tab-pane fade in active">       
+        <table class="table  tabla">
+          <thead>
+            <th>Nomina</th>
+            <th>Empleado</th> 
+            <th>Puesto</th> 
+            <th>Forma Pago</th>     
+            <th>Periodos</th>      
+            <th>Dias Trabajados</th>
+            <th>Fecha Elaboracion</th>
+            <th>Subtotal</th>                   
+            <th>Retenciones</th>
+            <th>Total</th>
+            <th></th>      
+            <th></th>
+            </thead>
+        
+            <tbody id="myTable"> 
+              <tr>
+                <td>{{nomina.idNomina}}</td>
+                <td>{{nomina.idEmpleado}}</td>
+                <td>{{nomina.idPuesto}}</td>
+                <td>{{nomina.idFormaPago}}</td>
+                <td> {{nomina.idPeriodo}}</td>
+                <td> {{nomina.diasTrabajados}}</td>
+                <td> {{nomina.fechaElabaracion}}</td>
+                <td> {{nomina.subtotal}}</td>
+                <td> {{nomina.retenciones}}</td>
+                <td> {{nomina.total}}</td>
+              </tr>
+            </tbody>
+        </table>    
+        </div>
+         
+
+      <div id="PestañaDeducciones" class="tab-pane fade">
+        <table class="table  tabla">
+          <thead>                           
+            <th>Nomina</th>      
+            <th>Deduccion</th>
+            <th>Importe</th>
+           </thead>
+      
+          <tbody id="myTable"> 
+            <tr>
+              <td>{{nomina.idNomina()}}</td>
+              <td>{{nomina.idDeduccion}}</td>
+              <td>{{nomina.importe}}</td>
+                         </tr>
+          </tbody>
+      </table>                 
+        </div>        
+      
+
+      <div id="PestañaPercepciones" class="tab-pane fade">
+        <table class="table  tabla">
+          <thead>                           
+            <th>Nomina</th>      
+            <th>Percepcion</th>
+            <th>Importe</th>
+           </thead>
+      
+          <tbody id="myTable"> 
+            <tr>
+              <td>{{nomina.idNomina}}</td>
+              <td>{{nomina.idPercepcion}}</td>
+              
+            </tr>
+          </tbody>
+      </table> 
+                        
+        </div>        
+        
+        </table>
+        <div class="paginacion">
+          {{ macros.pagination_widget2(pagination, '.nominaVer',empleado.idEmpleado) }}
+        </div>
+      </div>      
+      {% endif %}
+        
+    </div>
+    </div>
+</div>
+
+
+{%endblock%}

@@ -1,0 +1,119 @@
+{% extends 'componentes/menu.html' %}
+{% import 'componentes/paginacion.html' as macros %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Catálogo Nomina</p>
+</div>
+
+<div class="container input-group">
+  <span class="input-group-addon amarillo"><i class="glyphicon glyphicon-search"></i></span>
+  <input class="form-control" id="myInput" type="text" placeholder="Search...">
+  <br>
+</div>
+
+
+<div class="tabla"> 
+  <table class="table table-hover">
+    <thead> 
+      <th>Nomia</th>     
+      <th>Empleado</th>  
+      <th>Periodo</th>  
+      <th>Periodos</th>      
+      <th>Fecha Elaboracion</th>
+      <th>Fecha pago</th>  
+      <th>Subtotal</th>                   
+      <th>Retenciones</th>
+      <th>Total</th>
+      <th>Dias Trabajados</th>
+      <th></th>      
+      <th></th>
+      {% if current_user.is_admin() %}
+<th></th> 
+        {% endif %}
+      
+    </thead>
+  </div>
+
+    <tbody id="myTable">  
+      {%for obj in nomina%}      
+      <tr>
+
+        <td>{{obj.idNomina}}</td>
+        <td>{{obj.idEmpleado}}</td>
+        <td>{{obj.idFormaPago}}</td>
+        <td>{{obj.idPeriodo}}</td>
+        <td>{{obj.fechaElabaracion}}</td>
+        <td>{{obj.fechaPago}}</td>
+        <td>{{obj.subtotal}}</td>
+        <td>{{obj.retenciones}}</td>
+        <td>{{obj.total}}</td>
+        <td>{{obj.diasTrabajados}}</td>
+               {% if current_user.is_admin() or current_user.is_staff()  %}
+        <td>
+
+          <a href="/editarNomina/{{obj.idNomina}}" class="btn btn-success" role="button">
+            <span class="glyphicon glyphicon-pencil"></span>
+            Editar
+          </a>
+        </td> 
+        <td>
+          <a href="/nominaVer/{{obj.idNomina}}" class="btn btn-warning" role="button">
+            <span class="glyphicon glyphicon-eye-open"></span>
+            Ver</a>
+        </td>   
+        <td>
+          <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idNomina}}">
+            <span class="glyphicon glyphicon-trash"></span>
+            Eliminar
+          </a>
+        </td>
+        {% endif %}               
+      </tr> 
+      {% if current_user.is_admin() or current_user.is_staff()  %}   
+        <div id="eliminar{{obj.idNomina}}" class="modal fade" role="dialog">
+          <div class="modal-dialog">   
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                  &times;
+                </button>
+                <h4 class="modal-title">Confirmacion de proceso</h4>
+              </div>
+              <div class="modal-body">
+                <p>¿Estas seguro de eliminar la Nomina: {{obj.nombre}} ?</p>
+              </div>
+              <div class="modal-footer">
+                <a href="/eliminarNominas/{{obj.idNomina}}" class="btn btn-info"
+                  >Aceptar</a
+                >
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+    </table>
+  
+  </div>
+</div>
+  <div class="paginacion">
+    {{ macros.pagination_widget(pagination, '.nomina') }}
+  </div>
+  
+{%endblock%}
+

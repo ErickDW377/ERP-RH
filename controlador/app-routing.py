@@ -1,6 +1,6 @@
 from flask import Flask,render_template,request,flash, redirect, template_rendered, url_for, abort
 from flask_bootstrap import Bootstrap
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto,Nomina
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
@@ -1601,7 +1601,6 @@ def validarFechasHP(id,idP,idD,fecha):
 
 
 
-
 #DOCUEMNTO ------------------------------
 @app.route('/doc')
 def doc():
@@ -1642,6 +1641,105 @@ def excel():
     excel.close()
     os.remove(ruta+'\Static\docs\excel.xlsx')
     return exc
+
+
+
+
+#NOMINA------------------------------------------------------------------------------------
+
+@app.route('/nomina')
+@login_required
+def nomina():
+    if current_user.is_authenticated(): 
+        n=Nomina()
+        page = request.args.get('page', 1, type=int)
+        paginacion = n.consultarPagina(page)         
+        return  render_template('Nominas/nomina.html', nomina =paginacion.items, pagination = paginacion  )
+    else:
+        abort(404)
+        
+@app.route('/registrarNomina')
+@login_required
+def nominasRegistrar():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):        
+        return  render_template('Nominas/registrarNomina.html')
+    else:
+        abort(404)
+
+@app.route('/editarNomina/<int:id>')
+@login_required
+def nominaEditar(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        nomina = Nomina()
+        nomina = nomina.consultar(id)
+        return  render_template('Nominas/editarNomina.html', nomina= nomina)
+    else:
+        abort(404)
+
+@app.route('/registrarNomina',methods=['post'])
+@login_required
+def registrarNomina(): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        nomina = Nomina()
+        nomina.idNomina = request.form['idNomina']
+        nomina.idEmpleado = request.form['idEmpleado']
+        nomina.idFormaPago = request.form['idFormaPago'] 
+        nomina.idPeriodo= request.form['idPeriodo'] 
+        nomina.fechaElaboracion=request.form['fechaElaboracion']
+        nomina. fechaPago =request.form['fechaPago']
+        nomina.subtotal=request.form['subtotal']
+        nomina.retenciones=request.form['subtotal']
+        nomina.total=request.form['total']
+        nomina.diasTrabajados=request.form['diasTrabajados']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+            nomina.estatus='A'
+        else:
+            nomina.estatus='I' 
+        nomina.registrar()
+        flash('Nomina registrada con exito')
+        return  redirect(url_for('nominasRegistrar'))
+    else:
+        abort(404)
+
+@app.route('/editarNomina/<int:id>',methods=['post'])
+@login_required
+def editarNomina(id): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        nomina = Nomina()
+        nomina.idNomina = request.form['idNomina']
+        nomina.idEmpleado = request.form['idEmpleado']
+        nomina.idFormaPago = request.form['idFormaPago'] 
+        nomina.idPeriodo= request.form['idPeriodo'] 
+        nomina.fechaElaboracion=request.form['fechaElaboracion']
+        nomina. fechaPago =request.form['fechaPago']
+        nomina.subtotal=request.form['subtotal']
+        nomina.retenciones=request.form['subtotal']
+        nomina.total=request.form['total']
+        nomina.diasTrabajados=request.form['diasTrabajados']
+        estatus = request.values.get('estatus',False)
+        if estatus=="True":
+                nomina.estatus='A'
+        else:
+            nomina.estatus='I'  
+        nomina.idDeduccion = id
+        nomina.actualizar()
+        flash('La Nomina fue actualizada con exito')
+        return  redirect(url_for('nominaEditar', id= nomina.idNomina))
+    else:
+        abort(404)
+
+@app.route('/eliminarNominas/<int:id>')
+@login_required
+def eliminarNominas(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
+        nomina = Nomina()
+        nomina.eliminar(id)
+        flash('Nomina eliminada con exito')
+        return  redirect(url_for('nomina'))
+    else:
+        abort(404)
+        
 
 
 #Error--------------------------------------------------------------------------------------
