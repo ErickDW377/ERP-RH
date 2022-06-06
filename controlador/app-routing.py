@@ -1702,16 +1702,18 @@ def docPermisos(id,e,e2):
     os.remove(ruta+'\Static\docs\solicitudPermisos.pdf')
     return  doc
 
-@app.route('/excel')
-def excel():
-    empleados = Empleados()
-    empleados = empleados.consultarAll()
+@app.route('/excelNominas')
+def excelNominas():
+    nominas = Nomina()
+    nominas = nominas.consultarAll()
     datos = []
-    for emp in empleados:
-        e = [emp.nombre,emp.sexo,emp.tipo,emp.email]
+    for emp in nominas:
+        em = Empleados()
+        em = em.consultar(emp.idEmpleado)
+        e = [emp.nombreEmpleado(),em.salarioDiario,em.getPuesto(),em.getDepartamento(), em.nss,em.curp,emp.periodo(),emp.fechaPago,emp.formaPago(), emp.fechaElaboracion,emp.diasTrabajados,emp.retenciones,emp.subtotal,emp.total]
         datos.append(e)
 
-    archivo = pd.DataFrame(datos,columns=['Nombre','Sexo','Tipo','email'])
+    archivo = pd.DataFrame(datos,columns=['Nombre','Salario Diario','Puesto','Departamento','NSS','CURP','Periodo', 'Fecha de pago','Forma de Pago','Fecha de Elaboracion','Dias trabajados','Percepciones','Deducciones','Total'])
     archivo.to_excel(ruta+'\Static\docs\excel.xlsx',index=False)
     excel = open(ruta+'\Static\docs\excel.xlsx', 'rb')
     exc =excel.read()
@@ -1896,7 +1898,7 @@ def nominaAlta():
         nomina.estado = "A"
         nomina.registrar()
         flash('Nomina dada de alta con exito')
-        return  redirect(url_for('capturaNominas'))
+        return  redirect(url_for('registrarNomina'))
     else:
         abort(404)
 
@@ -1933,7 +1935,7 @@ def nominaRevisar(id,btn):
             nomina.documento = docNomina(id)
         nomina.actualizar()
         flash('La nomina fue revisada con exito')
-        return  redirect(url_for('nominas'))
+        return  redirect(url_for('inicio'))
     else:
         abort(404)
 
@@ -1945,7 +1947,7 @@ def eliminarNominas(id):
         nomina = Nomina()
         nomina.eliminar(id)
         flash('Nomina eliminada con exito')
-        return  redirect(url_for('nominas'))
+        return  redirect(url_for('inicio'))
     else:
         abort(404)
 
@@ -2057,10 +2059,10 @@ def error_404(e):
 
 if __name__=='__main__':
     db.init_app(app)
-    #HOST = os.environ.get('SERVER_HOST', 'localhost')
-    #try:
-    #    PORT = int(os.environ.get('SERVER_PORT', '80'))
-    #except ValueError:
-    #    PORT = 80
-    #app.run(HOST, PORT)
-    app.run(debug=true)
+    HOST = os.environ.get('SERVER_HOST', 'localhost')
+    try:
+        PORT = int(os.environ.get('SERVER_PORT', '80'))
+    except ValueError:
+        PORT = 80
+    app.run(HOST, PORT)
+    #app.run(debug=true)

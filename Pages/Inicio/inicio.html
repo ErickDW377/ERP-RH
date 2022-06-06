@@ -1,5 +1,13 @@
 {% extends 'componentes/menu.html' %}
 {%block cuerpo%}
+{% if get_flashed_messages()%}
+  {% for m in get_flashed_messages()%}
+    <div class="alert alert-success alert-dismissible alertas-txt">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>{{m}}</strong>
+    </div>
+  {% endfor %}
+{% endif %}
 <div class="contenedor">
     
     <img src="{{url_for('static',filename='images/10.jpeg')}}" height="100%", width="100%"

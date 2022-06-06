@@ -1019,6 +1019,11 @@ class Nomina(db.Model):
         per = Periodos()
         per = per.consultar(self.idPeriodo)
         return per.nombre
+    
+    def formaPago(self):
+        per = FormasdePago()
+        per = per.consultar(self.idFormaPago)
+        return per.nombre
 
 #Nominas Deducciones---------------------------------------
 class NominaDeducciones(db.Model):

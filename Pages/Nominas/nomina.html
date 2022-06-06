@@ -54,7 +54,7 @@
           </a>
         </td>  
         {% endif %}
-        {% if obj.estatus != 'Revisión' and obj.estatus != 'Autorizada' %}
+        {% if obj.estatus != 'Revisión'  %}
         <td>
           <a href="/verNomina/{{obj.idNomina}}" class="btn btn-warning" role="button">
             <span class="glyphicon glyphicon-eye-open"></span>
@@ -78,13 +78,15 @@
         </div>
         {% endif %}
         {% if (current_user.is_admin() or current_user.is_staff()) and  obj.estatus != 'Revisión' %}
+        {% if obj.estatus != 'Autorizada' %}
         <td>
 
           <a href="/editarNomina/{{obj.idNomina}}" class="btn btn-success" role="button">
             <span class="glyphicon glyphicon-pencil"></span>
             Editar
           </a>
-        </td>          
+        </td>
+        {% endif %}           
         <td>
           <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idNomina}}">
             <span class="glyphicon glyphicon-trash"></span>
