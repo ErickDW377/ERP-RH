@@ -193,16 +193,16 @@ subtotal float,
 retenciones float,
 total float,
 diasTrabajados int,
-estatus char,
+estatus varchar(10),
 idEmpleado int,
 idFormaPago int,
 idPeriodo int,
 documento mediumblob,
+estado char,
 primary key (idNomina),
 foreign key (idFormaPago) references RH_FormasPago(idFormaPago),
 foreign key (idPeriodo) references RH_Periodos(idPeriodo),
-foreign key (idEmpleado) references RH_Empleados(idEmpleado),
-check(estatus in ('A','I'))
+foreign key (idEmpleado) references RH_Empleados(idEmpleado)
 );
 
 create table RH_NominasDeducciones(

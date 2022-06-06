@@ -1,6 +1,8 @@
+from logging import PercentStyle
 from flask import Flask,render_template,request,flash, redirect, template_rendered, url_for, abort
 from flask_bootstrap import Bootstrap
-from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto,Nomina
+from sqlalchemy import true
+from DAO import db, Puestos,Turnos,Empleados,Departamentos,Estado,FormasdePago,DocumentosEmpleado,Ciudades,Sucursales,Periodos,AusenciasJustificadas,Asistencias,Percepciones,Deducciones,HistorialPuesto,Nomina, NominaDeducciones, NominaPercepciones
 from flask_login import LoginManager,current_user,login_required,login_user,logout_user
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
@@ -1336,12 +1338,20 @@ def responderAusenciaJustificada(id,btn):
         ausenciasJ.idEmpleadoAutoriza = current_user.idEmpleado       
         ausenciasJ.estatus = btn        
         ausenciasJ.idAusencia = id
+        tipo= request.form['tipo']
 
-        ausenciasJ.actualizar()
+        empleado  = AusenciasJustificadas()
+        empleado = empleado.consultar(id).idEmpleadoSolicita
+
         if btn == "A":
+            if tipo == 'Vacaciones':
+                ausenciasJ.evidencia = docVacaciones(ausenciasJ.idAusencia,empleado,ausenciasJ.idEmpleadoAutoriza) 
+            if tipo == 'Permiso':
+                ausenciasJ.evidencia = docPermisos(ausenciasJ.idAusencia,empleado,ausenciasJ.idEmpleadoAutoriza)
             flash('Ausencia Justificada ACEPTADA con exito')           
         elif btn == "R":
             flash('Ausencia Justificada RECHAZADA con exito')
+        ausenciasJ.actualizar()
         return  redirect(url_for('ausenciasJustificadas'))
     else:
         abort(404)
@@ -1602,28 +1612,95 @@ def validarFechasHP(id,idP,idD,fecha):
 
 
 #DOCUEMNTO ------------------------------
-@app.route('/doc')
-def doc():
+@app.route('/docNomina/<int:id>')
+def docNomina(id):
+    env = Environment(loader=FileSystemLoader("Pages"))
+    template = env.get_template("docs/docNomina.html")
+    nomina = Nomina()
+    nomina = nomina.consultar(id)
+    empleados = Empleados()   
+    periodos = Periodos()
+    fp = FormasdePago()
+    
+    nominaD = NominaDeducciones()
+    nominaD = nominaD.cosnsultarNomina(nomina.idNomina) 
+    nominaP = NominaPercepciones()
+    nominaP= nominaP.cosnsultarNomina(nomina.idNomina) 
+    datos={
+        'nominaD': nominaD,
+        'nominaP': nominaP,
+        'empleados': empleados.consultarAll(),
+        'nomina': nomina,
+        'periodos': periodos.consultarAll(),
+        'fp':fp.consultarAll()
+    }
+    html = template.render(datos)    
+    file = open(ruta + '\Pages\docs\docNominaTMP.html',"w")
+    file.write(html) 
+    file.close()    
+    pdfkit.from_file(ruta + '\Pages\docs\docNominaTMP.html',ruta+'\Static\docs\docNomina.pdf') 
+    pdf = open(ruta+'\Static\docs\docNomina.pdf',"rb")    
+    doc = pdf.read()    
+    pdf.close()
+    os.remove(ruta + '\Pages\docs\docNominaTMP.html')
+    os.remove(ruta+'\Static\docs\docNomina.pdf')
+    return  doc
+
+@app.route('/docVacaciones/<int:id>/<int:e>/<int:e2>')
+def docVacaciones(id,e,e2):
     env = Environment(loader=FileSystemLoader("Pages"))
     template = env.get_template("docs/solicitudVacaciones.html")
+    permiso = AusenciasJustificadas()
+    empleado = Empleados()
+    empleado2 = Empleados()
+    permiso = permiso.consultar(id)
+    empleado = empleado.consultar(e)
+    empleado2 = empleado2.consultar(e2)
+
     datos={
-        'ruta': ruta,
-        'nombre': 'Erick Sebastian diaz wences'
+        'permiso': permiso,
+        'empleado': empleado,
+        'empleado2': empleado2
     }
     html = template.render(datos)    
     file = open(ruta + '\Pages\docs\solicitudVacacionesTMP.html',"w")
     file.write(html) 
     file.close()    
     pdfkit.from_file(ruta + '\Pages\docs\solicitudVacacionesTMP.html',ruta+'\Static\docs\solicitudVacaciones.pdf') 
-    pdf = open(ruta+'\Static\docs\solicitudVacaciones.pdf',"rb")
-    au = AusenciasJustificadas();
-    au.evidencia = pdf.read()
-    au.idAusencia = 5
-    au.actualizar()
+    pdf = open(ruta+'\Static\docs\solicitudVacaciones.pdf',"rb")    
+    doc = pdf.read()    
     pdf.close()
     os.remove(ruta + '\Pages\docs\solicitudVacacionesTMP.html')
     os.remove(ruta+'\Static\docs\solicitudVacaciones.pdf')
-    return  render_template('docs/solicitudVacaciones.html')
+    return  doc
+
+@app.route('/docPermisos/<int:id>/<int:e>/<int:e2>')
+def docPermisos(id,e,e2):
+    env = Environment(loader=FileSystemLoader("Pages"))
+    template = env.get_template("docs/solicitudPermisos.html")
+    permiso = AusenciasJustificadas()
+    empleado = Empleados()
+    empleado2 = Empleados()
+    permiso = permiso.consultar(id)
+    empleado = empleado.consultar(e)
+    empleado2 = empleado2.consultar(e2)
+
+    datos={
+        'permiso': permiso,
+        'empleado': empleado,
+        'empleado2': empleado2
+    }
+    html = template.render(datos)    
+    file = open(ruta + '\Pages\docs\solicitudPermisosTMP.html',"w")
+    file.write(html) 
+    file.close()    
+    pdfkit.from_file(ruta + '\Pages\docs\solicitudPermisosTMP.html',ruta+'\Static\docs\solicitudPermisos.pdf') 
+    pdf = open(ruta+'\Static\docs\solicitudPermisos.pdf',"rb")    
+    doc = pdf.read()    
+    pdf.close()
+    os.remove(ruta + '\Pages\docs\solicitudPermisosTMP.html')
+    os.remove(ruta+'\Static\docs\solicitudPermisos.pdf')
+    return  doc
 
 @app.route('/excel')
 def excel():
@@ -1647,96 +1724,327 @@ def excel():
 
 #NOMINA------------------------------------------------------------------------------------
 
-@app.route('/nomina')
+@app.route('/documentoNomina/<int:id>')
+def documentoNomina(id):
+    doc=Nomina()
+    doc = doc.consultar(id).documento  
+    return doc
+
+
+@app.route('/nominas')
 @login_required
-def nomina():
-    if current_user.is_authenticated(): 
+def nominas():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
         n=Nomina()
         page = request.args.get('page', 1, type=int)
         paginacion = n.consultarPagina(page)         
-        return  render_template('Nominas/nomina.html', nomina =paginacion.items, pagination = paginacion  )
+        return  render_template('Nominas/nomina.html', nomina =paginacion.items, pagination = paginacion, p = '.nominas'  )
     else:
         abort(404)
-        
+
+@app.route('/capturaNominas')
+@login_required
+def capturaNominas():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
+        n=Nomina()
+        page = request.args.get('page', 1, type=int)
+        paginacion = n.consultarCapturaPagina(page)         
+        return  render_template('Nominas/nomina.html', nomina =paginacion.items, pagination = paginacion, p = '.capturaNominas'  )
+    else:
+        abort(404)
+
+@app.route('/misNominas')
+@login_required
+def misNominas():
+    if current_user.is_authenticated(): 
+        n=Nomina()
+        page = request.args.get('page', 1, type=int)
+        paginacion = n.consultarmisNominasPagina(page)         
+        return  render_template('Nominas/nomina.html', nomina =paginacion.items, pagination = paginacion, p = '.misNominas'  )
+    else:
+        abort(404)
+
+@app.route('/revicionNominas')
+@login_required
+def revicionNominas():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.idPuesto == 2): 
+        n=Nomina()
+        page = request.args.get('page', 1, type=int)
+        paginacion = n.consultarEnviadasPagina(page)         
+        return  render_template('Nominas/nomina.html', nomina =paginacion.items, pagination = paginacion, p = '.revicionNominas'  )
+    else:
+        abort(404)
+
+
 @app.route('/registrarNomina')
 @login_required
-def nominasRegistrar():
-    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):        
-        return  render_template('Nominas/registrarNomina.html')
+def registrarNomina():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        empleados = Empleados()   
+        periodos = Periodos()
+        fp = FormasdePago()
+        deducciones = Deducciones()
+        percepciones = Percepciones()    
+        return  render_template('Nominas/registrarNomina.html', empleados = empleados.consultarAll(), periodos = periodos.consultarAll(), fp = fp.consultarAll(), deducciones = deducciones.consultarAll(),percepciones = percepciones.consultarAll())
+    else:
+        abort(404)
+
+@app.route('/altaNomina')
+@login_required
+def altaNomina():
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+        empleados = Empleados()   
+        periodos = Periodos()
+        fp = FormasdePago()          
+        return  render_template('Nominas/altaNomina.html', empleados = empleados.consultarAll(), periodos = periodos.consultarAll(), fp = fp.consultarAll())
     else:
         abort(404)
 
 @app.route('/editarNomina/<int:id>')
 @login_required
-def nominaEditar(id):
+def editarNomina(id):
     if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
         nomina = Nomina()
         nomina = nomina.consultar(id)
-        return  render_template('Nominas/editarNomina.html', nomina= nomina)
+        empleados = Empleados()   
+        periodos = Periodos()
+        fp = FormasdePago()
+        deducciones = Deducciones()
+        percepciones = Percepciones()
+        nominaD = NominaDeducciones()
+        nominaD = nominaD.cosnsultarNomina(nomina.idNomina) 
+        nominaP = NominaPercepciones()
+        nominaP= nominaP.cosnsultarNomina(nomina.idNomina)   
+        return  render_template('Nominas/editarNomina.html',nomina = nomina, empleados = empleados.consultarAll(), periodos = periodos.consultarAll(), fp = fp.consultarAll(), deducciones = deducciones.consultarAll(),percepciones = percepciones.consultarAll(), nominaD=nominaD,nominaP=nominaP)
     else:
         abort(404)
 
-@app.route('/registrarNomina',methods=['post'])
+@app.route('/revisarNomina/<int:id>')
 @login_required
-def registrarNomina(): 
-    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+def revisarNomina(id):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.idPuesto == 2):  
         nomina = Nomina()
-        nomina.idNomina = request.form['idNomina']
+        nomina = nomina.consultar(id)
+        empleados = Empleados()   
+        periodos = Periodos()
+        fp = FormasdePago()
+        
+        nominaD = NominaDeducciones()
+        nominaD = nominaD.cosnsultarNomina(nomina.idNomina) 
+        nominaP = NominaPercepciones()
+        nominaP= nominaP.cosnsultarNomina(nomina.idNomina)   
+        return  render_template('Nominas/revisarNomina.html',nomina = nomina, empleados = empleados.consultarAll(), periodos = periodos.consultarAll(), fp = fp.consultarAll(), nominaD=nominaD,nominaP=nominaP)
+    else:
+        abort(404)
+
+@app.route('/verNomina/<int:id>')
+@login_required
+def verNomina(id):
+    if current_user.is_authenticated() :  
+        nomina = Nomina()
+        nomina = nomina.consultar(id)
+        empleados = Empleados()   
+        periodos = Periodos()
+        fp = FormasdePago()
+        
+        nominaD = NominaDeducciones()
+        nominaD = nominaD.cosnsultarNomina(nomina.idNomina) 
+        nominaP = NominaPercepciones()
+        nominaP= nominaP.cosnsultarNomina(nomina.idNomina)   
+        return  render_template('Nominas/verNomina.html',nomina = nomina, empleados = empleados.consultarAll(), periodos = periodos.consultarAll(), fp = fp.consultarAll(), nominaD=nominaD,nominaP=nominaP)
+    else:
+        abort(404)
+
+@app.route('/nominaRegistrar/<string:btn>',methods=['post'])
+@login_required
+def nominaRegistrar(btn): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        nomina = Nomina()       
         nomina.idEmpleado = request.form['idEmpleado']
         nomina.idFormaPago = request.form['idFormaPago'] 
         nomina.idPeriodo= request.form['idPeriodo'] 
-        nomina.fechaElaboracion=request.form['fechaElaboracion']
+        nomina.fechaElaboracion=datetime.now()
         nomina. fechaPago =request.form['fechaPago']
         nomina.subtotal=request.form['subtotal']
         nomina.retenciones=request.form['subtotal']
         nomina.total=request.form['total']
         nomina.diasTrabajados=request.form['diasTrabajados']
-        estatus = request.values.get('estatus',False)
-        if estatus=="True":
-            nomina.estatus='A'
-        else:
-            nomina.estatus='I' 
+        nomina.estatus = btn
         nomina.registrar()
         flash('Nomina registrada con exito')
-        return  redirect(url_for('nominasRegistrar'))
+        return  redirect(url_for('registrarNomina'))
     else:
         abort(404)
 
-@app.route('/editarNomina/<int:id>',methods=['post'])
+@app.route('/nominaAlta',methods=['post'])
 @login_required
-def editarNomina(id): 
+def nominaAlta(): 
     if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
-        nomina = Nomina()
-        nomina.idNomina = request.form['idNomina']
-        nomina.idEmpleado = request.form['idEmpleado']
-        nomina.idFormaPago = request.form['idFormaPago'] 
-        nomina.idPeriodo= request.form['idPeriodo'] 
-        nomina.fechaElaboracion=request.form['fechaElaboracion']
-        nomina. fechaPago =request.form['fechaPago']
+        nomina = Nomina()        
+        nomina.idEmpleado = request.form['empleado']
+        nomina.idFormaPago = request.form['formaPago'] 
+        nomina.idPeriodo= request.form['periodo'] 
+        nomina.fechaElaboracion=datetime.now()
+        nomina.fechaPago =request.form['fechaPago']        
+        nomina.diasTrabajados=request.form['diasTrabajados']
+        nomina.subtotal=0
+        nomina.retenciones=0
+        em = Empleados()
+        em = em.consultar(nomina.idEmpleado)
+        nomina.total=float(nomina.diasTrabajados) * float(em.salarioDiario)
+        nomina.estatus = 'Captura' 
+        nomina.estado = "A"
+        nomina.registrar()
+        flash('Nomina dada de alta con exito')
+        return  redirect(url_for('capturaNominas'))
+    else:
+        abort(404)
+
+@app.route('/nominaEditar/<int:id>/<string:btn>',methods=['post'])
+@login_required
+def nominaEditar(id,btn): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        nomina = Nomina()        
+        nomina.idEmpleado = request.form['empleado']
+        nomina.idFormaPago = request.form['formaPago'] 
+        nomina.idPeriodo= request.form['periodo'] 
+        nomina.fechaElaboracion=  datetime.now()
+        nomina.fechaPago =request.form['fechaPago']
         nomina.subtotal=request.form['subtotal']
-        nomina.retenciones=request.form['subtotal']
+        nomina.retenciones=request.form['retenciones']
         nomina.total=request.form['total']
         nomina.diasTrabajados=request.form['diasTrabajados']
-        estatus = request.values.get('estatus',False)
-        if estatus=="True":
-                nomina.estatus='A'
-        else:
-            nomina.estatus='I'  
-        nomina.idDeduccion = id
+        nomina.estatus = btn
+        nomina.idNomina = id       
         nomina.actualizar()
         flash('La Nomina fue actualizada con exito')
-        return  redirect(url_for('nominaEditar', id= nomina.idNomina))
+        return  redirect(url_for('editarNomina', id= nomina.idNomina))
     else:
         abort(404)
 
-@app.route('/eliminarNominas/<int:id>')
+@app.route('/nominaRevisar/<int:id>/<string:btn>',methods=['post'])
+@login_required
+def nominaRevisar(id,btn): 
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):  
+        nomina = Nomina()        
+        nomina.estatus = btn
+        nomina.idNomina = id
+        if btn == 'Autorizada':
+            nomina.documento = docNomina(id)
+        nomina.actualizar()
+        flash('La nomina fue revisada con exito')
+        return  redirect(url_for('nominas'))
+    else:
+        abort(404)
+
+
+@app.route('/eliminarNomina/<int:id>')
 @login_required
 def eliminarNominas(id):
     if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
         nomina = Nomina()
         nomina.eliminar(id)
         flash('Nomina eliminada con exito')
-        return  redirect(url_for('nomina'))
+        return  redirect(url_for('nominas'))
+    else:
+        abort(404)
+
+
+
+
+
+#NominaDeducciones-----------------------------------------------------------------------------------------------------
+@app.route('/registrarNominaDeduccion/<int:idN>/<int:idD>/<int:importe>',methods=['post'])
+@login_required
+def registrarNominaDeduccion(idN,idD, importe):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
+        nD = NominaDeducciones()
+        nD.idNomina = idN
+        nD.idDeduccion = idD
+        nD.importe = importe
+        print(nD.idNomina)
+        print(nD.idDeduccion)
+        print(nD.importe)
+        nD.registrar()
+        obj={
+            "estado":"ok","mensaje":"Deduccion agregada con exito"
+        }
+        return json.dumps(obj)       
+    else:
+        abort(404)
+
+
+
+@app.route('/verNominaDeduccion/<int:idN>/<int:idD>',methods=['get'])
+@login_required
+def verNominaDeduccion(idN,idD):
+    if current_user.is_authenticated():
+        item= NominaDeducciones()
+        item = item.consultar(idN,idD)
+        obj = {
+            'deduccion': item.deduccion(),
+            'porcentaje': item.porsentaje(),
+            'importe': item.importe
+        }      
+        return json.dumps(obj)
+    else:
+        abort(404)
+
+
+@app.route('/eliminarNominaDeduccion/<int:id>/<int:id2>',methods=['post'])
+@login_required
+def eliminarNominaDeduccion(id, id2):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
+        nD = NominaDeducciones()
+        nD.eliminar(id,id2)
+        return json.dumps({"estado":"ok","mensaje":"Deduccion eliminada con exito"} )            
+    else:
+        abort(404)
+
+
+
+#NominaPercepcion-----------------------------------------------------------------------------------------------------
+@app.route('/registrarNominaPercepcion/<int:idN>/<int:idP>/<int:importe>',methods=['post'])
+@login_required
+def registrarNominaPercepcion(idN,idP, importe):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
+        nD = NominaPercepciones()
+        nD.idNomina = idN
+        nD.idPercepcion = idP
+        nD.importe = importe       
+        nD.registrar()
+        obj={
+            "estado":"ok","mensaje":"Percepcion agregada con exito"
+        }
+        return json.dumps(obj)       
+    else:
+        abort(404)
+
+
+
+@app.route('/verNominaPercepcion/<int:idN>/<int:idP>',methods=['get'])
+@login_required
+def verNominaPercepcion(idN,idP):
+    if current_user.is_authenticated():
+        item= NominaPercepciones()
+        item = item.consultar(idN,idP)
+        obj = {
+            'percepcion': item.percepcion(),
+            'dias': item.dias(),
+            'importe': item.importe
+        }      
+        return json.dumps(obj)
+    else:
+        abort(404)
+
+
+@app.route('/eliminarNominaPercepcion/<int:id>/<int:id2>',methods=['post'])
+@login_required
+def eliminarNominaPercepcion(id, id2):
+    if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()): 
+        nD = NominaPercepciones()
+        nD.eliminar(id,id2)
+        return json.dumps({"estado":"ok","mensaje":"Percepcion eliminada con exito"} )            
     else:
         abort(404)
         
@@ -1749,9 +2057,10 @@ def error_404(e):
 
 if __name__=='__main__':
     db.init_app(app)
-    HOST = os.environ.get('SERVER_HOST', 'localhost')
-    try:
-        PORT = int(os.environ.get('SERVER_PORT', '80'))
-    except ValueError:
-        PORT = 80
-    app.run(HOST, PORT)
+    #HOST = os.environ.get('SERVER_HOST', 'localhost')
+    #try:
+    #    PORT = int(os.environ.get('SERVER_PORT', '80'))
+    #except ValueError:
+    #    PORT = 80
+    #app.run(HOST, PORT)
+    app.run(debug=true)

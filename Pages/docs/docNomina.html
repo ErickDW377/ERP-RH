@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="ISO 8859-1">
+    <title>ERP </title>      
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    
+     
+
+</head>
+
+<body>   
+    <div style="   
+    text-align: center;  
+    ">
+         
+        <img src="https://blogs.iteso.mx/materioteca/wp-content/uploads/sites/62/2020/10/Ecomat-17.png" alt="" height="7%", width="7%"
+        />           
+        <img src="https://altiara.mx/wp-content/uploads/2020/09/LOGO-UMFFAAC-400.png" height="5%", width="5%"
+        />
+        <img src="https://agroquimicos.mx/wp-content/uploads/2019/11/Agroquimicos-Uruapan-Logo.png" height="7%", width="7%"        
+        />   
+        <img src="https://www.anasac.com/international/wp-content/themes/anasac-maqueta/assets/img/logo-foot.png" height="7%", width="7%"
+        />   
+        <img src="https://media-exp1.licdn.com/dms/image/C4D0BAQGChMm8ctKWfw/company-logo_200_200/0/1588324689000?e=2147483647&v=beta&t=aV5KebD52a_Q1KK8QPVJhVLTVaSQyZzGJZZsOizrU28" height="7%", width="7%"
+        /> 
+    </div>   
+    <div style="
+    width: 40%;
+    margin: auto;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 30px;
+    text-align: center;  
+    font-weight: bolder;
+    color: rgb(0, 128, 0) !important;"> 
+            
+        <div>AGROQIMICA EEYV</div>
+    </div>     
+    
+    <div style="   
+    text-align: center;  
+    ">
+        <h1> <label>Nomina</label> </h1>
+    </div>
+ 
+  
+  <div style=" width: 95%;
+  margin: auto;
+  margin-bottom: 50px;    
+  background-color: rgba(189, 189, 189, 0.438);
+  border-radius: 10px;  
+  padding: 40px; ">
+    <div class="row">
+      <div class="form-group col-sm-3">
+        <label for="idestado">Empleado:</label>
+        <select name="empleado" id="empleado" class="form-control " disabled >
+          {%for obj in empleados %}
+          {% if obj.idEmpleado == nomina.idEmpleado %}
+          <option value="{{obj.idEmpleado}}" id="{{obj.salarioDiario}}"  selected>{{obj.nombre}} {{obj.apellidoPaterno}} {{obj.apellidoMaterno}}</option>
+          {% else %}
+          
+          {% endif %}
+          {% endfor %}
+        </select>
+  
+      </div>
+      <div class="form-group col-sm-3">
+        <label for="idestado">Periodo:</label>
+        <select name="periodo" id="periodo" class="form-control " disabled>
+          {%for obj in periodos %}
+          {% if obj.idPeriodo == nomina.idPeriodo %}
+          <option value="{{obj.idPeriodo}}" selected>{{obj.nombre}} {{obj.fechaInicio}} - {{obj.fechaFin}}</option>
+          {% else %}
+         
+          {% endif %}
+          
+          {% endfor %}
+        </select>
+      </div>
+  
+  
+      <div class="form-group col-sm-2">
+        <label>Días trabajados:</label>
+        <input type="number" min="1" class="form-control " name="diasTrabajados" id="diasTrabajados" value="{{nomina.diasTrabajados}}" readonly>
+        <div id="mensajeNombre" style="background-color:brown;color:white">
+        </div>
+      </div>
+      <div class="form-group col-sm-2">
+        <label for="idestado">Forma de pago:</label>
+        <select name="formaPago" id="formaPago" class="form-control " disabled>
+          
+          {%for obj in fp %}
+          {% if obj.idFormaPago == nomina.idFormaPago %}
+          <option value="{{obj.idFormaPago}}" >{{obj.nombre}}</option>
+          {% else %}
+          
+          {% endif %}
+          
+          {% endfor %}
+        </select>
+      </div>
+  
+      <div class=" col-sm-2">
+        <div class="form-group">
+          <label>Fecha pago:</label>
+          <input type="date" class="form-control " name="fechaPago" class="form-control" value="{{nomina.fechaPago}}" readonly>
+          <div id="mensajeFecha" style="background-color:brown;color:white">
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-sm-6">
+        <div class="row" style=" width: 100%;
+        margin: auto;
+        margin-bottom: 20px;    
+        background-color: rgba(189, 189, 189, 0.438);
+        border-radius: 10px;  
+        padding-left: 20px;    
+        padding-right: 20px;     
+        padding-top: 30px;  ">
+          <label class="col-sm-12" style="text-align: center;
+          font-size: 20px;
+          margin-bottom: 40px;
+          border-bottom-style: solid;
+          border-bottom-width: 5px;
+          font-weight: 900;
+          color: rgb(7, 105, 7) !important;">DEDUCCIONES</label>
+  
+         
+          <table class="table " style="width: 95%;
+          margin: auto;
+          margin-top: 20px;
+          margin-bottom: 30px;
+          font-size: 25px;
+          text-align: center;
+          align-items: center;" id="tablaDeducciones">
+            <thead>          
+              <th>Deducción</th>                  
+              <th>Porcentaje</th>
+              <th>Importe</th> 
+                           
+            </thead>
+        
+            <tbody id="tablaD"> 
+              {%for obj in nominaD %}
+                <tr id="{{obj.idDeduccion}}">
+                  <td>{{obj.deduccion()}}</td>
+                  <td>{{obj.porcentaje()}}</td>
+                  <td>{{obj.importe}}</td>
+                  
+                 
+                </tr>
+              {% endfor %}
+              
+            </tbody>
+        </table> 
+        <div class="form-group col-sm-4"></div>
+        <div class="form-group col-sm-4"><label>Retenciones:</label></div>
+        <div class="form-group col-sm-4">          
+          <input type="number" class="form-control " name="retenciones" id="retenciones"  value="{{nomina.retenciones}}" readonly>          
+        </div>
+        </div>
+      </div>
+  
+      <div class="col-sm-6">
+        <div class="row" style=" width: 100%;
+        margin: auto;
+        margin-bottom: 20px;    
+        background-color: rgba(189, 189, 189, 0.438);
+        border-radius: 10px;  
+        padding-left: 20px;    
+        padding-right: 20px;     
+        padding-top: 30px;  ">
+  
+          <label class="col-sm-12" style="text-align: center;
+          font-size: 20px;
+          margin-bottom: 40px;
+          border-bottom-style: solid;
+          border-bottom-width: 5px;
+          font-weight: 900;
+          color: rgb(7, 105, 7) !important;">PERCEPCIONES</label>
+  
+          
+          <table class="table " style="width: 95%;
+          margin: auto;
+          margin-top: 20px;
+          margin-bottom: 30px;
+          font-size: 25px;
+          text-align: center;
+          align-items: center;" id="tablaPercepcion">
+            <thead>          
+              <th>Percepción</th>                  
+              <th>Días</th>
+              <th>Importe</th>                    
+            </thead>
+        
+            <tbody id="tablaP"> 
+              {%for obj in nominaP %}
+              <tr id="{{obj.idPercepcion}}+P">
+                <td>{{obj.percepcion()}}</td>
+                <td>{{obj.dias()}}</td>
+                <td>{{obj.importe}}</td>
+                
+                
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+        <div class="form-group col-sm-4"></div>
+        <div class="form-group col-sm-4"><label>Subtotal:</label></div>
+        <div class="form-group col-sm-4">          
+          <input type="number" class="form-control " name="subtotal" id="subtotal" value="{{nomina.subtotal}}" readonly>          
+        </div>
+        </div>
+      </div>
+  
+      <div class="form-group col-sm-9"></div>
+        <div class="form-group col-sm-1"><label>Total:</label></div>
+      <div class="form-group col-sm-2">        
+        <input type="number" class="form-control " name="total" id="total" readonly value="{{nomina.total}}">        
+      </div>
+  
+    </div>
+  
+    
+  
+  </div>
+</body>
+
+    
+</html>

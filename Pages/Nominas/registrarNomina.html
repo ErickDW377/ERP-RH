@@ -13,191 +13,181 @@
 <div class="titulo">
   <p>Registro Noniminas </p>
 </div>
-<form action="/registrarNomina" method="post" enctype="multipart/form-data"></form>
-<div class="contenedor3">
-  <div class="row">
+<form action="/registrarNomina" method="post" enctype="multipart/form-data">
+  <div class="contenedor3">
+    <div class="row">
+      <div class="form-group col-sm-3">
+        <label for="idestado">Empleado:</label>
+        <select name="empleado" id="empleado" class="form-control ">
+          {%for obj in empleados %}
+          <option value="{{obj.idEmpleado}}">{{obj.nombre}} {{obj.apellidoPaterno}} {{obj.apellidoMaterno}}</option>
+          {% endfor %}
+        </select>
 
-    <div class=" col-sm-4">
-      <div class="form-group">
-        <label>FECHA PAGO:</label>
-        <input type="date" min="1" max="100" class="form-control " name="fechaPago" class="form-control">
+      </div>
+      <div class="form-group col-sm-3">
+        <label for="idestado">Periodo:</label>
+        <select name="periodo" id="periodo" class="form-control ">
+          {%for obj in periodos %}
+          <option value="{{obj.idPeriodo}}">{{obj.nombre}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+
+      <div class="form-group col-sm-2">
+        <label>Días trabajados:</label>
+        <input type="number" min="1" class="form-control " name="diasTrabajados" id="diasTrabajados">
         <div id="mensajeNombre" style="background-color:brown;color:white">
         </div>
       </div>
-    </div>
-    <div class="form-group col-sm-4">
-      <label for="idestado">EMPLEADO:</label>
-      <select  name="empleado"  id="idEstado" class="form-control ">
-        {%for obj in estados %}   
-        <option value="{{obj.idEmpleado}}">{{obj.nombre}}</option>
-        {% endfor %} 
-      </select>
-      
-    </div>
-    <div class="form-group col-sm-4">
-      <label for="idestado">FORMA DE PAGO:</label>
-      <select  name="empleado"  id="idEstado" class="form-control ">
-        {%for obj in estados %}   
-        <option value="{{obj.idEmpleado}}">{{obj.nombre}}</option>
-        {% endfor %} 
-      </select>
-    </div>
-
-    <div class="form-group col-sm-4">
-      <label for="idestado">PERIODO:</label>
-      <select  name="empleado"  id="idEstado" class="form-control ">
-        {%for obj in estados %}   
-        <option value="{{obj.idEmpleado}}">{{obj.nombre}}</option>
-        {% endfor %} 
-      </select>
-    </div>
-    <div class="form-group col-sm-4">
-      <label>DIAS TRABAJADOS:</label>
-      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
-      <div id="mensajeNombre" style="background-color:brown;color:white">
+      <div class="form-group col-sm-2">
+        <label for="idestado">Forma de pago:</label>
+        <select name="formaPago" id="formaPago" class="form-control ">
+          {%for obj in fp %}
+          <option value="{{obj.idFormaPago}}">{{obj.nombre}}</option>
+          {% endfor %}
+        </select>
       </div>
-    </div>
 
-    <div class=" col-sm-4">
-      <div class="form-group">
-        <label>FECHA ELABORACION:</label>
-        <input type="date" class="form-control " name="fechaElaboracion" id="nombre" class="form-control">
-        <div id="mensajeNombre" style="background-color:brown;color:white">
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <div class="form-group col-sm-4">
-      <label>SUBTOTAL:</label>
-      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
-      <div id="mensajeNombre" style="background-color:brown;color:white">
-      </div>
-    </div>
-
-
-    <div class="form-group col-sm-4">
-      <label>RETENCIONES:</label>
-      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
-      <div id="mensajeNombre" style="background-color:brown;color:white">
-      </div>
-    </div>
-    <div class="form-group col-sm-4">
-      <label>TOTAL:</label>
-      <input type="number" min="1" max="100" class="form-control " name="fechaPago" id="nombre" class="form-control">
-      <div id="mensajeNombre" style="background-color:brown;color:white">
-      </div>
-    </div>
-  </div>
-
-  <div class="row ">
-    <div class="form-group col-sm-6">
-      <button type="submit" class="btn btn-block btn-primary " id="btnGuardar"
-        onclick="this.form.action='/registrarNomina/G', this.form.method='post', this.form.enctype='multipart/form-data'">
-        <span class="glyphicon glyphicon-floppy-disk"></span>
-        Guardar
-      </button>
-    </div>
-    <div class="form-group col-sm-6">
-      <button type="submit" class="btn btn-block btn-success " id="btnGuardar2"
-        onclick="this.form.action='/registrarNomina/E', method='post', enctype='multipart/form-data'">
-        <span class="glyphicon glyphicon-envelope"></span>
-        Enviar
-      </button>
-    </div>
-
-
-  </div>
-
-</div>
-<div class="row">
-  <div class="col-sm-6">
-    <div class="contenedor4">
-      <h2 style="font-size: 25px;">DEDUCCION</h2>
-      <div class="row">
-        <div class="form-group col-sm-4">
-
-
-          <label>NOMINA</label>
-          <input type="text" class="form-control " name="idNomina" id="nombre" onblur='consultarNombre("nomina")'
-            required>
-          <div id="mensajeNombre" style="background-color:brown;color:white">
-          </div>
-        </div>
-
-        <div class="form-group col-sm-4">
-          <label>DEDUCCION</label>
-          <input type="text" class="form-control " name="idEmpleado" id="nombre" onblur='consultarNombre("nomina")'
-            required>
-          <div id="mensajeNombre" style="background-color:brown;color:white">
-          </div>
-        </div>
-
-        <div class="form-group col-sm-4">
-          <label>IMPORTE</label>
-          <input type="text" class="form-control " name="importe" id="nombre" onblur='consultarNombre("nomina")'
-            required>
-          <div id="mensajeNombre" style="background-color:brown;color:white">
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
-  </div>
-
-  <div class="col-sm-6">
-    <div class="contenedor4">
-      <h1 style="font-size: 24px;">PERCEPCION</h1>
-      <div class="row">
-        <div class="form-group col-sm-4">
-
-          <label>NOMINA</label>
-          <input type="text" class="form-control " name="idNomina" id="nombre" onblur='consultarNombre("nomina")'
-            required>
-          <div id="mensajeNombre" style="background-color:brown;color:white">
-          </div>
-        </div>
-
-        <div class="form-group col-sm-4">
-          <label>PERCEPCION</label>
-          <input type="text" class="form-control " name="idEmpleado" id="nombre" onblur='consultarNombre("nomina")'
-            required>
-          <div id="mensajeNombre" style="background-color:brown;color:white">
-          </div>
-        </div>
-
-        <div class="form-group col-sm-4">
-          <label>IMPORTE</label>
-          <input type="text" class="form-control " name="importe" id="nombre" onblur='consultarNombre("nomina")'
-            required>
-          <div id="mensajeNombre" style="background-color:brown;color:white">
+      <div class=" col-sm-2">
+        <div class="form-group">
+          <label>Fecha pago:</label>
+          <input type="date" class="form-control " name="fechaPago" class="form-control">
+          <div id="mensajeFecha" style="background-color:brown;color:white">
           </div>
         </div>
       </div>
 
+      <div class="col-sm-6">
+        <div class="contenedor4 row">
+          <label class="subtitulo col-sm-12">DEDUCCIONES</label>
+
+          <div class="form-group col-sm-4">
+            <label>Deducción</label>
+            <select name="deduccion" id="deduccion" class="form-control ">
+              {%for obj in deducciones %}
+              <option value="{{obj.idDeduccion}}">{{obj.nombre}} {{obj.porcentaje}}</option>
+              {% endfor %}
+            </select>            
+          </div>
+
+          <div class="form-group col-sm-3">
+            <label>Porcentaje</label>
+            <input type="number" class="form-control " name="porcentaje" id="porcentaje"
+              >            
+          </div>
+
+          <div class="form-group col-sm-3">
+            <label>Importe</label>
+            <input type="number" class="form-control " name="importeD" id="importeD" 
+              >            
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Agregar</label>
+            <a class="btn btn-success btn-centrar" role="button" onclick="addDeduccion()">
+              <span class="glyphicon glyphicon-plus"></span>
+            </a>
+          </div>
+          <table class="table  tabla2" id="tablaDeducciones">
+            <thead>          
+              <th>Deducción</th>                  
+              <th>Porcentaje</th>
+              <th>Importe</th> 
+                           
+            </thead>
+        
+            <tbody id="tablaD"> 
+              
+            </tbody>
+        </table> 
+        <div class="form-group col-sm-6"></div>
+        <div class="form-group col-sm-2"><label>Retenciones:</label></div>
+        <div class="form-group col-sm-4">          
+          <input type="number" class="form-control " name="retenciones" id="retenciones" readonly>          
+        </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="contenedor4 row">
+
+          <label class="subtitulo col-sm-12">PERCEPCIONES</label>
+
+          <div class="form-group col-sm-4">
+
+            <label>Percepción</label>
+            <select name="percepcion" id="percepcion" class="form-control ">
+              {%for obj in percepciones %}
+              <option value="{{obj.idPercepcion}}">{{obj.nombre}} {{obj.diasPagar}}</option>
+              {% endfor %}
+            </select>            
+          </div>
+
+          <div class="form-group col-sm-3">
+            <label>Días</label>
+            <input type="number" class="form-control " name="dias" id="dias" 
+              readonly>            
+          </div>
+
+          <div class="form-group col-sm-3">
+            <label>Importe</label>
+            <input type="number" class="form-control " name="importeP" id="importeP" 
+              readonly>            
+          </div>
+          <div class="form-group col-sm-2">
+            <label>Agregar</label>
+            <a class="btn btn-success btn-centrar" role="button" onclick="">
+              <span class="glyphicon glyphicon-plus"></span>
+            </a>
+          </div>
+          <table class="table  tabla2" id="tablaPercepcion">
+            <thead>          
+              <th>Percepción</th>                  
+              <th>Días</th>
+              <th>Importe</th>                    
+            </thead>
+        
+            <tbody id="myTable"> 
+              
+            </tbody>
+        </table>
+        <div class="form-group col-sm-8"></div>
+        <div class="form-group col-sm-2"><label>Subtotal:</label></div>
+        <div class="form-group col-sm-2">          
+          <input type="number" class="form-control " name="subtotal" id="subtotal" readonly>          
+        </div>
+        </div>
+      </div>
+
+      <div class="form-group col-sm-10"></div>
+        <div class="form-group col-sm-1"><label>Total:</label></div>
+      <div class="form-group col-sm-1">        
+        <input type="number" class="form-control " name="total" id="total" readonly>        
+      </div>
+
     </div>
+
+    <div class="row ">
+      <div class="form-group col-sm-6">
+        <button type="submit" class="btn btn-block btn-primary " id="btnGuardar"
+          onclick="this.form.action='/registrarAusenciaJustificada/G', this.form.method='post', this.form.enctype='multipart/form-data'">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+          Guardar
+        </button>
+      </div>
+
+      <div class="form-group col-sm-6">
+        <button type="submit" class="btn btn-block btn-success " id="btnGuardar2"
+          onclick="this.form.action='/registrarAusenciaJustificada/E', method='post', enctype='multipart/form-data'">
+          <span class="glyphicon glyphicon-envelope"></span>
+          Enviar
+        </button>
+      </div>
+    </div>
+    <a href="/nominas" class="btn btn-danger btn-block" role="button">Cancelar</a>
 
   </div>
-</div>
-
-
-
-
-<div class="contenedor">
-  <button type="submit" class="btn btn-primary btn-block" id="btnGuardar">
-    <span class="glyphicon glyphicon-floppy-disk"></span>
-    Registrar
-  </button>
-  <a href="/nomina" class="btn btn-danger btn-block" role="button">Cancelar</a>
-  </form>
-</div>
-
-
-
-
-
+</form>
+<script src="{{url_for('static', filename='js/nomina.js')}}" ></script>
 {%endblock%}

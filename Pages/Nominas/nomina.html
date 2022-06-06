@@ -12,7 +12,7 @@
 {% endif %}
 
 <div class="titulo">
-  <p>Catálogo Nomina</p>
+  <p>Catálogo Nominas</p>
 </div>
 
 <div class="container input-group">
@@ -24,53 +24,67 @@
 
 <div class="tabla"> 
   <table class="table table-hover">
-    <thead> 
-      <th>Nomia</th>     
+    <thead>        
       <th>Empleado</th>  
-      <th>Periodo</th>  
-      <th>Periodos</th>      
-      <th>Fecha Elaboracion</th>
-      <th>Fecha pago</th>  
-      <th>Subtotal</th>                   
-      <th>Retenciones</th>
-      <th>Total</th>
-      <th>Dias Trabajados</th>
+      <th>Periodo</th>       
+      <th>Fecha Elaboracion</th>      
+      <th>Total</th> 
+      <th>Estatus</th>    
       <th></th>      
       <th></th>
-      {% if current_user.is_admin() %}
-<th></th> 
-        {% endif %}
+      <th></th>      
       
     </thead>
-  </div>
+  
 
     <tbody id="myTable">  
       {%for obj in nomina%}      
-      <tr>
+      <tr>       
+        <td>{{obj.nombreEmpleado()}}</td>        
+        <td>{{obj.periodo()}}</td>
+        <td>{{obj.fechaElaboracion}}</td>        
+        <td> $ {{obj.total}}</td>
+        <td>{{obj.estatus}}</td>
+        {% if (current_user.is_admin() or current_user.idPuesto == 2) and  obj.estatus == 'Revisión' %}
+        <td>
 
-        <td>{{obj.idNomina}}</td>
-        <td>{{obj.idEmpleado}}</td>
-        <td>{{obj.idFormaPago}}</td>
-        <td>{{obj.idPeriodo}}</td>
-        <td>{{obj.fechaElabaracion}}</td>
-        <td>{{obj.fechaPago}}</td>
-        <td>{{obj.subtotal}}</td>
-        <td>{{obj.retenciones}}</td>
-        <td>{{obj.total}}</td>
-        <td>{{obj.diasTrabajados}}</td>
-               {% if current_user.is_admin() or current_user.is_staff()  %}
+          <a href="/revisarNomina/{{obj.idNomina}}" class="btn btn-success" role="button">
+            <span class="glyphicon glyphicon--eye-open"></span>
+            Revisar
+          </a>
+        </td>  
+        {% endif %}
+        {% if obj.estatus != 'Revisión' and obj.estatus != 'Autorizada' %}
+        <td>
+          <a href="/verNomina/{{obj.idNomina}}" class="btn btn-warning" role="button">
+            <span class="glyphicon glyphicon-eye-open"></span>
+            Ver</a>
+        </td>
+        {% endif %}
+        {% if  obj.estatus == 'Autorizada' %}
+        <td><a data-toggle="modal" data-target="#verDoc{{obj.idNomina}}">documento.pdf</a></td>
+        <div id="verDoc{{obj.idNomina}}" class="modal fade" role="dialog" >
+          <div class="modal-dialog modal-lg">        
+            <div class="modal-content" >
+              <div class="modal-header">                    
+                <h4 class="modal-title">Nomina</h4>                    
+              </div>                   
+                <embed  src="/documentoNomina/{{obj.idNomina}}" type="application/pdf" width="100%" height="550px"/> 
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+                </div>                                
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if (current_user.is_admin() or current_user.is_staff()) and  obj.estatus != 'Revisión' %}
         <td>
 
           <a href="/editarNomina/{{obj.idNomina}}" class="btn btn-success" role="button">
             <span class="glyphicon glyphicon-pencil"></span>
             Editar
           </a>
-        </td> 
-        <td>
-          <a href="/nominaVer/{{obj.idNomina}}" class="btn btn-warning" role="button">
-            <span class="glyphicon glyphicon-eye-open"></span>
-            Ver</a>
-        </td>   
+        </td>          
         <td>
           <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#eliminar{{obj.idNomina}}">
             <span class="glyphicon glyphicon-trash"></span>
@@ -91,10 +105,10 @@
                 <h4 class="modal-title">Confirmacion de proceso</h4>
               </div>
               <div class="modal-body">
-                <p>¿Estas seguro de eliminar la Nomina: {{obj.nombre}} ?</p>
+                <p>¿Estas seguro de eliminar la Nomina?</p>
               </div>
               <div class="modal-footer">
-                <a href="/eliminarNominas/{{obj.idNomina}}" class="btn btn-info"
+                <a href="/eliminarNomina/{{obj.idNomina}}" class="btn btn-info"
                   >Aceptar</a
                 >
                 <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -108,11 +122,10 @@
         {% endfor %}
     </tbody>
     </table>
-  
-  </div>
-</div>
+  </div> 
+
   <div class="paginacion">
-    {{ macros.pagination_widget(pagination, '.nomina') }}
+    {{ macros.pagination_widget(pagination, p) }}
   </div>
   
 {%endblock%}

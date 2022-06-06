@@ -1,0 +1,78 @@
+{% extends 'componentes/menu.html' %}
+{%block cuerpo%}
+
+{% if get_flashed_messages()%}
+{% for m in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible alertas-txt">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>{{m}}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="titulo">
+  <p>Registro Noniminas </p>
+</div>
+<form action="/registrarNomina" method="post" enctype="multipart/form-data">
+  <div class="contenedor3">
+    <div class="row">
+      <div class="form-group col-sm-3">
+        <label for="idestado">Empleado:</label>
+        <select name="empleado" id="empleado" class="form-control ">
+          {%for obj in empleados %}
+          <option value="{{obj.idEmpleado}}">{{obj.nombre}} {{obj.apellidoPaterno}} {{obj.apellidoMaterno}}</option>
+          {% endfor %}
+        </select>
+
+      </div>
+      <div class="form-group col-sm-3">
+        <label for="idestado">Periodo:</label>
+        <select name="periodo" id="periodo" class="form-control ">
+          {%for obj in periodos %}
+          <option value="{{obj.idPeriodo}}">{{obj.nombre}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+
+      <div class="form-group col-sm-2">
+        <label>Días trabajados:</label>
+        <input type="number" min="1" class="form-control " name="diasTrabajados" id="diasTrabajados">
+        <div id="mensajeNombre" style="background-color:brown;color:white">
+        </div>
+      </div>
+      <div class="form-group col-sm-2">
+        <label for="idestado">Forma de pago:</label>
+        <select name="formaPago" id="formaPago" class="form-control ">
+          {%for obj in fp %}
+          <option value="{{obj.idFormaPago}}">{{obj.nombre}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class=" col-sm-2">
+        <div class="form-group">
+          <label>Fecha pago:</label>
+          <input type="date" class="form-control " name="fechaPago" class="form-control">
+          <div id="mensajeFecha" style="background-color:brown;color:white">
+          </div>
+        </div>
+      </div>     
+
+    </div>
+
+    <div >
+      <div class="form-group ">
+        <button type="submit" class="btn btn-block btn-primary " id="btnGuardar"
+          onclick="this.form.action='/nominaAlta', this.form.method='post', this.form.enctype='multipart/form-data'">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+          Dar de alta nomina
+        </button>
+      </div>      
+    </div>
+    <a href="/inicio" class="btn btn-danger btn-block" role="button">Cancelar</a>
+
+  </div>
+</form>
+<script src="{{url_for('static', filename='js/nomina.js')}}" ></script>
+{%endblock%}

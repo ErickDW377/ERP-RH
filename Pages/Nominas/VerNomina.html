@@ -11,99 +11,147 @@
 {% endif %}
 
 <div class="titulo">
+  Nomina
 </div>
 
 
-<ul class="nav nav-tabs container ">
-  <li class="active"><a data-toggle="tab" href="#PestañaNomina">NOMINA</a></li>
-  <li><a data-toggle="tab" href="#PestañaDeducciones">DEDUCCIONES</a></li>
-  <li><a data-toggle="tab" href="#PestañaPercepciones">PERCEPCIONES</a></li>  
-</ul>
-
-<div class="contenedor2">   
-    <div class="tab-content row">
-      <div id="PestañaNomina" class="tab-pane fade in active">       
-        <table class="table  tabla">
-          <thead>
-            <th>Nomina</th>
-            <th>Empleado</th> 
-            <th>Puesto</th> 
-            <th>Forma Pago</th>     
-            <th>Periodos</th>      
-            <th>Dias Trabajados</th>
-            <th>Fecha Elaboracion</th>
-            <th>Subtotal</th>                   
-            <th>Retenciones</th>
-            <th>Total</th>
-            <th></th>      
-            <th></th>
-            </thead>
+<div class="contenedor3">
+  <div class="row">
+    <div class="form-group col-sm-3">
+      <label for="idestado">Empleado:</label>
+      <select name="empleado" id="empleado" class="form-control " disabled >
+        {%for obj in empleados %}
+        {% if obj.idEmpleado == nomina.idEmpleado %}
+        <option value="{{obj.idEmpleado}}" id="{{obj.salarioDiario}}"  selected>{{obj.nombre}} {{obj.apellidoPaterno}} {{obj.apellidoMaterno}}</option>
+        {% else %}
         
-            <tbody id="myTable"> 
-              <tr>
-                <td>{{nomina.idNomina}}</td>
-                <td>{{nomina.idEmpleado}}</td>
-                <td>{{nomina.idPuesto}}</td>
-                <td>{{nomina.idFormaPago}}</td>
-                <td> {{nomina.idPeriodo}}</td>
-                <td> {{nomina.diasTrabajados}}</td>
-                <td> {{nomina.fechaElabaracion}}</td>
-                <td> {{nomina.subtotal}}</td>
-                <td> {{nomina.retenciones}}</td>
-                <td> {{nomina.total}}</td>
-              </tr>
-            </tbody>
-        </table>    
+        {% endif %}
+        {% endfor %}
+      </select>
+
+    </div>
+    <div class="form-group col-sm-3">
+      <label for="idestado">Periodo:</label>
+      <select name="periodo" id="periodo" class="form-control " disabled>
+        {%for obj in periodos %}
+        {% if obj.idPeriodo == nomina.idPeriodo %}
+        <option value="{{obj.idPeriodo}}" selected>{{obj.nombre}} {{obj.fechaInicio}} - {{obj.fechaFin}}</option>
+        {% else %}
+       
+        {% endif %}
+        
+        {% endfor %}
+      </select>
+    </div>
+
+
+    <div class="form-group col-sm-2">
+      <label>Días trabajados:</label>
+      <input type="number" min="1" class="form-control " name="diasTrabajados" id="diasTrabajados" value="{{nomina.diasTrabajados}}" readonly>
+      <div id="mensajeNombre" style="background-color:brown;color:white">
+      </div>
+    </div>
+    <div class="form-group col-sm-2">
+      <label for="idestado">Forma de pago:</label>
+      <select name="formaPago" id="formaPago" class="form-control " disabled>
+        
+        {%for obj in fp %}
+        {% if obj.idFormaPago == nomina.idFormaPago %}
+        <option value="{{obj.idFormaPago}}" >{{obj.nombre}}</option>
+        {% else %}
+        
+        {% endif %}
+        
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class=" col-sm-2">
+      <div class="form-group">
+        <label>Fecha pago:</label>
+        <input type="date" class="form-control " name="fechaPago" class="form-control" value="{{nomina.fechaPago}}" readonly>
+        <div id="mensajeFecha" style="background-color:brown;color:white">
         </div>
-         
+      </div>
+    </div>
 
-      <div id="PestañaDeducciones" class="tab-pane fade">
-        <table class="table  tabla">
-          <thead>                           
-            <th>Nomina</th>      
-            <th>Deduccion</th>
-            <th>Importe</th>
-           </thead>
-      
-          <tbody id="myTable"> 
-            <tr>
-              <td>{{nomina.idNomina()}}</td>
-              <td>{{nomina.idDeduccion}}</td>
-              <td>{{nomina.importe}}</td>
-                         </tr>
-          </tbody>
-      </table>                 
-        </div>        
-      
+    <div class="col-sm-6">
+      <div class="contenedor4 row">
+        <label class="subtitulo col-sm-12">DEDUCCIONES</label>
 
-      <div id="PestañaPercepciones" class="tab-pane fade">
-        <table class="table  tabla">
-          <thead>                           
-            <th>Nomina</th>      
-            <th>Percepcion</th>
-            <th>Importe</th>
-           </thead>
+       
+        <table class="table  tabla2" id="tablaDeducciones">
+          <thead>          
+            <th>Deducción</th>                  
+            <th>Porcentaje</th>
+            <th>Importe</th> 
+                         
+          </thead>
       
-          <tbody id="myTable"> 
-            <tr>
-              <td>{{nomina.idNomina}}</td>
-              <td>{{nomina.idPercepcion}}</td>
-              
-            </tr>
+          <tbody id="tablaD"> 
+            {%for obj in nominaD %}
+              <tr id="{{obj.idDeduccion}}">
+                <td>{{obj.deduccion()}}</td>
+                <td>{{obj.porcentaje()}}</td>
+                <td>{{obj.importe}}</td>
+                
+               
+              </tr>
+            {% endfor %}
+            
           </tbody>
       </table> 
-                        
-        </div>        
-        
-        </table>
-        <div class="paginacion">
-          {{ macros.pagination_widget2(pagination, '.nominaVer',empleado.idEmpleado) }}
-        </div>
-      </div>      
-      {% endif %}
-        
+      <div class="form-group col-sm-4"></div>
+      <div class="form-group col-sm-4"><label>Retenciones:</label></div>
+      <div class="form-group col-sm-4">          
+        <input type="number" class="form-control " name="retenciones" id="retenciones"  value="{{nomina.retenciones}}" readonly>          
+      </div>
+      </div>
     </div>
+
+    <div class="col-sm-6">
+      <div class="contenedor4 row">
+
+        <label class="subtitulo col-sm-12">PERCEPCIONES</label>
+
+        
+        <table class="table  tabla2" id="tablaPercepcion">
+          <thead>          
+            <th>Percepción</th>                  
+            <th>Días</th>
+            <th>Importe</th>                    
+          </thead>
+      
+          <tbody id="tablaP"> 
+            {%for obj in nominaP %}
+            <tr id="{{obj.idPercepcion}}+P">
+              <td>{{obj.percepcion()}}</td>
+              <td>{{obj.dias()}}</td>
+              <td>{{obj.importe}}</td>
+              
+              
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      <div class="form-group col-sm-4"></div>
+      <div class="form-group col-sm-4"><label>Subtotal:</label></div>
+      <div class="form-group col-sm-4">          
+        <input type="number" class="form-control " name="subtotal" id="subtotal" value="{{nomina.subtotal}}" readonly>          
+      </div>
+      </div>
     </div>
+
+    <div class="form-group col-sm-9"></div>
+      <div class="form-group col-sm-1"><label>Total:</label></div>
+    <div class="form-group col-sm-2">        
+      <input type="number" class="form-control " name="total" id="total" readonly value="{{nomina.total}}">        
+    </div>
+
+  </div>
+
+  
+
 </div>
 
 

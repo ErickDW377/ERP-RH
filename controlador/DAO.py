@@ -952,16 +952,19 @@ class HistorialPuesto(db.Model):
 class Nomina(db.Model):
     __tablename__= 'RH_Nominas'
     idNomina = Column(Integer, primary_key=True)
-    idEmpleado=Column(Integer, primary_key=True)
-    idFormaPago=Column(Integer, primary_key=True)
-    idPeriodo=Column(Integer, primary_key=True)
+    idEmpleado=Column(Integer)
+    idFormaPago=Column(Integer)
+    idPeriodo=Column(Integer)
     fechaElaboracion = Column(Date)
     fechaPago = Column(Date)
     subtotal = Column(Float)
     retenciones= Column(Float)
     total=Column(Float)
     diasTrabajados=Column(Integer)
-    estatus = Column(String(1))
+    estatus = Column(String(10))
+    documento = Column(BLOB)
+    estado = Column(String(1))
+    
     def registrar(self):
         db.session.add(self)
         db.session.commit()
@@ -970,7 +973,8 @@ class Nomina(db.Model):
         return self.query.get(id)
 
     def consultarAll(self):        
-        return self.query.all()
+        return self.query.all()   
+    
 
     def actualizar(self):
         db.session.merge(self)
@@ -978,16 +982,131 @@ class Nomina(db.Model):
 
     def eliminar(self,id):
         objeto=self.consultar(id)
-        objeto.estatus = "I"
+        objeto.estado = "I"
         db.session.merge(objeto)
         db.session.commit()
-
+    
     def consultarPagina(self, pagina):
         obj = None
+        if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+            obj = self.query.order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)        
+            return obj
+
+    def consultarCapturaPagina(self, pagina):
+        obj = None
+        if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
+            obj = self.query.filter( Nomina.estatus == 'Captura',Nomina.estado =='A').order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)        
+            return obj
+
+    def consultarmisNominasPagina(self, pagina):
+        if current_user.is_authenticated():
+            obj = None         
+            obj = self.query.filter(Nomina.idEmpleado==current_user.idEmpleado, Nomina.estatus == 'Autorizada', Nomina.estado == 'A').order_by(Nomina.idNomina.desc()).paginate(pagina,per_page= 5, error_out=False)
+            return obj
+
+    def consultarEnviadasPagina(self, pagina):
+        if current_user.is_authenticated() and (current_user.is_admin() or current_user.idPuesto == 2):
+            obj = None         
+            obj = self.query.filter(Nomina.estatus == 'Revisión').order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)
+            return obj
+
+    def nombreEmpleado(self):
+        empleado = Empleados()
+        empleado = empleado.consultar(self.idEmpleado)
+        return empleado.nombre + " "+ empleado.apellidoPaterno + " "+empleado.apellidoMaterno
+
+    def periodo(self):
+        per = Periodos()
+        per = per.consultar(self.idPeriodo)
+        return per.nombre
+
+#Nominas Deducciones---------------------------------------
+class NominaDeducciones(db.Model):
+    __tablename__= 'RH_NominasDeducciones'
+    idNomina = Column(Integer, primary_key=True)
+    idDeduccion = Column(Integer, primary_key=True)
+    importe = Column(Integer)
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,idN,idD):
+        return self.query.get((idN,idD))
+    
+    def cosnsultarNomina(self, id ):
+        return  self.query.filter(NominaDeducciones.idNomina == id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id, id2):
+        objeto=self.consultar(id,id2)
+        db.session.delete(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina, nomina):
+        obj = None
         if current_user.is_admin() or current_user.is_staff():
-            obj = self.query.order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)
-        else:
-            obj = self.query.filter(Nomina.estatus=='A').order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)
+            obj = self.query.filter(NominaDeducciones.idNomina==nomina).order_by(NominaDeducciones.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)        
         return obj
     
-   
+    def deduccion(self):
+        de = Deducciones()
+        de = de.consultar(self.idDeduccion)
+        return de.nombre
+    
+    def porcentaje(self):
+        de = Deducciones()
+        de = de.consultar(self.idDeduccion)
+        return de.porcentaje
+
+    
+#Nominas Percepciones---------------------------------------
+class NominaPercepciones(db.Model):
+    __tablename__= 'RH_NominasPercepciones'
+    idNomina = Column(Integer, primary_key=True)
+    idPercepcion = Column(Integer, primary_key=True)
+    importe = Column(Integer)
+
+    def registrar(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def consultar(self,idN,idP):
+        return self.query.get((idN,idP))
+    
+    def cosnsultarNomina(self, id ):
+        return  self.query.filter(NominaPercepciones.idNomina == id)
+
+    def consultarAll(self):        
+        return self.query.all()
+
+    def actualizar(self):
+        db.session.merge(self)
+        db.session.commit()
+
+    def eliminar(self,id, id2):
+        objeto=self.consultar(id,id2)
+        db.session.delete(objeto)
+        db.session.commit()
+
+    def consultarPagina(self, pagina, nomina):
+        obj = None
+        if current_user.is_admin() or current_user.is_staff():
+            obj = self.query.filter(NominaPercepciones.idNomina==nomina).order_by(NominaPercepciones.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)        
+        return obj
+    
+    def percepcion(self):
+        de = Percepciones()
+        de = de.consultar(self.idPercepcion)
+        return de.nombre
+    
+    def dias(self):
+        de = Percepciones()
+        de = de.consultar(self.idPercepcion)
+        return de.diasPagar

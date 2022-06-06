@@ -12,19 +12,19 @@
 {% endif %}
 
 <div class="titulo">
-  <p>Modificar Nonimina </p>
+  <p>Nonimina </p>
 </div>
 <form action="/nominaEditar" method="post" enctype="multipart/form-data">
   <div class="contenedor3">
     <div class="row">
       <div class="form-group col-sm-3">
         <label for="idestado">Empleado:</label>
-        <select name="empleado" id="empleado" class="form-control " onchange="setSueldo(), setPorcentaje(), setDias()" >
+        <select name="empleado" id="empleado" class="form-control " disabled >
           {%for obj in empleados %}
           {% if obj.idEmpleado == nomina.idEmpleado %}
           <option value="{{obj.idEmpleado}}" id="{{obj.salarioDiario}}"  selected>{{obj.nombre}} {{obj.apellidoPaterno}} {{obj.apellidoMaterno}}</option>
           {% else %}
-          <option value="{{obj.idEmpleado}}" id="{{obj.salarioDiario}}" >{{obj.nombre}} {{obj.apellidoPaterno}} {{obj.apellidoMaterno}}</option>
+          
           {% endif %}
           {% endfor %}
         </select>
@@ -32,12 +32,12 @@
       </div>
       <div class="form-group col-sm-3">
         <label for="idestado">Periodo:</label>
-        <select name="periodo" id="periodo" class="form-control ">
+        <select name="periodo" id="periodo" class="form-control " disabled>
           {%for obj in periodos %}
           {% if obj.idPeriodo == nomina.idPeriodo %}
           <option value="{{obj.idPeriodo}}" selected>{{obj.nombre}} {{obj.fechaInicio}} - {{obj.fechaFin}}</option>
           {% else %}
-          <option value="{{obj.idPeriodo}}">{{obj.nombre}} {{obj.fechaInicio}} - {{obj.fechaFin}}</option>
+         
           {% endif %}
           
           {% endfor %}
@@ -47,19 +47,19 @@
 
       <div class="form-group col-sm-2">
         <label>Días trabajados:</label>
-        <input type="number" min="1" class="form-control " name="diasTrabajados" id="diasTrabajados" value="{{nomina.diasTrabajados}}">
+        <input type="number" min="1" class="form-control " name="diasTrabajados" id="diasTrabajados" value="{{nomina.diasTrabajados}}" readonly>
         <div id="mensajeNombre" style="background-color:brown;color:white">
         </div>
       </div>
       <div class="form-group col-sm-2">
         <label for="idestado">Forma de pago:</label>
-        <select name="formaPago" id="formaPago" class="form-control ">
+        <select name="formaPago" id="formaPago" class="form-control " disabled>
           
           {%for obj in fp %}
           {% if obj.idFormaPago == nomina.idFormaPago %}
-          <option value="{{obj.idFormaPago}}" selected>{{obj.nombre}}</option>
+          <option value="{{obj.idFormaPago}}" >{{obj.nombre}}</option>
           {% else %}
-          <option value="{{obj.idFormaPago}}">{{obj.nombre}}</option>
+          
           {% endif %}
           
           {% endfor %}
@@ -69,7 +69,7 @@
       <div class=" col-sm-2">
         <div class="form-group">
           <label>Fecha pago:</label>
-          <input type="date" class="form-control " name="fechaPago" class="form-control" value="{{nomina.fechaPago}}">
+          <input type="date" class="form-control " name="fechaPago" class="form-control" value="{{nomina.fechaPago}}" readonly>
           <div id="mensajeFecha" style="background-color:brown;color:white">
           </div>
         </div>
@@ -79,32 +79,7 @@
         <div class="contenedor4 row">
           <label class="subtitulo col-sm-12">DEDUCCIONES</label>
 
-          <div class="form-group col-sm-4">
-            <label>Deducción</label>
-            <select name="deduccion" id="deduccion" class="form-control " onchange="setPorcentaje()" >
-              {%for obj in deducciones %}
-              <option value="{{obj.idDeduccion}}"  id="{{obj.porcentaje}}">{{obj.nombre}} </option>
-              {% endfor %}
-            </select>            
-          </div>
-
-          <div class="form-group col-sm-3">
-            <label>Porcentaje</label>
-            <input type="number" class="form-control " name="porcentaje" id="porcentaje" readonly
-              >            
-          </div>
-
-          <div class="form-group col-sm-3">
-            <label>Importe</label>
-            <input type="number" class="form-control " name="importeD" id="importeD" readonly
-              >            
-          </div>
-          <div class="form-group col-sm-2">
-            <label>Agregar</label>
-            <a class="btn btn-success btn-centrar" role="button" onclick="addDeduccion('{{nomina.idNomina}}')">
-              <span class="glyphicon glyphicon-plus"></span>
-            </a>
-          </div>
+         
           <table class="table  tabla2" id="tablaDeducciones">
             <thead>          
               <th>Deducción</th>                  
@@ -120,12 +95,7 @@
                   <td>{{obj.porcentaje()}}</td>
                   <td>{{obj.importe}}</td>
                   
-                  <td>
-                    <a class="btn btn-danger" role="button" onclick="deleteDeduccion('{{obj.idNomina}}','{{obj.idDeduccion}}','{{obj.importe}}')")>
-                      <span class="glyphicon glyphicon-trash"></span>
-                      
-                    </a>
-                  </td>
+                 
                 </tr>
               {% endfor %}
               
@@ -144,33 +114,7 @@
 
           <label class="subtitulo col-sm-12">PERCEPCIONES</label>
 
-          <div class="form-group col-sm-4">
-
-            <label>Percepción</label>
-            <select name="percepcion" id="percepcion" class="form-control " onchange="setDias()" >
-              {%for obj in percepciones %}
-              <option value="{{obj.idPercepcion}}" id="{{obj.diasPagar}}">{{obj.nombre}}</option>
-              {% endfor %}
-            </select>            
-          </div>
-
-          <div class="form-group col-sm-3">
-            <label>Días</label>
-            <input type="number" class="form-control " name="dias" id="dias" readonly 
-              >            
-          </div>
-
-          <div class="form-group col-sm-3">
-            <label>Importe</label>
-            <input type="number" class="form-control " name="importeP" id="importeP" readonly 
-              >            
-          </div>
-          <div class="form-group col-sm-2">
-            <label>Agregar</label>
-            <a class="btn btn-success btn-centrar" role="button" onclick="addPercepcion('{{nomina.idNomina}}')">
-              <span class="glyphicon glyphicon-plus"></span>
-            </a>
-          </div>
+          
           <table class="table  tabla2" id="tablaPercepcion">
             <thead>          
               <th>Percepción</th>                  
@@ -185,11 +129,7 @@
                 <td>{{obj.dias()}}</td>
                 <td>{{obj.importe}}</td>
                 
-                <td>
-                  <a class="btn btn-danger" role="button" onclick="deletePercepcion('{{obj.idNomina}}','{{obj.idPercepcion}}','{{obj.importe}}')")>
-                    <span class="glyphicon glyphicon-trash"></span>                    
-                  </a>
-                </td>
+                
               </tr>
               {% endfor %}
             </tbody>
@@ -212,24 +152,24 @@
 
     <div class="row ">
       <div class="form-group col-sm-6">
-        <button type="submit" class="btn btn-block btn-primary " id="btnGuardar"
-          onclick="this.form.action='/nominaEditar/{{nomina.idNomina}}/Captura', this.form.method='post', this.form.enctype='multipart/form-data'">
+        <button type="submit" class="btn btn-block btn-danger " id="btnGuardar"
+          onclick="this.form.action='/nominaRevisar/{{nomina.idNomina}}/Captura', this.form.method='post', this.form.enctype='multipart/form-data'">
           <span class="glyphicon glyphicon-floppy-disk"></span>
-          Guardar
+          Rechazar
         </button>
       </div>
 
       <div class="form-group col-sm-6">
         <button type="submit" class="btn btn-block btn-success " id="btnGuardar2"
-          onclick="this.form.action='/nominaEditar/{{nomina.idNomina}}/Revisión', method='post', enctype='multipart/form-data'">
+          onclick="this.form.action='/nominaRevisar/{{nomina.idNomina}}/Autorizada', method='post', enctype='multipart/form-data'">
           <span class="glyphicon glyphicon-envelope"></span>
-          Enviar
+          Autorizar
         </button>
       </div>
     </div>
-    <a href="/inicio" class="btn btn-danger btn-block" role="button">Cancelar</a>
+    
 
   </div>
 </form>
-<script src="{{url_for('static', filename='js/nomina.js')}}" onload="setSueldo(),setPorcentaje(),setDias(), setCantidades()"></script>
+
 {%endblock%}

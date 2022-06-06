@@ -30,6 +30,9 @@
       <th>Empleado Solicitante</th>
       <th>Empleado Autorizador</th>             
       <th>Estatus</th>
+      
+      <th></th>
+      
       <th></th>
       <th></th>
     </thead>
@@ -51,6 +54,7 @@
               Incapacidad
           {% endif %}
         </td>
+
         <td>{{obj.nombreEmpleadoS()}}</td>
         {% if obj.idEmpleadoAutoriza == none %}
         <td><h1 ><small>Pendiente</small></h1></td>
@@ -68,6 +72,24 @@
               Rechazada
           {% endif %}
         </td>
+        {% if obj.estatus == "A"%}
+        <td>
+          <a data-toggle="modal" data-target="#verDoc{{obj.idAusencia}}">Evidencia.pdf</a>
+      <div id="verDoc{{obj.idAusencia}}" class="modal fade" role="dialog" >
+      <div class="modal-dialog modal-lg">        
+        <div class="modal-content" >
+          <div class="modal-header">                    
+            <h4 class="modal-title">Evidencia</h4>                    
+          </div>                   
+            <embed  src="/evidencia/{{obj.idAusencia}}" type="application/pdf" width="100%" height="550px"/> 
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+            </div>                                
+        </div>
+      </div>
+    </div>
+        </td>
+        {% endif %}
         {% if obj.estatus == "G"%}
         {% if obj.idEmpleadoSolicita == current_user.idEmpleado%}
         <td>

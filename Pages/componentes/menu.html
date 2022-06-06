@@ -292,48 +292,73 @@
         </li>
 
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">HistorialPuesto
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="/historialPuesto">
-              <span class="glyphicon glyphicon-list-alt"></span>  
-              Ver catalogo
-            </a></li>
-        </ul>
-      </li>
-      
-      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Deducciones
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-        {% if current_user.is_admin() or current_user.is_staff()  %}
-         <li><a href="/registrarDeducciones">
-            <span class="glyphicon glyphicon-plus"></span>
-            Registrar
-          </a></li>
-          {% endif %}
-         <li><a href="/deducciones">
-            <span class="glyphicon glyphicon-list-alt"></span>  
-            Ver catalogo
-          </a></li>
-            </ul>
-            </li>  
-            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Nominas 
-              <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              {% if current_user.is_admin() or current_user.is_staff()  %}
-               <li><a href="/registrarNomina">
-                  <span class="glyphicon glyphicon-plus"></span>
-                  Registrar
-                </a></li>
-                {% endif %}
-               <li><a href="/nomina">
-                  <span class="glyphicon glyphicon-list-alt"></span>  
-                  Ver catalogo
-                </a></li>
-                  </ul>
-                  </li> 
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/historialPuesto">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Ver catalogo
+              </a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Deducciones
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            {% if current_user.is_admin() or current_user.is_staff() %}
+            <li><a href="/registrarDeducciones">
+                <span class="glyphicon glyphicon-plus"></span>
+                Registrar
+              </a></li>
+            {% endif %}
+            <li><a href="/deducciones">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Ver catalogo
+              </a></li>
+          </ul>
+        </li>
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> Nominas
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            {% if current_user.is_admin() or current_user.is_staff() %}
+            <li><a href="/altaNomina">
+                <span class="glyphicon glyphicon-plus"></span>
+                Registrar
+              </a></li>
+            
+            {% endif %}
+            {% if current_user.is_admin() or current_user.idPuesto == 2 %}
+              <li><a href="/nominas">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Ver catalogo
+              </a></li>
+            {% endif %}
+
+              <li><a href="/misNominas">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Mis nominas
+              </a></li>
+            {% if current_user.is_admin() or current_user.is_staff() %}  
+              <li><a href="/capturaNominas">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Nominas en captura
+              </a></li>
+            {% endif %}
+            {% if current_user.is_admin() or current_user.idPuesto == 2 %}  
+              <li><a href="/revicionNominas">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                Nominas en revición
+              </a></li>
+
+              <li><a href="/descargarNominas">
+                <span class="glyphicon glyphicon-download"></span>
+                Descargar nominas
+              </a></li>
+            {% endif %}
+          </ul>
+        </li>
 
 
 
