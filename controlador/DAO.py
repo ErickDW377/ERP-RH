@@ -989,13 +989,13 @@ class Nomina(db.Model):
     def consultarPagina(self, pagina):
         obj = None
         if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
-            obj = self.query.order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)        
+            obj = self.query.order_by(Nomina.idNomina.desc()).paginate(pagina,per_page= 5, error_out=False)        
             return obj
 
     def consultarCapturaPagina(self, pagina):
         obj = None
         if current_user.is_authenticated() and (current_user.is_admin() or current_user.is_staff()):
-            obj = self.query.filter( Nomina.estatus == 'Captura',Nomina.estado =='A').order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)        
+            obj = self.query.filter( Nomina.estatus == 'Captura',Nomina.estado =='A').order_by(Nomina.idNomina.desc()).paginate(pagina,per_page= 5, error_out=False)        
             return obj
 
     def consultarmisNominasPagina(self, pagina):
@@ -1007,7 +1007,7 @@ class Nomina(db.Model):
     def consultarEnviadasPagina(self, pagina):
         if current_user.is_authenticated() and (current_user.is_admin() or current_user.idPuesto == 2):
             obj = None         
-            obj = self.query.filter(Nomina.estatus == 'Revisión').order_by(Nomina.idNomina.asc()).paginate(pagina,per_page= 5, error_out=False)
+            obj = self.query.filter(Nomina.estatus == 'Revisión').order_by(Nomina.idNomina.desc()).paginate(pagina,per_page= 5, error_out=False)
             return obj
 
     def nombreEmpleado(self):

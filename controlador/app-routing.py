@@ -23,6 +23,7 @@ login_manager.login_view = "login"
 login_manager.login_message = u"! Debes iniciar sesión !"
 
 ruta= os.path.join(os.getcwd())
+print (ruta + "rutaaaaaaaaaaaaaaaaaaaaaaaa")
 
 @app.route('/')
 def iniciar():    
@@ -1898,7 +1899,7 @@ def nominaAlta():
         nomina.estado = "A"
         nomina.registrar()
         flash('Nomina dada de alta con exito')
-        return  redirect(url_for('registrarNomina'))
+        return  redirect(url_for('editarNomina', id = nomina.idNomina))
     else:
         abort(404)
 
@@ -1920,7 +1921,7 @@ def nominaEditar(id,btn):
         nomina.idNomina = id       
         nomina.actualizar()
         flash('La Nomina fue actualizada con exito')
-        return  redirect(url_for('editarNomina', id= nomina.idNomina))
+        return  redirect(url_for('capturaNominas'))
     else:
         abort(404)
 
@@ -2059,10 +2060,10 @@ def error_404(e):
 
 if __name__=='__main__':
     db.init_app(app)
-    HOST = os.environ.get('SERVER_HOST', 'localhost')
-    try:
-        PORT = int(os.environ.get('SERVER_PORT', '80'))
-    except ValueError:
-        PORT = 80
-    app.run(HOST, PORT)
-    #app.run(debug=true)
+    #HOST = os.environ.get('SERVER_HOST', 'localhost')
+    #try:
+    #    PORT = int(os.environ.get('SERVER_PORT', '80'))
+    #except ValueError:
+    #    PORT = 80
+    #app.run(HOST, PORT)
+    app.run(debug=true)
